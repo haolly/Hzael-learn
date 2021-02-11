@@ -12,6 +12,9 @@ project "Hazel-learn"
     
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    pchheader "hazelPCH.h"
+    pchsource "Hazel-learn/src/hazelPCH.cpp"
     
     files
     {

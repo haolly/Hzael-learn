@@ -7,10 +7,12 @@ namespace Hazel
 	{
 	public:
 		MouseMovedEvent(float x, float y)
-			: m_MouseX(x), m_MouseY(y) {}
+			: m_MouseX(x), m_MouseY(y)
+		{
+		}
 
-		inline float GetX() const { return m_MouseX;  }
-		inline float GetY() const { return m_MouseY;  }
+		inline float GetX() const { return m_MouseX; }
+		inline float GetY() const { return m_MouseY; }
 
 		std::string ToString() const override
 		{
@@ -30,10 +32,19 @@ namespace Hazel
 	{
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset)
-			: m_XOffset(xOffset), m_YOffset(yOffset) {}
+			: m_XOffset(xOffset), m_YOffset(yOffset)
+		{
+		}
 
-		inline float GetXOffset() const { return m_XOffset; }
-		inline float GetYOffset() const { return m_YOffset; }
+		inline float GetXOffset() const
+		{
+			return m_XOffset;
+		}
+
+		inline float GetYOffset() const
+		{
+			return m_YOffset;
+		}
 
 		std::string ToString() const override
 		{
@@ -43,7 +54,7 @@ namespace Hazel
 		}
 
 		EVENT_CLASS_CATEGORY(EventCategory::EventCategoryInput | EventCategory::EventCategoryMouse)
-			EVENT_CLASS_TYPE(MouseScrolled)
+		EVENT_CLASS_TYPE(MouseScrolled)
 	private:
 		float m_XOffset;
 		float m_YOffset;
@@ -56,7 +67,10 @@ namespace Hazel
 		EVENT_CLASS_CATEGORY(EventCategory::EventCategoryInput | EventCategory::EventCategoryMouse)
 	protected:
 		MouseButtonEvent(int button)
-			:m_Button(button) {}
+			: m_Button(button)
+		{
+		}
+
 		int m_Button;
 	};
 
@@ -64,9 +78,13 @@ namespace Hazel
 	{
 	public:
 		MouseButtonPressedEvent(int button)
-			: MouseButtonEvent(button) {}
+			: MouseButtonEvent(button)
+		{
+		}
+
 		EVENT_CLASS_TYPE(MouseButtonPressed)
-			std::string ToString() const override
+
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent: " << m_Button;
@@ -78,14 +96,17 @@ namespace Hazel
 	{
 	public:
 		MouseButtonReleasedEvent(int button)
-			: MouseButtonEvent(button) {}
+			: MouseButtonEvent(button)
+		{
+		}
+
 		EVENT_CLASS_TYPE(MouseButtonReleased)
-			std::string ToString() const override
+
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent: " << m_Button;
 			return ss.str();
 		}
 	};
-
 }

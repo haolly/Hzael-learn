@@ -1,6 +1,6 @@
 # Directories
 .vs/
-/bin/
+bin/
 bin-int/
 
 # User-specific files, copy from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore

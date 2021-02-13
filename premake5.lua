@@ -7,9 +7,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Hazel-learn/vendor/GLFW/include"
+IncludeDir["Glad"] = "Hazel-learn/vendor/Glad/include"
 
 -- include another premake5.lua into this like C language
 include "Hazel-learn/vendor/GLFW"
+include "Hazel-learn/vendor/Glad"
 
 project "Hazel-learn"
     kind "SharedLib"
@@ -33,12 +35,14 @@ project "Hazel-learn"
     	"%{prj.name}/src",
     	"%{prj.name}/vendor/spdlog/include",
     	"%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}",
     }
 
     -- link static lib
     links
     {
-    	"GLFW",
+      "GLFW",
+      "Glad",
     	"opengl32.lib"
     }
     
@@ -51,6 +55,7 @@ project "Hazel-learn"
             "HZ_PLATFORM_WINDOWS",
             "HZ_BUILD_DLL",
             "HZ_ENABLE_ASSERT",
+            "GLFW_INCLUDE_NONE",
         }
 
         postbuildcommands

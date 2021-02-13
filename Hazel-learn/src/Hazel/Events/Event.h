@@ -1,4 +1,5 @@
 #pragma once
+#include "hazelPCH.h"
 #include "Hazel/Core.h"
 
 namespace Hazel
@@ -41,6 +42,7 @@ namespace Hazel
 		{
 			return GetCategoryFlags() & category;
 		}
+		bool IsHandled() { return m_Handled;}
 	protected:
 		bool m_Handled = false;
 	};

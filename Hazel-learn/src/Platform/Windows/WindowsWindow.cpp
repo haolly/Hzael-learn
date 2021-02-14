@@ -120,6 +120,13 @@ namespace Hazel
 			}
 		});
 
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int c)
+		{
+			auto data = *(WindowData*)glfwGetWindowUserPointer(window);
+			KeyTypedEvent e(c);
+			data.EventCallbackFn(e);
+		});
+
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 		{
 			auto data = *(WindowData*)glfwGetWindowUserPointer(window);

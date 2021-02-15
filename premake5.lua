@@ -10,6 +10,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Hazel-learn/vendor/GLFW/include"
 IncludeDir["Glad"] = "Hazel-learn/vendor/Glad/include"
 IncludeDir["imgui"] = "Hazel-learn/vendor/imgui"
+IncludeDir["glm"] = "Hazel-learn/vendor/glm"
 
 -- include another premake5.lua into this like C language
 include "Hazel-learn/vendor/GLFW"
@@ -31,7 +32,9 @@ project "Hazel-learn"
     files
     {
          "%{prj.name}/src/**.h",
-         "%{prj.name}/src/**.cpp"
+         "%{prj.name}/src/**.cpp",
+         "%{prj.name}/vendor/glm/glm/**.hpp",
+         "%{prj.name}/vendor/glm/glm/**.inl",
     }
     
     includedirs
@@ -41,6 +44,7 @@ project "Hazel-learn"
     	"%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.imgui}",
+        "%{IncludeDir.glm}",
     }
 
     -- link static lib
@@ -102,8 +106,9 @@ project "Sandbox"
     
     includedirs
     {
-           "Hazel-learn/vendor/spdlog/include",
-           "Hazel-learn/src"
+            "Hazel-learn/vendor/spdlog/include",
+            "Hazel-learn/src",
+            "%{IncludeDir.glm}",
     }
 
     links {"Hazel-learn"}

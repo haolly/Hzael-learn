@@ -3,6 +3,8 @@
 #include "Hazel/Log.h"
 #include <GLFW/glfw3.h>
 
+
+#include "Input.h"
 #include "glad/glad.h"
 
 namespace Hazel
@@ -34,6 +36,9 @@ namespace Hazel
 				layer->OnUpdate();
 			
 			m_window->OnUpdate();
+
+			auto[x,y] = Input::GetMousePos();
+			HZ_CORE_TRACE("Mouse input: {0}, {1}", x, y);
 		}
 	}
 

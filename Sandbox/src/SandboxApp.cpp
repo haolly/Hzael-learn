@@ -7,15 +7,15 @@ public:
 		:Layer("Example"){}
 	void OnUpdate() override
 	{
-		HZ_INFO("Example layer OnUpdate");
-		// if(Hazel::Input::IsKeyPressed(GLFW_KEY_A))
-		// {
-		// 	HZ_INFO("Key pressed");
-		// }
+		//HZ_INFO("Example layer OnUpdate");
+		if(Hazel::Input::IsKeyPressed(HZ_KEY_A))
+		{
+			HZ_INFO("A Key pressed");
+		}
 	}
 	void OnEvent(Hazel::Event& e) override
 	{
-		HZ_TRACE("Example layer event: {0}", e);
+		//HZ_TRACE("Example layer event: {0}", e);
 	}
 };
 

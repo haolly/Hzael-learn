@@ -36,9 +36,6 @@ namespace Hazel
 				layer->OnUpdate();
 			
 			m_window->OnUpdate();
-
-			auto[x,y] = Input::GetMousePos();
-			HZ_CORE_TRACE("Mouse input: {0}, {1}", x, y);
 		}
 	}
 

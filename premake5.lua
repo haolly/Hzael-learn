@@ -108,6 +108,7 @@ project "Sandbox"
     {
             "Hazel-learn/vendor/spdlog/include",
             "Hazel-learn/src",
+            "Hazel-learn/vendor",
             "%{IncludeDir.glm}",
     }
 

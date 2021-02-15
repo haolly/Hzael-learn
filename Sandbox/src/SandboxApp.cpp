@@ -7,6 +7,8 @@
 #include <glm/ext/matrix_clip_space.hpp> // glm::perspective
 #include <glm/ext/scalar_constants.hpp> // glm::pi
 
+#include <imgui/imgui.h>
+
 glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
 {
 	glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
@@ -34,6 +36,14 @@ public:
 			HZ_INFO("A Key pressed");
 		}
 	}
+
+	void OnImGuiRenderer() override
+	{
+		ImGui::Begin("test");
+		ImGui::Text("Hello World");
+		ImGui::End();
+	}
+	
 	void OnEvent(Hazel::Event& e) override
 	{
 		//HZ_TRACE("Example layer event: {0}", e);
@@ -46,7 +56,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Hazel::ImGuiLayer());
 	}
 
 	~Sandbox()

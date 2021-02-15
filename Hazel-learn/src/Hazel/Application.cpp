@@ -19,6 +19,9 @@ namespace Hazel
 		s_Instance = this;
 		m_window = std::unique_ptr<Window>(Window::Create());
 		m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		// 这里不能是 unique_ptr，ownership 的问题，需要更多的去了解背后的原因
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -34,6 +37,12 @@ namespace Hazel
 
 			for(Layer* layer: m_LayerStack)
 				layer->OnUpdate();
+
+			
+			m_ImGuiLayer->Begin();
+			for(Layer* layer: m_LayerStack)
+				layer->OnImGuiRenderer();
+			m_ImGuiLayer->End();
 			
 			m_window->OnUpdate();
 		}

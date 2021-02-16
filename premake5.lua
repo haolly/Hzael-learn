@@ -1,8 +1,8 @@
 -- premake5.lua
 workspace "Hazel-learn"
-    architecture "x64"
-    configurations { "Debug", "Release", "Dist" }
-    startproject "Sandbox"
+	architecture "x64"
+	configurations { "Debug", "Release", "Dist" }
+	startproject "Sandbox"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -18,122 +18,115 @@ include "Hazel-learn/vendor/Glad"
 include "Hazel-learn/vendor/imgui"
 
 project "Hazel-learn"
-    kind "SharedLib"
-    location "Hazel-learn"
-    language "C++"
-    staticruntime "Off"
-    
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	kind "StaticLib"
+	location "Hazel-learn"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
-    pchheader "hazelPCH.h"
-    pchsource "Hazel-learn/src/hazelPCH.cpp"
-    
-    files
-    {
-         "%{prj.name}/src/**.h",
-         "%{prj.name}/src/**.cpp",
-         "%{prj.name}/vendor/glm/glm/**.hpp",
-         "%{prj.name}/vendor/glm/glm/**.inl",
-    }
-    
-    includedirs
-    {
-    	"%{prj.name}/src",
-    	"%{prj.name}/vendor/spdlog/include",
-    	"%{IncludeDir.GLFW}",
-        "%{IncludeDir.Glad}",
-        "%{IncludeDir.imgui}",
-        "%{IncludeDir.glm}",
-    }
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-    -- link static lib
-    links
-    {
-      "GLFW",
-      "Glad",
-      "imgui",
-      "opengl32.lib",
-    }
-    
-    filter "system:windows"
-        cppdialect "C++17"
-        systemversion "latest"
-        defines 
-        {
-            "HZ_PLATFORM_WINDOWS",
-            "HZ_BUILD_DLL",
-            "HZ_ENABLE_ASSERT",
-            "GLFW_INCLUDE_NONE",
-        }
+	pchheader "hazelPCH.h"
+	pchsource "Hazel-learn/src/hazelPCH.cpp"
 
-        postbuildcommands
-        {
-            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-        }
-         
-    
-    filter "configurations:Debug"
-       defines { "HZ_DEBUG" }
-       runtime "Debug"
-       symbols "On"
-    
-    filter "configurations:Release"
-       defines { "HZ_RELEASE" }
-       runtime "Release"
-       optimize "On"
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl",
+	}
 
-    filter "configurations:Dist"
-       defines { "HZ_DIST" }
-       runtime "Release"
-       optimize "On"
+	includedirs
+	{
+		"%{prj.name}/src",
+		"%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.glm}",
+	}
+
+	-- link static lib
+	links
+	{
+		"GLFW",
+		"Glad",
+		"imgui",
+		"opengl32.lib",
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		defines 
+		{
+			"HZ_PLATFORM_WINDOWS",
+			"HZ_BUILD_DLL",
+			"HZ_ENABLE_ASSERT",
+			"GLFW_INCLUDE_NONE",
+		}
+
+	filter "configurations:Debug"
+		defines { "HZ_DEBUG" }
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines { "HZ_RELEASE" }
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines { "HZ_DIST" }
+		runtime "Release"
+		optimize "on"
 
 project "Sandbox"
-    kind "ConsoleApp"
+	kind "ConsoleApp"
 
-    location "Sandbox"
-    language "C++"
-    staticruntime "Off"
-    
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-    
-    files
-    {
-         "%{prj.name}/src/**.h",
-         "%{prj.name}/src/**.cpp"
-    }
-    
-    includedirs
-    {
-            "Hazel-learn/vendor/spdlog/include",
-            "Hazel-learn/src",
-            "Hazel-learn/vendor",
-            "%{IncludeDir.glm}",
-    }
+	location "Sandbox"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
-    links {"Hazel-learn"}
-    
-    filter "system:windows"
-        cppdialect "C++17"
-        systemversion "latest"
-        defines 
-        {
-            "HZ_PLATFORM_WINDOWS",
-        }
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-    filter "configurations:Debug"
-       defines { "HZ_DEBUG" }
-       runtime "Debug"
-       symbols "On"
-    
-    filter "configurations:Release"
-       defines { "HZ_RELEASE" }
-       runtime "Release"
-       optimize "On"
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
 
-    filter "configurations:Dist"
-       defines { "HZ_DIST" }
-       runtime "Release"
-       optimize "On"
+	includedirs
+	{
+		"Hazel-learn/vendor/spdlog/include",
+		"Hazel-learn/src",
+		"Hazel-learn/vendor",
+		"%{IncludeDir.glm}",
+	}
 
+	links {"Hazel-learn"}
+
+	filter "system:windows"
+		systemversion "latest"
+		defines 
+		{
+			"HZ_PLATFORM_WINDOWS",
+		}
+
+	filter "configurations:Debug"
+		defines { "HZ_DEBUG" }
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines { "HZ_RELEASE" }
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines { "HZ_DIST" }
+		runtime "Release"
+		optimize "on"

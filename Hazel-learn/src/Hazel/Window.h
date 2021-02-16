@@ -5,6 +5,8 @@
 
 namespace Hazel
 {
+	class GraphicsContext;
+
 	struct WindowProps
 	{
 		std::string Title;
@@ -32,6 +34,8 @@ namespace Hazel
 		virtual void* GetNativeWindow() const = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
+
+		GraphicsContext* m_Context;
 	private:
 		
 	};

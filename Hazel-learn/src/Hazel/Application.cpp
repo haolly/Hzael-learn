@@ -1,11 +1,7 @@
 #include "hazelPCH.h"
 #include "Application.h"
 #include "Hazel/Log.h"
-#include <GLFW/glfw3.h>
-
-
-#include "Input.h"
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 namespace Hazel
 {

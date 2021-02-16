@@ -5,7 +5,8 @@
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Events/MouseEvent.h"
-#include <glad/glad.h>
+
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Hazel
 {
@@ -39,7 +40,7 @@ namespace Hazel
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
@@ -71,9 +72,10 @@ namespace Hazel
 		}
 
 		m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		HZ_CORE_ASSERT(status, "Failed to initialize Glad!");
+
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
+		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
@@ -151,14 +153,14 @@ namespace Hazel
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset)
 		{
 			auto data = *(WindowData*)glfwGetWindowUserPointer(window);
-			MouseScrolledEvent e(xoffset, yoffset);
+			MouseScrolledEvent e((float)xoffset, (float)yoffset);
 			data.EventCallbackFn(e);
 		});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
 		{
 			auto data = *(WindowData*)glfwGetWindowUserPointer(window);
-			MouseMovedEvent e(xPos, yPos);
+			MouseMovedEvent e((float)xPos, (float)yPos);
 			data.EventCallbackFn(e);
 		});
 	}

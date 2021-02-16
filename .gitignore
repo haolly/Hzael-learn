@@ -3,6 +3,8 @@
 bin/
 bin-int/
 
+imgui.ini
+
 # User-specific files, copy from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 *.rsuser
 *.suo

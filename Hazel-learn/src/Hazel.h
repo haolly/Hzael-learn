@@ -1,6 +1,6 @@
 #pragma once
 
-// For use in client
+// For use in client, shouldn't be include in ANY hazel source file
 
 #include "Hazel/Application.h"
 #include "Hazel/Log.h"

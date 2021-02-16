@@ -8,6 +8,8 @@
 
 namespace Hazel
 {
+	class Shader;
+
 	class HAZEL_API Application
 	{
 	public:
@@ -35,6 +37,9 @@ namespace Hazel
 		bool m_Runing = true;
 
 		LayerStack m_LayerStack;
+
+		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
 	private:
 		static Application* s_Instance;
 	};

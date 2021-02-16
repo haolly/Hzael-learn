@@ -1,6 +1,5 @@
 #include "hazelPCH.h"
 #include "WindowsWindow.h"
-#include "Hazel/Log.h"
 
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/KeyEvent.h"

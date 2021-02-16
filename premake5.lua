@@ -13,9 +13,11 @@ IncludeDir["imgui"] = "Hazel-learn/vendor/imgui"
 IncludeDir["glm"] = "Hazel-learn/vendor/glm"
 
 -- include another premake5.lua into this like C language
-include "Hazel-learn/vendor/GLFW"
-include "Hazel-learn/vendor/Glad"
-include "Hazel-learn/vendor/imgui"
+group "Dependencies"
+	include "Hazel-learn/vendor/GLFW"
+	include "Hazel-learn/vendor/Glad"
+	include "Hazel-learn/vendor/imgui"
+group ""
 
 project "Hazel-learn"
 	kind "StaticLib"

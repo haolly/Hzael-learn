@@ -16,7 +16,7 @@ namespace Hazel
 		HZ_CORE_ERROR("GLWF error, {0}, {1}", error, description);
 	}
 
-	inline Window* Window::Create(const WindowProps& props)
+	Window* Window::Create(const WindowProps& props)
 	{
 		return new WindowsWindow(props);
 	}

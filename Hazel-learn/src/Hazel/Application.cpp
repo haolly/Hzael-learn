@@ -74,7 +74,7 @@ namespace Hazel
 			}
 
 		)";
-		m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(Shader::Create(vertexSrc, fragmentSrc));
 
 		// Square
 		m_SquareVA.reset(VertexArray::Create());
@@ -122,7 +122,7 @@ namespace Hazel
 
 		)";
 
-		m_BlueShader.reset(new Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		m_BlueShader.reset(Shader::Create(blueShaderVertexSrc, blueShaderFragmentSrc));
 	}
 
 	Application::~Application()

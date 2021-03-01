@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Hazel {
 
 	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& framentSrc)
@@ -123,6 +125,13 @@ namespace Hazel {
 	void OpenGLShader::UnBind() const
 	{
 		glUseProgram(0);
+	}
+
+	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const
+	{
+		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
+		// If we use a row-major matrix, we should transport this matrix, IE pass 3rd argument to GL_TRUE 
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 }

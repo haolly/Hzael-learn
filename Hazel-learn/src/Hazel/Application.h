@@ -6,9 +6,6 @@
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/ImGui/ImGuiLayer.h"
 
-#include "Hazel/Renderer/OrthographicCamera.h"
-
-
 namespace Hazel
 {
 	class Shader;
@@ -44,17 +41,6 @@ namespace Hazel
 
 		LayerStack m_LayerStack;
 
-		OrthographicCamera m_Camera;
-
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexBuffer> m_VertexBuffer;
-		std::shared_ptr<IndexBuffer> m_IndexBuffer;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> m_BlueShader;
-		std::shared_ptr<VertexBuffer> m_SquareVB;
-		std::shared_ptr<IndexBuffer> m_SquareIB;
-		std::shared_ptr<VertexArray> m_SquareVA;
 	private:
 		static Application* s_Instance;
 	};

@@ -1,6 +1,8 @@
 #include "hazelPCH.h"
 #include "Application.h"
 
+#include "GLFW/glfw3.h"
+
 namespace Hazel
 {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
@@ -27,9 +29,11 @@ namespace Hazel
 	{
 		while (m_Runing)
 		{
-
+			float time = (float)glfwGetTime();		// Platform::GetTime()
+			float deltaTime = time - m_LastFrameTime;
+			m_LastFrameTime = time;
 			for(Layer* layer: m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(deltaTime);
 
 			
 			m_ImGuiLayer->Begin();

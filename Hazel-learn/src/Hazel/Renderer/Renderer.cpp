@@ -17,10 +17,12 @@ namespace Hazel {
 	{
 	}
 
-	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader)
+	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader, const glm::mat4& transform)
 	{
 		shader->Bind();
+		// TODO viewProjection do not need to upload every frame, but upload per shader per scene
 		shader->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		shader->UploadUniformMat4("u_Transform", transform);
 		// Bind should not in RenderCommand
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

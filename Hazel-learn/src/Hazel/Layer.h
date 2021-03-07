@@ -12,7 +12,7 @@ namespace Hazel
 		
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(float deltaTime) {}
 		virtual void OnImGuiRenderer() {} 
 		virtual void OnEvent(Event& e) {}  
 		inline const std::string GetName() const { return m_DebugName;}

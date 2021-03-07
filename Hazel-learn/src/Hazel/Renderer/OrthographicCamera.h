@@ -26,7 +26,7 @@ namespace Hazel {
 		glm::mat4 m_ViewProjectionMatrix;
 
 		glm::vec3 m_Position;
-		// Only sensible in rotation Z axis, radian
+		// Only sensible in rotation Z axis, degree
 		float m_Rotation = 0.0f;
 	};
 }

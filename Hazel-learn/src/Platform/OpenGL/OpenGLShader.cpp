@@ -127,8 +127,48 @@ namespace Hazel {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::UploadUniformInt(const std::string& name, int value) const
+	{
+		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
+		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::UploadUniformFloat(const std::string& name, float value) const
+	{
+		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
+		glUniform1f(location, value);
+	}
+
+	void OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& value) const
+	{
+		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
+		glUniform2f(location, value.x, value.y);
+	}
+
+	void OpenGLShader::UploadUniformFloat3(const std::string& name, const glm::vec3& value) const
+	{
+		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
+		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& values) const
+	{
+		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
+		glUniform4f(location, values.x, values.y, values.z, values.w);
+	}
+
+	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix) const
+	{
+		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
+
 	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const
 	{
+		// Usually, the shader is pre-parsed to get the uniforms and locations
+		// Uniforms groups to TWO kind, One kind is set by Renderer, like light direction, viewProjection etc.
+		// the other kind is set by Material, like color
 		GLint location = glGetUniformLocation(m_RenderID, name.c_str());
 		// If we use a row-major matrix, we should transport this matrix, IE pass 3rd argument to GL_TRUE 
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));

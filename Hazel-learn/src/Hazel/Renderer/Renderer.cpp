@@ -2,6 +2,8 @@
 
 #include "Renderer.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 namespace Hazel {
 
 	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
@@ -21,8 +23,8 @@ namespace Hazel {
 	{
 		shader->Bind();
 		// TODO viewProjection do not need to upload every frame, but upload per shader per scene
-		shader->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-		shader->UploadUniformMat4("u_Transform", transform);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
 		// Bind should not in RenderCommand
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

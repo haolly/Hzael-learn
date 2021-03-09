@@ -11,6 +11,7 @@ IncludeDir["GLFW"] = "Hazel-learn/vendor/GLFW/include"
 IncludeDir["Glad"] = "Hazel-learn/vendor/Glad/include"
 IncludeDir["imgui"] = "Hazel-learn/vendor/imgui"
 IncludeDir["glm"] = "Hazel-learn/vendor/glm"
+IncludeDir["stb_image"] = "Hazel-learn/vendor/stb_image"
 
 -- include another premake5.lua into this like C language
 group "Dependencies"
@@ -38,6 +39,8 @@ project "Hazel-learn"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 	}
 
 	includedirs
@@ -48,6 +51,7 @@ project "Hazel-learn"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}",
 	}
 
 	-- link static lib

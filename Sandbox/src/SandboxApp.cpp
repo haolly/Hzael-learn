@@ -92,11 +92,11 @@ public:
 		// Square
 		m_SquareVA.reset(Hazel::VertexArray::Create());
 
-		float squareVertices[3*4] = {
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f,
-			-0.5f, 0.5f, 0.0f,
+		float squareVertices[5*4] = {
+			-0.5f, -0.5f, 0.0f,  0.0f, 0.0f,
+			0.5f, -0.5f, 0.0f,	 1.0f, 0.0f,
+			0.5f, 0.5f, 0.0f,	 1.0f, 1.0f,
+			-0.5f, 0.5f, 0.0f,	 0.0f, 1.0f,
 		};
 		
 		Hazel::Ref<Hazel::VertexBuffer> m_SquareVB;
@@ -105,6 +105,7 @@ public:
 
 		Hazel::BufferLayout squareLayout = {
 			{Hazel::ShaderDataType::Float3, "a_Position"},
+			{Hazel::ShaderDataType::Float2, "a_TexCoord"},
 		};
 		m_SquareVB->SetLayout(squareLayout);
 		m_SquareVA->AddVertexBuffer(m_SquareVB);
@@ -141,6 +142,41 @@ public:
 		)";
 
 		m_FlatColorShader.reset(Hazel::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+
+		std::string textureColorShaderVertexSrc = R"(
+			#version 330 core
+			layout(location=0) in vec3 a_Position;
+			layout(location=1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+		std::string textureColorShaderFragmentSrc = R"(
+			#version 330 core
+			layout(location=0) out vec4 color;
+			in vec2 v_TexCoord;
+			uniform sampler2D u_Texture;
+			void main()
+			{
+				color = texture(u_Texture, v_TexCoord);
+			}
+
+		)";
+
+		m_TextureShader.reset(Hazel::Shader::Create(textureColorShaderVertexSrc, textureColorShaderFragmentSrc));
+
+		m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
+
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
+		// TODO 这里的slot 在material中映射
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(float deltaTime) override
@@ -183,6 +219,9 @@ public:
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->Bind();
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
+		
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
+
 		for(int y=0; y <20; ++y)
 		{
 			for(int x= 0; x < 20; ++x)
@@ -194,7 +233,10 @@ public:
 				Hazel::Renderer::Submit(m_SquareVA, m_FlatColorShader, transform);
 			}
 		}
-		Hazel::Renderer::Submit(m_VertexArray, m_Shader);
+
+		m_Texture->Bind(0);
+		Hazel::Renderer::Submit(m_SquareVA, m_TextureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		//Hazel::Renderer::Submit(m_VertexArray, m_Shader);
 		
 		Hazel::Renderer::EndScene();
 	}
@@ -224,6 +266,9 @@ private:
 
 	Hazel::Ref<Hazel::Shader> m_FlatColorShader;
 	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
+	
+	Hazel::Ref<Hazel::Shader> m_TextureShader;
+	Hazel::Ref<Hazel::Texture2D> m_Texture;
 
 	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.78f};
 };

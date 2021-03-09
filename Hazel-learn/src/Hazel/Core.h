@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef HZ_PLATFORM_WINDOWS
  #if HZ_DYNAMIC_LINK
 	#ifdef HZ_BUILD_DLL
@@ -25,3 +27,17 @@
 #define Bit(x) (1 << x)
 
 #define HZ_BIND_EVENT_FN(fn)  std::bind(&fn, this, std::placeholders::_1) 
+
+namespace Hazel {
+	/// <summary>
+	/// 为啥需要这些呢？1. 不同模块需要强引用，不能出现A模块释放了之后导致B模块获取不到资源。 2. asset 类型的资源不适合拷贝
+	/// 这里相当于一个引擎的资源管理
+	/// ref https://www.youtube.com/watch?v=HkGZ378nArE&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=41&t=131s
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}

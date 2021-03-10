@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "GLFW/glfw3.h"
+#include "Renderer/Renderer.h"
 
 namespace Hazel
 {
@@ -16,7 +17,9 @@ namespace Hazel
 		s_Instance = this;
 		m_window = std::unique_ptr<Window>(Window::Create());
 		m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
-		// 这里不能是 unique_ptr，ownership 的问题，需要更多的去了解背后的原因
+
+		Renderer::Init();
+		
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 	}

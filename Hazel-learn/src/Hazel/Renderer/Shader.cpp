@@ -5,7 +5,7 @@
 
 namespace Hazel
 {
-	Shader* Shader::Create(const std::string& filepath)
+	Ref<Shader> Shader::Create(const std::string& filepath)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -16,7 +16,7 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return new OpenGLShader(filepath);
+				return std::make_shared<OpenGLShader>(filepath);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");
@@ -24,7 +24,7 @@ namespace Hazel
 
 	}
 
-	Shader* Shader::Create(const std::string& vertexSrc, const std::string& framentSrc)
+	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& framentSrc)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -35,10 +35,47 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return new OpenGLShader(vertexSrc, framentSrc);
+				return std::make_shared<OpenGLShader>(name, vertexSrc, framentSrc);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");
 		return nullptr;
+	}
+
+	void ShaderLibrary::Add(const Ref<Shader>& shader)
+	{
+		auto& name = shader->GetName();
+		Add(name, shader);
+	}
+
+	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
+	{
+		HZ_CORE_ASSERT(!Exist(name), "Shader already exists!");
+		m_Shaders[name] = shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& filepath)
+	{
+		auto shader = Shader::Create(filepath);
+		Add(shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+	{
+		auto shader = Shader::Create(filepath);
+		Add(name, shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Get(const std::string& name)
+	{
+		HZ_CORE_ASSERT(Exist(name), "Shader doesn't exists!");
+		return m_Shaders[name];
+	}
+
+	bool ShaderLibrary::Exist(const std::string& name) const
+	{
+		return m_Shaders.find(name) != m_Shaders.end();
 	}
 }

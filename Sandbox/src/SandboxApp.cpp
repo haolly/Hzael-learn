@@ -87,7 +87,7 @@ public:
 			}
 
 		)";
-		m_Shader.reset(Hazel::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Hazel::Shader::Create("VertexColorTriangle", vertexSrc, fragmentSrc);
 
 		// Square
 		m_SquareVA.reset(Hazel::VertexArray::Create());
@@ -141,17 +141,17 @@ public:
 
 		)";
 
-		m_FlatColorShader.reset(Hazel::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+		m_FlatColorShader = Hazel::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
-		m_TextureShader.reset(Hazel::Shader::Create("assets/shaders/Texture.glsl"));
+		auto textureShader = shaderLibrary.Load("assets/shaders/Texture.glsl");
 
 		m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
 
 		// TODO 这里的slot 在material中映射
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(float deltaTime) override
@@ -194,8 +194,8 @@ public:
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->Bind();
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
-		
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
+		auto textureShader = shaderLibrary.Get("Texture");	
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
 
 		for(int y=0; y <20; ++y)
 		{
@@ -210,9 +210,9 @@ public:
 		}
 
 		m_Texture->Bind(0);
-		Hazel::Renderer::Submit(m_SquareVA, m_TextureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Hazel::Renderer::Submit(m_SquareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		m_LogoTexture->Bind();
-		Hazel::Renderer::Submit(m_SquareVA, m_TextureShader, 
+		Hazel::Renderer::Submit(m_SquareVA, textureShader, 
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, -0.25f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//Hazel::Renderer::Submit(m_VertexArray, m_Shader);
@@ -233,6 +233,7 @@ public:
 	}
 
 private:
+	Hazel::ShaderLibrary shaderLibrary;
 	Hazel::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
 	glm::vec3 m_SquarePosition;
@@ -246,7 +247,6 @@ private:
 	Hazel::Ref<Hazel::Shader> m_FlatColorShader;
 	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
 	
-	Hazel::Ref<Hazel::Shader> m_TextureShader;
 	Hazel::Ref<Hazel::Texture2D> m_Texture, m_LogoTexture;
 
 	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.78f};

@@ -23,4 +23,4 @@
 
 ## Resource Manager
 
-1. Assets 必须由Engine创建来管理，不能在sandbox中管理
+1. Shader 是由 shaderLibrary 来管理的，目前还没有lifeTime 的概念

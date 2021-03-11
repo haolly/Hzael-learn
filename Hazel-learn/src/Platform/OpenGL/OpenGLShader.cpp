@@ -99,7 +99,7 @@ namespace Hazel {
 	std::string OpenGLShader::ReadFile(const std::string& filepath) const
 	{
 		std::string result;
-		std::ifstream in(filepath, std::ios::in, std::ios::binary);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in)
 		{
 			in.seekg(0, std::ios::end);
@@ -145,8 +145,10 @@ namespace Hazel {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		HZ_CORE_ASSERT(shaderSources.size() <= 2, "Only support 2 shader types!");
 		GLuint program = glCreateProgram();
-		std::unordered_map<GLenum, GLuint> glShaderIDs(shaderSources.size());
+		std::array<GLenum, 2> glShaderIDs{};
+		int glShaderIndex = 0;
 		for (auto kv : shaderSources)
 		{
 			GLenum type = kv.first;
@@ -176,8 +178,11 @@ namespace Hazel {
 				// We don't need the shader anymore.
 				if(type == GL_FRAGMENT_SHADER)
 				{
+					for (auto shaderID : glShaderIDs)
+					{
+						glDeleteShader(shaderID);
+					}
 					glDeleteShader(shader);
-					glDeleteShader(glShaderIDs[GL_VERTEX_SHADER]);
 				}
 				else
 				{
@@ -189,7 +194,7 @@ namespace Hazel {
 				HZ_CORE_ASSERT(false, "Shader compilation failure!");
 				break;
 			}
-			glShaderIDs[type] = shader;
+			glShaderIDs[glShaderIndex++] = shader;
 			glAttachShader(program, shader);
 		}
 
@@ -211,9 +216,9 @@ namespace Hazel {
 			// We don't need the program anymore.
 			glDeleteProgram(program);
 
-			for (auto kv : glShaderIDs)
+			for (auto shaderID : glShaderIDs)
 			{
-				glDeleteShader(kv.second);
+				glDeleteShader(shaderID);
 			}
 
 			HZ_CORE_ERROR("{0}", infoLog.data());
@@ -221,9 +226,9 @@ namespace Hazel {
 			return;
 		}
 
-		for (auto kv : glShaderIDs)
+		for (auto shaderID : glShaderIDs)
 		{
-			glDetachShader(program, kv.second);
+			glDetachShader(program, shaderID);
 		}
 		m_RenderID = program;
 	}

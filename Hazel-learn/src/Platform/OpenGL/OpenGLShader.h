@@ -1,8 +1,7 @@
 #pragma once
 #include "Hazel/Renderer/Shader.h"
 #include <glm/glm.hpp>
-
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 namespace Hazel {
 	class OpenGLShader : public Shader

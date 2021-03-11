@@ -8,6 +8,7 @@
 ## MainLoop
 
 1. `Application`  作为容器，包含 Window & Layer， MainLoop 在Application中
+2.  使用GLFW
 
 ## Renderer
 
@@ -19,3 +20,7 @@
 ## Input
 
 1. use GLFW now
+
+## Resource Manager
+
+1. Assets 必须由Engine创建来管理，不能在sandbox中管理

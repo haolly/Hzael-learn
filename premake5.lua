@@ -3,6 +3,10 @@ workspace "Hazel-learn"
 	architecture "x64"
 	configurations { "Debug", "Release", "Dist" }
 	startproject "Sandbox"
+	flags
+	{
+		"MultiProcessorCompile"
+	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -111,6 +115,7 @@ project "Sandbox"
 		"Hazel-learn/src",
 		"Hazel-learn/vendor",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.Glad}",
 	}
 
 	links {"Hazel-learn"}

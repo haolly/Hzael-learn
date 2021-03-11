@@ -61,7 +61,7 @@ public:
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		std::string vertexSrc = R"(
-			#version 330 core
+			#version 410 core 
 			layout(location=0) in vec3 a_Position;
 			layout(location=1) in vec4 a_Color;
 			uniform mat4 u_ViewProjection;
@@ -76,7 +76,7 @@ public:
 			}
 		)";
 		std::string fragmentSrc = R"(
-			#version 330 core
+			#version 410 core
 			layout(location=0) out vec4 color;
 			in vec3 v_Position;
 			in vec4 v_Color;
@@ -143,13 +143,7 @@ public:
 
 		m_FlatColorShader.reset(Hazel::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 
-		std::string textureColorShaderVertexSrc = R"(
-		
-		)";
-		std::string textureColorShaderFragmentSrc = R"(
-		)";
-
-		m_TextureShader.reset(Hazel::Shader::Create(textureColorShaderVertexSrc, textureColorShaderFragmentSrc));
+		m_TextureShader.reset(Hazel::Shader::Create("assets/shaders/Texture.glsl"));
 
 		m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");

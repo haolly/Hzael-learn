@@ -11,6 +11,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+
 #include "Platform/OpenGL/OpenGLShader.h"
 
 glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
@@ -27,7 +28,7 @@ class ExampleLayer : public Hazel::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_SquarePosition(0.0f)
+		:Layer("Example"), m_CameraController(1920.0f / 1080.0f, true), m_SquarePosition(0.0f)
 	{
 		auto cam = camera(5.0f, {1.0f, 2.0f});
 
@@ -156,45 +157,19 @@ public:
 
 	void OnUpdate(float deltaTime) override
 	{
-		HZ_INFO("deltaTime: {0}", deltaTime);
-		if(Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed * deltaTime;
-		else if(Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed * deltaTime;
+		// Update
+		m_CameraController.OnUpdate(deltaTime);
 
-		if(Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed * deltaTime;
-		else if(Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed * deltaTime;
-
-		
-		if(Hazel::Input::IsKeyPressed(HZ_KEY_J))
-			m_SquarePosition.x -= m_CameraMoveSpeed * deltaTime;
-		else if(Hazel::Input::IsKeyPressed(HZ_KEY_L))
-			m_SquarePosition.x += m_CameraMoveSpeed * deltaTime;
-
-		if(Hazel::Input::IsKeyPressed(HZ_KEY_I))
-			m_SquarePosition.y += m_CameraMoveSpeed * deltaTime;
-		else if(Hazel::Input::IsKeyPressed(HZ_KEY_K))
-			m_SquarePosition.y -= m_CameraMoveSpeed * deltaTime;
-
-		if(Hazel::Input::IsKeyPressed(HZ_KEY_A))
-			m_CameraRotation += m_CameraRotateSpeed * deltaTime;
-		else if(Hazel::Input::IsKeyPressed(HZ_KEY_D))
-			m_CameraRotation -= m_CameraRotateSpeed * deltaTime;
-		
+		// Render
 		Hazel::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
 		Hazel::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-
-		Hazel::Renderer::BeginScene(m_Camera);
+		Hazel::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->Bind();
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
-		auto textureShader = shaderLibrary.Get("Texture");	
+		const auto textureShader = shaderLibrary.Get("Texture");	
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
 
 		for(int y=0; y <20; ++y)
@@ -229,17 +204,13 @@ public:
 	
 	void OnEvent(Hazel::Event& e) override
 	{
-		Hazel::EventDispatcher dispatcher(e);
+		m_CameraController.OnEvent(e);
 	}
 
 private:
 	Hazel::ShaderLibrary shaderLibrary;
-	Hazel::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
+	Hazel::OrthographicCameraController m_CameraController;
 	glm::vec3 m_SquarePosition;
-	float m_CameraRotation = 0.0f;
-	float m_CameraMoveSpeed = 5.0f;
-	float m_CameraRotateSpeed = 60.0f;
 
 	Hazel::Ref<Hazel::Shader> m_Shader;
 	Hazel::Ref<Hazel::VertexArray> m_VertexArray;

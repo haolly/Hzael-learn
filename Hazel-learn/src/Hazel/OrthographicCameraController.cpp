@@ -58,6 +58,8 @@ namespace Hazel
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
+		//TODO, 这里有问题，没有保持显示内容大小不变。 ref http://edeleastar.github.io/opengl-programming/topic02/pdf/1.First_Projection.pdf
+		// https://paroj.github.io/gltut/Positioning/Tut04%20Aspect%20of%20the%20World.html#idp3329
 		m_AspectRatio = static_cast<float>(e.GetWidth())/e.GetHeight();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;

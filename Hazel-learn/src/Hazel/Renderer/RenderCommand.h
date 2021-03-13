@@ -4,6 +4,7 @@
 
 namespace Hazel {
 
+	//Note, 为啥需要额外包裹一层？ 因为后面可能会有多线程相关的东西，所有的东西都push 到这里
 	class RenderCommand 
 	{
 	public:
@@ -11,6 +12,12 @@ namespace Hazel {
 		{
 			s_RendererAPI->Init();
 		}
+
+		inline static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		{
+			s_RendererAPI->SetViewport(x, y, width, height);
+		}
+
 		inline static void SetClearColor(const glm::vec4& color) 
 		{
 			s_RendererAPI->SetClearColor(color);

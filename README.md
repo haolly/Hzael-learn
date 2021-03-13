@@ -8,7 +8,12 @@
 ## MainLoop
 
 1. `Application`  作为容器，包含 Window & Layer， MainLoop 在Application中
-2.  使用GLFW
+2.  使用GLFW 创建 window
+
+## Event System
+
+1. GLFW 的event 回调 分发到 `Application` 层
+2. `Application` 分发到 `Layer` 
 
 ## Renderer
 

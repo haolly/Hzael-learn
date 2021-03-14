@@ -1,8 +1,6 @@
 #include <Hazel.h>
+#include <Hazel/Core/EntryPoint.h>
 
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/ext/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
 #include <glm/ext/matrix_clip_space.hpp> // glm::perspective
 #include <glm/ext/scalar_constants.hpp> // glm::pi
@@ -12,6 +10,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
+
+#include "Sandbox2D.h"
+// temporary
 #include "Platform/OpenGL/OpenGLShader.h"
 
 glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
@@ -32,7 +33,7 @@ public:
 	{
 		auto cam = camera(5.0f, {1.0f, 2.0f});
 
-		m_VertexArray.reset(Hazel::VertexArray::Create());
+		m_VertexArray = Hazel::VertexArray::Create();
 		// 默认是在clip space 中，[-1, 1] 的范围
 		float vertices[3*7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -91,7 +92,7 @@ public:
 		m_Shader = Hazel::Shader::Create("VertexColorTriangle", vertexSrc, fragmentSrc);
 
 		// Square
-		m_SquareVA.reset(Hazel::VertexArray::Create());
+		m_SquareVA = Hazel::VertexArray::Create();
 
 		float squareVertices[5*4] = {
 			-0.5f, -0.5f, 0.0f,  0.0f, 0.0f,
@@ -228,7 +229,8 @@ class Sandbox : public Hazel::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()

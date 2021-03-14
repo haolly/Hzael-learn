@@ -26,5 +26,5 @@
 #include "Hazel/Renderer/OrthographicCamera.h"
 // Renderer end
 
-// Entry point
-#include "Hazel/Core/EntryPoint.h"
+// Entry point, do not include in CLIENT
+//#include "Hazel/Core/EntryPoint.h"

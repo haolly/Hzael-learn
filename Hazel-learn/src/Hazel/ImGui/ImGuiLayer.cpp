@@ -1,9 +1,7 @@
 #include "hazelPCH.h"
 #include "ImGuiLayer.h"
 #include "imgui.h"
-#include "Hazel/Application.h"
-#include "Hazel/Events/KeyEvent.h"
-#include "Hazel/Events/MouseEvent.h"
+#include "Hazel/Core/Application.h"
 
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"

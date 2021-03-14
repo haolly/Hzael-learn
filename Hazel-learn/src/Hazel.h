@@ -2,15 +2,16 @@
 
 // For use in client, shouldn't be include in ANY hazel source file
 
-#include "Hazel/Application.h"
-#include "Hazel/Log.h"
-#include "Hazel/Layer.h"
+#include "Hazel/Core/Application.h"
+#include "Hazel/Core/Log.h"
+#include "Hazel/Core/Layer.h"
 #include "Hazel/ImGui/ImGuiLayer.h"
 
-#include "Hazel/Input.h"
-#include "Hazel/KeyCodes.h"
-#include "Hazel/MouseButtonCodes.h"
-#include "Hazel/OrthographicCameraController.h"
+#include "Hazel/Core/Input.h"
+#include "Hazel/Core/KeyCodes.h"
+#include "Hazel/Core/MouseButtonCodes.h"
+
+#include "Hazel/Renderer/OrthographicCameraController.h"
 
 
 // Renderer
@@ -26,4 +27,4 @@
 // Renderer end
 
 // Entry point
-#include "Hazel/EntryPoint.h"
+#include "Hazel/Core/EntryPoint.h"

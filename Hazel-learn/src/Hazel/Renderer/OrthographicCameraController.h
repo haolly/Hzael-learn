@@ -1,7 +1,7 @@
 #pragma once
-#include "Events/ApplicationEvent.h"
-#include "Events/MouseEvent.h"
-#include "Renderer/OrthographicCamera.h"
+#include "Hazel/Events/ApplicationEvent.h"
+#include "Hazel/Events/MouseEvent.h"
+#include "Hazel/Renderer/OrthographicCamera.h"
 
 namespace Hazel
 {

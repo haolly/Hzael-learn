@@ -145,7 +145,7 @@ public:
 
 		m_FlatColorShader = Hazel::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
-		auto textureShader = shaderLibrary.Load("assets/shaders/Texture.glsl");
+		const auto textureShader = shaderLibrary.Load("assets/shaders/Texture.glsl");
 
 		m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");

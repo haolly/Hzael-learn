@@ -1,4 +1,5 @@
-// Basic Texture shader
+// Basic UI shader
+// ÀàËÆ Unity µÄÄ¬ÈÏUI shader , ref https://github.com/TwoTailsGames/Unity-Built-in-Shaders/blob/master/DefaultResourcesExtra/UI/UI-Default.shader
 #type vertex
 #version 410 core
 layout(location=0) in vec3 a_Position;
@@ -19,9 +20,12 @@ void main()
 #version 410 core
 layout(location=0) out vec4 color;
 in vec2 v_TexCoord;
+
 uniform sampler2D u_Texture;
+uniform vec4 u_Color;
+
 void main()
 {
-	color = texture(u_Texture, v_TexCoord);
+	color = texture(u_Texture, v_TexCoord * 10) * u_Color;
 }
 

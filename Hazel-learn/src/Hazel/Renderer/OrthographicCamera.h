@@ -5,8 +5,8 @@ namespace Hazel {
 	class OrthographicCamera
 	{
 	public:
-		// -1,1,-1,1 就是clip space 的大小
 		// aspect ratio 会影响渲染的正方形是不是正方形；只有跟window的aspect ratio 一样才会是正方形
+		// left, right, bottom, top 决定能看到的世界坐标的范围，如果摄像机的位置是原点，那么正交摄像机能看到的最左边的地方就是left，最右边的地方就是right
 		OrthographicCamera(float left, float right, float bottom, float top);
 		void SetProjection(float left, float right, float bottom, float top);
 		

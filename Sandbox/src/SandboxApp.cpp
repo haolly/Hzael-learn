@@ -34,7 +34,6 @@ public:
 		auto cam = camera(5.0f, {1.0f, 2.0f});
 
 		m_VertexArray = Hazel::VertexArray::Create();
-		// 默认是在clip space 中，[-1, 1] 的范围
 		float vertices[3*7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
@@ -43,7 +42,7 @@ public:
 
 
 		Hazel::Ref<Hazel::VertexBuffer> m_VertexBuffer;
-		m_VertexBuffer.reset(Hazel::VertexBuffer::Create(vertices, sizeof(vertices)) );
+		m_VertexBuffer = Hazel::VertexBuffer::Create(vertices, sizeof(vertices));
 		m_VertexBuffer->Bind();
 
 		Hazel::BufferLayout layout = {
@@ -58,7 +57,7 @@ public:
 		uint32_t indices[3] = {0, 1, 2};
 
 		Hazel::Ref<Hazel::IndexBuffer> m_IndexBuffer;
-		m_IndexBuffer.reset(Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(indices[1])));
+		m_IndexBuffer = (Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(indices[1])));
 		m_IndexBuffer->Bind();
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
@@ -102,7 +101,7 @@ public:
 		};
 		
 		Hazel::Ref<Hazel::VertexBuffer> m_SquareVB;
-		m_SquareVB.reset(Hazel::VertexBuffer::Create(squareVertices, sizeof(squareVertices)) );
+		m_SquareVB = (Hazel::VertexBuffer::Create(squareVertices, sizeof(squareVertices)) );
 		m_SquareVB->Bind();
 
 		Hazel::BufferLayout squareLayout = {
@@ -115,7 +114,7 @@ public:
 		uint32_t squareIndices[3 * 2] = {0, 1, 2, 2, 3, 0};
 
 		Hazel::Ref<Hazel::IndexBuffer> m_SquareIB;
-		m_SquareIB.reset(Hazel::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(squareIndices[1])));
+		m_SquareIB = (Hazel::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(squareIndices[1])));
 		m_SquareIB->Bind();
 		m_SquareVA->SetIndexBuffer(m_SquareIB);
 

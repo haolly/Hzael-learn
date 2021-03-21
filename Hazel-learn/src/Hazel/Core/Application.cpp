@@ -13,6 +13,7 @@ namespace Hazel
 
 	Application::Application()
 	{
+		HZ_PROFILE_FUNC();
 		HZ_CORE_ASSERT(!s_Instance, "Application already exist!")
 		s_Instance = this;
 		m_window = std::unique_ptr<Window>(Window::Create());
@@ -30,6 +31,7 @@ namespace Hazel
 
 	void Application::Run()
 	{
+		HZ_PROFILE_FUNC();
 		while (m_Runing)
 		{
 			float time = (float)glfwGetTime();		// Platform::GetTime()
@@ -38,6 +40,7 @@ namespace Hazel
 
 			if(!m_Minimized)
 			{
+				HZ_PROFILE_SCOPE("Update all layer")
 				for(Layer* layer: m_LayerStack)
 					layer->OnUpdate(deltaTime);
 			}

@@ -33,10 +33,15 @@ namespace Hazel
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: m_Path(path)
 	{
+		HZ_PROFILE_FUNC();
 		int width, height, channel;
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channel, 0);
-		HZ_CORE_ASSERT(data, "Failed to load image");
+		stbi_uc* data = nullptr;
+		{
+			HZ_PROFILE_SCOPE("OpenGLTexture2D::OpenGLTexture2D stbi_load");
+			data = stbi_load(path.c_str(), &width, &height, &channel, 0);
+			HZ_CORE_ASSERT(data, "Failed to load image");
+		}
 		m_Width = width;
 		m_Height = height;
 

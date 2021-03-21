@@ -2,7 +2,6 @@
 
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-#include <chrono>
 
 
 Sandbox2D::Sandbox2D()
@@ -36,8 +35,9 @@ void Sandbox2D::OnUpdate(float deltaTime)
 		HZ_PROFILE_SCOPE("DrawQuad");
 		Hazel::Renderer2D::DrawQuad({-0.5f, 0.0f}, {0.5f, 1.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
 		Hazel::Renderer2D::DrawQuad({0.5f, -0.3f}, {0.5f, 0.5f}, {0.2f, 0.2f, 0.8f, 1.0f});
-		Hazel::Renderer2D::DrawQuad({0.8f, -0.3f, -0.1}, {5.0f, 5.0f}, m_Texture);
-		Hazel::Renderer2D::DrawQuad({0.8f, -0.3f}, {0.5f, 0.5f}, m_LogoTexture);
+		Hazel::Renderer2D::DrawQuad({0.8f, -0.3f, -0.1}, {5.0f, 5.0f}, m_Texture, 10.0f);
+		Hazel::Renderer2D::DrawRotatedQuad({0.8f, -0.3f}, glm::radians(45.0f), {0.5f, 0.5f}, 
+						m_LogoTexture, 1.0f, glm::vec4(0.8f, 0.2f, 0.1f, 1.0f));
 		Hazel::Renderer2D::EndScene();
 	}
 

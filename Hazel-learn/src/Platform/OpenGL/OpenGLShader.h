@@ -16,6 +16,7 @@ namespace Hazel {
 		const std::string& GetName() const override { return m_Name; }
 
 		void UploadUniformInt(const std::string& name, int value) const;
+		void UploadUniformIntArray(const std::string& name, int* value, uint32_t count) const;
 
 		void UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const;
 		void UploadUniformMat3(const std::string& name, const glm::mat3& matrix) const;
@@ -39,6 +40,7 @@ namespace Hazel {
 
 	public:
 		void SetInt(const std::string& name, int value) override;
+		void SetIntArray(const std::string& name, int* value, uint32_t count) override;
 	private:
 		uint32_t m_RenderID;
 		std::string m_Name;

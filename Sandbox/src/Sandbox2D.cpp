@@ -32,14 +32,17 @@ void Sandbox2D::OnUpdate(float deltaTime)
 	Hazel::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 	{
+		static float rotation = 0.0f;
+		rotation += deltaTime * 50.0f;
+
 		HZ_PROFILE_SCOPE("DrawQuad");
-		//Full Screen Quad
+		//Full Screen Quad, 这里的缩放大小跟摄像机的left/right,top/bottom 有关, 根据 Texture.glsl 的vertex shader 可知，这里的位置都是世界坐标
 		Hazel::Renderer2D::DrawQuad({0.0f, 0.0f}, {1920/1080.0f * 2.0f, 2.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
+		//Hazel::Renderer2D::DrawRotatedQuad({0.0f, 0.0f}, 45.0f, {1920/1080.0f * 2.0f, 2.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
 		//Hazel::Renderer2D::DrawQuad({0.5f, -0.3f}, {0.5f, 0.5f}, {0.2f, 0.2f, 0.8f, 1.0f});
-		Hazel::Renderer2D::DrawQuad({-5.0f, -5.0f, -0.1}, {10.0f, 10.0f}, m_Texture, 10.0f);
-		Hazel::Renderer2D::DrawQuad({-.0f, -.0f, 0.1}, {1.0f, 1.0f}, m_Texture, 20.0f);
-		// Hazel::Renderer2D::DrawRotatedQuad({0.8f, -0.3f}, glm::radians(45.0f), {0.5f, 0.5f}, 
-		// 				m_LogoTexture, 1.0f, glm::vec4(0.8f, 0.2f, 0.1f, 1.0f));
+		//Hazel::Renderer2D::DrawQuad({-5.0f, -5.0f, -0.1}, {10.0f, 10.0f}, m_Texture, 10.0f);
+		//Hazel::Renderer2D::DrawQuad({-.0f, -.0f, 0.1}, {1.0f, 1.0f}, m_Texture, 20.0f);
+		Hazel::Renderer2D::DrawRotatedQuad({0.0f, 0.0f, 0.1f}, rotation, {0.5f, 0.5f}, m_LogoTexture, 1.0f, glm::vec4(0.8f, 0.2f, 0.1f, 1.0f));
 		Hazel::Renderer2D::EndScene();
 	}
 

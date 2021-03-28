@@ -14,8 +14,10 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
 	HZ_PROFILE_FUNC();
-	m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
+	m_CheckboardTexture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 	m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
+	m_SpriteSheet = Hazel::Texture2D::Create("assets/game/textures/spritesheet.png");
+	m_WoodTextureInSheet = Hazel::SubTexture2D::CreateFromCoords(m_SpriteSheet, {463, 1}, {64, 64});
 
 	m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
@@ -54,9 +56,12 @@ void Sandbox2D::OnUpdate(float deltaTime)
 		Hazel::Renderer2D::DrawQuad({0.0f, 0.0f}, {1.0f, 1.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
 		//Hazel::Renderer2D::DrawRotatedQuad({0.0f, 0.0f}, glm::radians(45.0f), {1920/1080.0f * 2.0f, 2.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
 		//Hazel::Renderer2D::DrawQuad({0.5f, -0.3f}, {0.5f, 0.5f}, {0.2f, 0.2f, 0.8f, 1.0f});
-		//Hazel::Renderer2D::DrawQuad({-5.0f, -5.0f, -0.1}, {10.0f, 10.0f}, m_Texture, 10.0f);
-		//Hazel::Renderer2D::DrawQuad({-.0f, -.0f, 0.1}, {1.0f, 1.0f}, m_Texture, 20.0f);
+		//Hazel::Renderer2D::DrawQuad({-5.0f, -5.0f, -0.1}, {10.0f, 10.0f}, m_CheckboardTexture, 10.0f);
+		//Hazel::Renderer2D::DrawQuad({-.0f, -.0f, 0.1}, {1.0f, 1.0f}, m_CheckboardTexture, 20.0f);
 		Hazel::Renderer2D::DrawRotatedQuad({0.0f, 0.0f, 0.1f}, glm::radians(rotation), {0.5f, 0.5f}, m_LogoTexture, 1.0f, glm::vec4(0.8f, 0.2f, 0.1f, 1.0f));
+
+		Hazel::Renderer2D::DrawQuad({-0.0f, -0.0f, 0.5}, {1.0f, 1.0f}, m_WoodTextureInSheet, 1.0f);
+
 		Hazel::Renderer2D::EndScene();
 
 		Hazel::Renderer2D::BeginScene(m_CameraController.GetCamera());

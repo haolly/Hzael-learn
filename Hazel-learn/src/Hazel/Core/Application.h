@@ -29,6 +29,8 @@ namespace Hazel
 			return *m_window;
 		}
 
+		void Close();
+
 		static Application& Get()
 		{
 			return *s_Instance;

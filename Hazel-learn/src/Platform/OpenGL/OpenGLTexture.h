@@ -18,6 +18,11 @@ namespace Hazel
 		{
 			return m_RendererID == dynamic_cast<const OpenGLTexture2D&>(other).m_RendererID;
 		}
+
+		uint32_t GetRendererID() const override
+		{
+			return m_RendererID;
+		}
 	private:
 		std::string m_Path;
 		uint32_t m_Width, m_Height;

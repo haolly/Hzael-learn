@@ -1,12 +1,13 @@
 #include "hazelPCH.h"
-#include "Hazel/Renderer/VertexArray.h"
-#include "Renderer.h"
+#include "Framebuffer.h"
+#include "Hazel/Renderer/Renderer.h"
 
-#include "Platform/OpenGL/OpenGLVertexArray.h"
+#include "Platform/OpenGL/OpenGLFramebuffer.h"
 
-namespace Hazel {
 
-	Ref<VertexArray> VertexArray::Create()
+namespace Hazel
+{
+	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -17,11 +18,11 @@ namespace Hazel {
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLVertexArray>();
+				return CreateRef<OpenGLFramebuffer>(spec);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");
 		return nullptr;
 	}
-
 }
+

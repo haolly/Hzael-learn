@@ -26,6 +26,11 @@ void Sandbox2D::OnAttach()
 	m_Particle.Velocity = { 0.0f, 0.0f };
 	m_Particle.VelocityVariation = { 3.0f, 1.0f };
 	m_Particle.Position = { 0.0f, 0.0f };
+
+	Hazel::FramebufferSpecification fbSpec;
+	fbSpec.Width = 1280;
+	fbSpec.Height = 720;
+	m_Framebuffer = Hazel::Framebuffer::Create(fbSpec);
 }
 
 void Sandbox2D::OnDetach()
@@ -39,6 +44,8 @@ void Sandbox2D::OnUpdate(float deltaTime)
 	m_CameraController.OnUpdate(deltaTime);
 
 	Hazel::Renderer2D::ResetStats();
+
+	m_Framebuffer->Bind();
 
 	// Render
 	Hazel::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
@@ -93,6 +100,9 @@ void Sandbox2D::OnUpdate(float deltaTime)
 
 	m_ParticleSystem.OnUpdate(deltaTime);
 	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
+
+	m_Framebuffer->UnBind();
+
 	HZ_INFO("fps:{0}", 1/deltaTime);
 }
 
@@ -202,8 +212,8 @@ void Sandbox2D::OnImGuiRenderer()
 	ImGui::ColorEdit4("Death Color", glm::value_ptr(m_Particle.ColorEnd));
 	ImGui::DragFloat("Life Time", &m_Particle.LifeTime, 0.1f, 0.0f, 1000.0f);
 
-	uint32_t textureID = m_CheckboardTexture->GetRendererID();
-	ImGui::Image((void*)textureID, ImVec2{64.0f, 64.0f});
+	uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+	ImGui::Image((void*)textureID, ImVec2{1280.0f, 720.0f});
 
 	ImGui::End();
 }

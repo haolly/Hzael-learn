@@ -24,7 +24,6 @@ private:
 
 	Hazel::Ref<Hazel::Texture2D> m_SpriteSheet;
 	Hazel::Ref<Hazel::SubTexture2D> m_WoodTextureInSheet;
-	Hazel::Ref<Hazel::Framebuffer> m_Framebuffer;
 
 	glm::vec4 m_SquareColor = {0.2f, 0.3f, 0.78f, 1.0f};
 

@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "Hazel-learn\vendor\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "Hazel-learn\vendor\imgui\imgui.vcxproj", "{0098A80F-6CAC-D0C0-352E-7420A101CDF1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazel-Editor", "Hazel-Editor\Hazel-Editor.vcxproj", "{2D075B63-196A-EA07-C2EF-22BEAE31B68A}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazel-learn", "Hazel-learn\Hazel-learn.vcxproj", "{18C12999-8476-A28E-0D6B-9C65791F9992}"
 EndProject
 Global
@@ -44,6 +46,12 @@ Global
 		{0098A80F-6CAC-D0C0-352E-7420A101CDF1}.Dist|x64.Build.0 = Dist|x64
 		{0098A80F-6CAC-D0C0-352E-7420A101CDF1}.Release|x64.ActiveCfg = Release|x64
 		{0098A80F-6CAC-D0C0-352E-7420A101CDF1}.Release|x64.Build.0 = Release|x64
+		{2D075B63-196A-EA07-C2EF-22BEAE31B68A}.Debug|x64.ActiveCfg = Debug|x64
+		{2D075B63-196A-EA07-C2EF-22BEAE31B68A}.Debug|x64.Build.0 = Debug|x64
+		{2D075B63-196A-EA07-C2EF-22BEAE31B68A}.Dist|x64.ActiveCfg = Dist|x64
+		{2D075B63-196A-EA07-C2EF-22BEAE31B68A}.Dist|x64.Build.0 = Dist|x64
+		{2D075B63-196A-EA07-C2EF-22BEAE31B68A}.Release|x64.ActiveCfg = Release|x64
+		{2D075B63-196A-EA07-C2EF-22BEAE31B68A}.Release|x64.Build.0 = Release|x64
 		{18C12999-8476-A28E-0D6B-9C65791F9992}.Debug|x64.ActiveCfg = Debug|x64
 		{18C12999-8476-A28E-0D6B-9C65791F9992}.Debug|x64.Build.0 = Debug|x64
 		{18C12999-8476-A28E-0D6B-9C65791F9992}.Dist|x64.ActiveCfg = Dist|x64

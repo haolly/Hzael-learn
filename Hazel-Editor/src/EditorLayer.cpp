@@ -39,8 +39,8 @@ namespace Hazel
 
 		Renderer2D::ResetStats();
 
-		m_Framebuffer->Bind();
 
+		m_Framebuffer->Bind();
 		// Render
 		RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
 		RenderCommand::Clear();
@@ -76,18 +76,6 @@ namespace Hazel
 				}
 			}
 			Renderer2D::EndScene();
-		}
-
-		if (Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_LEFT))
-		{
-			auto [x, y] = Input::GetMousePos();
-			auto width = Application::Get().GetWindow().Width();
-			auto height = Application::Get().GetWindow().Height();
-
-			auto bounds = m_CameraController.GetBounds();
-			auto pos = m_CameraController.GetCamera().GetPosition();
-			x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
-			y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
 		}
 
 		m_Framebuffer->UnBind();
@@ -196,12 +184,24 @@ namespace Hazel
 		ImGui::Text("Vertices %d:", stats.GetTotalVertexCount());
 		ImGui::Text("Indices %d:", stats.GetTotatIndexCount());
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-
-
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{1280.0f, 720.0f}, ImVec2{0,1}, ImVec2{1, 0});
-
 		ImGui::End();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
+		ImGui::Begin("Viewport");
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+		//Note, this panel's size change will not handle by Window:OnEvent
+		if(m_ViewportSize != *(glm::vec2*)&viewportPanelSize)
+		{
+			m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+			m_CameraController.Resize(m_ViewportSize.x, m_ViewportSize.y);
+		}
+		HZ_INFO("Viewport size: {0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image((void*)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0,1}, ImVec2{1, 0});
+		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::OnEvent(Event& e)

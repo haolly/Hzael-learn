@@ -2,7 +2,7 @@
 workspace "Hazel-learn"
 	architecture "x64"
 	configurations { "Debug", "Release", "Dist" }
-	startproject "Sandbox"
+	startproject "Hazel-Editor"
 	flags
 	{
 		"MultiProcessorCompile"

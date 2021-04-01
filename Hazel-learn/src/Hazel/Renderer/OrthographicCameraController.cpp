@@ -48,6 +48,13 @@ namespace Hazel
 		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
 	}
 
+	void OrthographicCameraController::Resize(float width, float height)
+	{
+		m_AspectRatio = width/height;
+		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
+		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+	}
+
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
 		//TODO tweak the zoom speed to respect current zoomLevel like move speed do
@@ -62,9 +69,7 @@ namespace Hazel
 	{
 		//TODO, 这里有问题，没有保持显示内容大小不变。 ref http://edeleastar.github.io/opengl-programming/topic02/pdf/1.First_Projection.pdf
 		// https://paroj.github.io/gltut/Positioning/Tut04%20Aspect%20of%20the%20World.html#idp3329
-		m_AspectRatio = static_cast<float>(e.GetWidth())/e.GetHeight();
-		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
-		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+		Resize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
 	}
 }

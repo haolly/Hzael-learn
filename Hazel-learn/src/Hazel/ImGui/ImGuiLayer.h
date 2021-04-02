@@ -7,7 +7,7 @@ namespace Hazel
 	{
 	public:
 		ImGuiLayer();
-		~ImGuiLayer();
+		virtual ~ImGuiLayer() override;
 
 		void OnAttach() override;
 		void OnDetach() override;
@@ -15,5 +15,11 @@ namespace Hazel
 
 		void Begin();
 		void End();
+		void OnEvent(Event& e) override;
+
+		void BlockEvents(bool block) {m_BlockEvents = block;}
+
+	private:
+		bool m_BlockEvents = true;
 	};
 }

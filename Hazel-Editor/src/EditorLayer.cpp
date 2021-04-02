@@ -35,7 +35,10 @@ namespace Hazel
 	{
 		HZ_PROFILE_FUNC();
 		// Update
-		m_CameraController.OnUpdate(deltaTime);
+		if (m_ViewportFocused)
+		{
+			m_CameraController.OnUpdate(deltaTime);
+		}
 
 		Renderer2D::ResetStats();
 
@@ -188,6 +191,9 @@ namespace Hazel
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
 		ImGui::Begin("Viewport");
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvents(!(m_ViewportFocused || m_ViewportHovered));
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		//Note, this panel's size change will not handle by Window:OnEvent
 		if(m_ViewportSize != *(glm::vec2*)&viewportPanelSize)

@@ -25,6 +25,7 @@ namespace Hazel
 		Ref<Texture2D> m_SpriteSheet;
 		Ref<SubTexture2D> m_WoodTextureInSheet;
 		Ref<Framebuffer> m_Framebuffer;
+		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		glm::vec4 m_SquareColor = {0.2f, 0.3f, 0.78f, 1.0f};
 

@@ -3,30 +3,18 @@
 
 namespace Hazel
 {
+	/// <summary>
+	/// Input class 在不同的平台只会有一个实例，不会存在runtime时候的切换，所以选择使用哪个inputImpl 实际应该在compile time就决定了；
+	/// 相反，renderer API 是应该在不同的平台都包含的，可以在runtime的时候进行切换；
+	/// </summary>
 	class HAZEL_API Input
 	{
 	public:
-		static bool IsKeyPressed(int keycode)
-		{
-			return s_Instance->IsKeyPressedImpl(keycode);
-		}
-		static bool IsMouseButtonPressed(int button)
-		{
-			return s_Instance->IsMouseButtonPressedImpl(button);
-		}
+		static bool IsKeyPressed(int keycode);
+		static bool IsMouseButtonPressed(int button);
 
-		static std::pair<float, float> GetMousePos() { return s_Instance->GetMousePosImpl(); }
-		static float GetMouseX() { return s_Instance->GetMouseXImpl(); }
-		static float GetMouseY() { return s_Instance->GetMouseYImpl(); }
-
-	protected:
-		virtual bool IsKeyPressedImpl(int keycode) = 0;
-		virtual bool IsMouseButtonPressedImpl(int button) = 0;
-		virtual std::pair<float, float> GetMousePosImpl() = 0;
-		virtual float GetMouseXImpl() = 0;
-		virtual float GetMouseYImpl() = 0;
-	private:
-		static Input* s_Instance;
-		
+		static std::pair<float, float> GetMousePosition();
+		static float GetMouseX(); 
+		static float GetMouseY(); 
 	};
 }

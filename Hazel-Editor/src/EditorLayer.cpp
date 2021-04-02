@@ -9,7 +9,7 @@
 namespace Hazel
 {
 	EditorLayer::EditorLayer()
-		: Layer("Sandbox2D"), m_CameraController(1920.0f / 1080.0f, true)
+		: Layer("Editor"), m_CameraController(1920.0f / 1080.0f, true)
 	{
 	}
 

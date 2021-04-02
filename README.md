@@ -15,6 +15,11 @@
 1. GLFW 的event 回调 分发到 `Application` 层
 2. `Application` 分发到 `Layer` 
 
+## 编辑器
+
+1. 用ImGUI
+2. ImGUI的panel resize 不会触发GLFW 的event
+
 ## Renderer
 
 1. Renderer & RenderCommand 作为外层API 接口

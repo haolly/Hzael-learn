@@ -21,6 +21,7 @@ namespace Hazel
 		Ref<VertexArray> m_SquareVA;
 
 		Ref<Scene> m_ActiveScene;
+		Entity m_SquareEntity;
 
 		Ref<Texture2D> m_CheckboardTexture, m_LogoTexture;
 

@@ -28,8 +28,8 @@ namespace Hazel
 
 		m_ActiveScene = CreateRef<Scene>();
 		auto square = m_ActiveScene->CreateEntity();
-		m_ActiveScene->m_Registry.emplace<TransformComponent>(square);
-		m_ActiveScene->m_Registry.emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+		m_SquareEntity = square;
+		square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 	}
 
 	void EditorLayer::OnDetach()
@@ -163,8 +163,11 @@ namespace Hazel
 		ImGui::Text("Quad Count %d:", stats.QuadCount);
 		ImGui::Text("Vertices %d:", stats.GetTotalVertexCount());
 		ImGui::Text("Indices %d:", stats.GetTotatIndexCount());
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+		auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 		ImGui::End();
+
+		//Viewport
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
 		ImGui::Begin("Viewport");
 		m_ViewportFocused = ImGui::IsWindowFocused();

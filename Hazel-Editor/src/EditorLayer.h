@@ -20,6 +20,8 @@ namespace Hazel
 		Ref<Shader> m_FlatColorShader;
 		Ref<VertexArray> m_SquareVA;
 
+		Ref<Scene> m_ActiveScene;
+
 		Ref<Texture2D> m_CheckboardTexture, m_LogoTexture;
 
 		Ref<Texture2D> m_SpriteSheet;

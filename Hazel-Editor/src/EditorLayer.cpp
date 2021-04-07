@@ -25,6 +25,11 @@ namespace Hazel
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
+
+		m_ActiveScene = CreateRef<Scene>();
+		auto square = m_ActiveScene->CreateEntity();
+		m_ActiveScene->m_Registry.emplace<TransformComponent>(square);
+		m_ActiveScene->m_Registry.emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 	}
 
 	void EditorLayer::OnDetach()
@@ -49,37 +54,9 @@ namespace Hazel
 		RenderCommand::Clear();
 
 
-		{
-			static float rotation = 0.0f;
-			rotation += deltaTime * 50.0f;
-
-			HZ_PROFILE_SCOPE("DrawQuad");
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			//Full Screen Quad, 这里的缩放大小跟摄像机的left/right,top/bottom 有关, 根据 Texture.glsl 的vertex shader 可知，这里的位置都是世界坐标
-			//Renderer2D::DrawQuad({0.0f, 0.0f}, {1920/1080.0f * 2.0f, 2.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
-			Renderer2D::DrawQuad({0.0f, 0.0f}, {1.0f, 1.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
-			//Renderer2D::DrawRotatedQuad({0.0f, 0.0f}, glm::radians(45.0f), {1920/1080.0f * 2.0f, 2.0f}, {0.8f, 0.2f, 0.3f, 1.0f});
-			//Renderer2D::DrawQuad({0.5f, -0.3f}, {0.5f, 0.5f}, {0.2f, 0.2f, 0.8f, 1.0f});
-			//Renderer2D::DrawQuad({-5.0f, -5.0f, -0.1}, {10.0f, 10.0f}, m_CheckboardTexture, 10.0f);
-			//Renderer2D::DrawQuad({-.0f, -.0f, 0.1}, {1.0f, 1.0f}, m_CheckboardTexture, 20.0f);
-			Renderer2D::DrawRotatedQuad({0.0f, 0.0f, 0.1f}, glm::radians(rotation), {0.5f, 0.5f}, m_LogoTexture,
-			                                   1.0f, glm::vec4(0.8f, 0.2f, 0.1f, 1.0f));
-
-			Renderer2D::DrawQuad({-0.0f, -0.0f, 0.5}, {1.0f, 1.0f}, m_WoodTextureInSheet, 1.0f);
-
-			Renderer2D::EndScene();
-
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			for (float y = -5.0f; y < 5.0f; y += 0.5f)
-			{
-				for (float x = -5.0f; x < 5.0f; x += 0.5f)
-				{
-					glm::vec4 color = {(x + 5) / 10, 0.3, (y + 5) / 10, 0.3f};
-					Renderer2D::DrawQuad({x, y, 0.1f}, {0.45f, 0.45f}, color);
-				}
-			}
-			Renderer2D::EndScene();
-		}
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		m_ActiveScene->OnUpdate(deltaTime);
+		Renderer2D::EndScene();
 
 		m_Framebuffer->UnBind();
 
@@ -179,7 +156,7 @@ namespace Hazel
 
 
 		ImGui::Begin("Settings");
-
+		
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Statistics:");
 		ImGui::Text("Draw Count %d:", stats.DrawCalls);
@@ -188,7 +165,6 @@ namespace Hazel
 		ImGui::Text("Indices %d:", stats.GetTotatIndexCount());
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
 		ImGui::End();
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
 		ImGui::Begin("Viewport");
 		m_ViewportFocused = ImGui::IsWindowFocused();

@@ -76,7 +76,7 @@ void Sandbox2D::OnUpdate(float deltaTime)
 
 	if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_LEFT))
 	{
-		auto [x, y] = Hazel::Input::GetMousePos();
+		auto [x, y] = Hazel::Input::GetMousePosition();
 		auto width = Hazel::Application::Get().GetWindow().Width();
 		auto height = Hazel::Application::Get().GetWindow().Height();
 

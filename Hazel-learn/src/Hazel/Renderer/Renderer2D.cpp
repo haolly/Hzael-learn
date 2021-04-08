@@ -2,6 +2,7 @@
 #include "Renderer2D.h"
 
 #include "Buffer.h"
+#include "Camera.h"
 #include "OrthographicCamera.h"
 #include "RenderCommand.h"
 #include "Shader.h"
@@ -116,6 +117,26 @@ namespace Hazel {
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+		s_Data.TextureSlotIndex = 1;
+	}
+
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
+	{
+		int32_t samplers[Renderer2DData::MaxTextureSlots];
+		for (int i = 0; i < Renderer2DData::MaxTextureSlots; ++i)
+		{
+			samplers[i] = i;
+		}
+
+		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+		s_Data.TextureShader->Bind();
+		s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+		s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
 
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;

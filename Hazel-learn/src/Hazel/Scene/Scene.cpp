@@ -25,11 +25,32 @@ namespace Hazel
 
 	void Scene::OnUpdate(float ts)
 	{
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
+		Camera* mainCamera = nullptr;
+		TransformComponent* transformComp = nullptr;
+		auto view = m_Registry.view<CameraComponent, TransformComponent>();
+		for (auto entity : view)
 		{
-			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawQuad(transform, sprite.Color);
+			auto& [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
+			if(camera.Primary)
+			{
+				mainCamera = &camera.Camera;
+				transformComp = &transform;
+				break;
+			}
 		}
+
+		if(mainCamera)
+		{
+			Renderer2D::BeginScene(*mainCamera, transformComp->Transform);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group)
+			{
+				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawQuad(transform, sprite.Color);
+			}
+			Renderer2D::EndScene();
+		}
+
+		
 	}
 }

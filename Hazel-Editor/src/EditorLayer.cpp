@@ -40,6 +40,58 @@ namespace Hazel
 		m_SecondCamera = m_ActiveScene->CreateEntity("Second Camera");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
 		cc.Primary = false;
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{
+				//GetComponent<TransformComponent>();
+				std::cout<< "CameraController: OnCreate" << std::endl;
+				m_TransformComp = &GetComponent<TransformComponent>();
+			}
+
+			void OnDestroy()
+			{
+				
+			}
+
+			void OnUpdate(float dt)
+			{
+				auto& m_Transform = m_TransformComp->Transform;
+				std::cout<< "CameraController: OnUpdate" << dt<< std::endl;
+				float speed = 5.0f;
+
+				if(Input::IsKeyPressed(HZ_KEY_A))
+					m_Transform[3][0] -= speed * dt;
+				else if(Input::IsKeyPressed(HZ_KEY_D))
+					m_Transform[3][0] += speed * dt;
+
+				if(Input::IsKeyPressed(HZ_KEY_W))
+					m_Transform[3][1] += speed * dt;
+				else if(Input::IsKeyPressed(HZ_KEY_S))
+					m_Transform[3][1] -= speed * dt;
+
+				// if (m_EnableRotation)
+				// {
+				// 	if(Input::IsKeyPressed(HZ_KEY_Q))
+				// 		m_CameraRotation += m_CameraRotateSpeed * deltaTime;
+				// 	else if(Input::IsKeyPressed(HZ_KEY_E))
+				// 		m_CameraRotation -= m_CameraRotateSpeed * deltaTime;
+				//
+				// 	m_Camera.SetRotation(m_CameraRotation);
+				// }
+				// m_Camera.SetPosition(m_CameraPosition);
+				//
+				// // When object is far, move faster, when object is near, move slow
+				// m_CameraMoveSpeed = m_ZoomLevel;
+			}
+
+		private:
+			TransformComponent* m_TransformComp;
+		};
+
+		m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()

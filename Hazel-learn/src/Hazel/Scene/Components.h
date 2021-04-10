@@ -4,10 +4,11 @@
 
 
 #include "SceneCamera.h"
-#include "Hazel/Renderer/Camera.h"
+#include "ScriptableEntity.h"
 
 namespace Hazel
 {
+
 	struct TagComponent
 	{
 		std::string Tag;
@@ -44,4 +45,26 @@ namespace Hazel
 		// CameraComponent(const glm::mat4& projection) : Camera(projection) {}
 	};
 	
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* Instance = nullptr;
+
+		std::function<void()> InstantiateFunction;
+		std::function<void()> DestroyInstanceFunction;
+
+		std::function<void(ScriptableEntity*)> OnCreateFunction;
+		std::function<void(ScriptableEntity*,float ts)> OnUpdateFunction;
+		std::function<void(ScriptableEntity*)> OnDestroyFunction;
+
+		template<typename T>
+		void Bind()
+		{
+			//TODO, deal with the situation where the script does not provide those functions
+			InstantiateFunction = [&]() {Instance = new T();};
+			DestroyInstanceFunction = [&]() {delete (T*)Instance;};
+			OnCreateFunction = [](ScriptableEntity* instance) {((T*)instance)->OnCreate();};
+			OnDestroyFunction = [](ScriptableEntity* instance) {((T*)instance)->OnDestroy();};
+			OnUpdateFunction = [](ScriptableEntity* instance, float ts) {((T*)instance)->OnUpdate(ts);};
+		}
+	};
 }

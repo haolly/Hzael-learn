@@ -25,6 +25,20 @@ namespace Hazel
 
 	void Scene::OnUpdate(float ts)
 	{
+		{
+			// Update Script
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& scriptComponent)
+			{
+				if(!scriptComponent.Instance)
+				{
+					scriptComponent.InstantiateFunction();
+					scriptComponent.Instance->m_Entity = Entity{entity, this};
+					scriptComponent.OnCreateFunction(scriptComponent.Instance);
+				}
+				scriptComponent.OnUpdateFunction(scriptComponent.Instance, ts);
+			});
+		}
+
 		Camera* mainCamera = nullptr;
 		TransformComponent* transformComp = nullptr;
 		auto view = m_Registry.view<CameraComponent, TransformComponent>();

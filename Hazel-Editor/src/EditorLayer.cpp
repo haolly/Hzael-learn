@@ -31,8 +31,15 @@ namespace Hazel
 		m_SquareEntity = square;
 		square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 
+		square = m_ActiveScene->CreateEntity();
+		square.AddComponent<SpriteRendererComponent>(glm::vec4{1.0f, 1.0f, 0.0f, 1.0f});
+
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-		m_CameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+		m_CameraEntity.AddComponent<CameraComponent>();
+
+		m_SecondCamera = m_ActiveScene->CreateEntity("Second Camera");
+		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
+		cc.Primary = false;
 	}
 
 	void EditorLayer::OnDetach()
@@ -42,6 +49,18 @@ namespace Hazel
 	void EditorLayer::OnUpdate(float deltaTime)
 	{
 		HZ_PROFILE_FUNC();
+
+		// Note, 这里渲染相关的要放在update中，不然拖动viewPort的大小改变时候，在 OnImGUIRender 函数中处理就会出现黑框
+		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && (spec.Width != m_ViewportSize.x || spec.Height !=
+				m_ViewportSize.y))
+		{
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_CameraController.Resize(m_ViewportSize.x, m_ViewportSize.y);
+
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
+
 		// Update
 		if (m_ViewportFocused)
 		{
@@ -159,15 +178,44 @@ namespace Hazel
 
 
 		ImGui::Begin("Settings");
-		
+
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Statistics:");
 		ImGui::Text("Draw Count %d:", stats.DrawCalls);
 		ImGui::Text("Quad Count %d:", stats.QuadCount);
 		ImGui::Text("Vertices %d:", stats.GetTotalVertexCount());
 		ImGui::Text("Indices %d:", stats.GetTotatIndexCount());
-		auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+
+		if (m_SquareEntity)
+		{
+			ImGui::Separator();
+			auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
+			ImGui::Text("Tag:%s", tag.c_str());
+
+			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+
+			auto& squareTrans = m_SquareEntity.GetComponent<TransformComponent>().Transform;
+			ImGui::InputFloat3("Square Trans", glm::value_ptr(squareTrans[3]));
+			ImGui::Separator();
+		}
+
+		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
+		if(ImGui::Checkbox("Second Camera:", &m_PrimaryCamera))
+		{
+			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
+			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+		}
+
+		{
+			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
+			auto orthSize = camera.GetOrthographicSize();
+			if(ImGui::DragFloat("Second Camera Orth Size:", &orthSize))
+			{
+				camera.SetOrthographicSize(orthSize);
+			}
+		}
+		
 		ImGui::End();
 
 		//Viewport
@@ -178,16 +226,10 @@ namespace Hazel
 		Application::Get().GetImGuiLayer()->BlockEvents(!(m_ViewportFocused || m_ViewportHovered));
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		//Note, this panel's size change will not handle by Window:OnEvent
-		if(m_ViewportSize != *(glm::vec2*)&viewportPanelSize)
-		{
-			m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
-			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
-			m_CameraController.Resize(m_ViewportSize.x, m_ViewportSize.y);
-		}
+		m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 		HZ_INFO("Viewport size: {0}, {1}", viewportPanelSize.x, viewportPanelSize.y);
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0,1}, ImVec2{1, 0});
+		ImGui::Image((void*)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}

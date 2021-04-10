@@ -41,6 +41,7 @@ namespace Hazel
 
 		if(mainCamera)
 		{
+
 			Renderer2D::BeginScene(*mainCamera, transformComp->Transform);
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
@@ -52,5 +53,23 @@ namespace Hazel
 		}
 
 		
+	}
+
+	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	{
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+
+		// Resize non-fixedAspectRatio cameras
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraComp = view.get<CameraComponent>(entity);
+			if(!cameraComp.FixedAspectRatio)
+			{
+				cameraComp.Camera.SetViewportSize(width, height);
+			}
+		}
+
 	}
 }

@@ -26,16 +26,16 @@ namespace Hazel
 	void Scene::OnUpdate(float ts)
 	{
 		{
-			// Update Script
+			// TODO move to Scene::OnScenePlay, and call scriptComponent.Instance->OnDestroy on Scene::OnStopPlay
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& scriptComponent)
 			{
 				if(!scriptComponent.Instance)
 				{
-					scriptComponent.InstantiateFunction();
+					scriptComponent.Instance = scriptComponent.InstantiateScript();
 					scriptComponent.Instance->m_Entity = Entity{entity, this};
-					scriptComponent.OnCreateFunction(scriptComponent.Instance);
+					scriptComponent.Instance->OnCreate();
 				}
-				scriptComponent.OnUpdateFunction(scriptComponent.Instance, ts);
+				scriptComponent.Instance->OnUpdate(ts);
 			});
 		}
 
@@ -44,7 +44,7 @@ namespace Hazel
 		auto view = m_Registry.view<CameraComponent, TransformComponent>();
 		for (auto entity : view)
 		{
-			auto& [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
+			auto [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
 			if(camera.Primary)
 			{
 				mainCamera = &camera.Camera;
@@ -60,7 +60,7 @@ namespace Hazel
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
-				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 				Renderer2D::DrawQuad(transform, sprite.Color);
 			}
 			Renderer2D::EndScene();

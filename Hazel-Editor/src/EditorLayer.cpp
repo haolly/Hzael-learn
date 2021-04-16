@@ -58,19 +58,19 @@ namespace Hazel
 
 			void OnUpdate(float dt)
 			{
-				auto& m_Transform = m_TransformComp->Transform;
+				auto& translation = m_TransformComp->Translation;
 				std::cout<< "CameraController: OnUpdate" << dt<< std::endl;
 				float speed = 5.0f;
 
 				if(Input::IsKeyPressed(HZ_KEY_A))
-					m_Transform[3][0] -= speed * dt;
+					translation.x -= speed * dt;
 				else if(Input::IsKeyPressed(HZ_KEY_D))
-					m_Transform[3][0] += speed * dt;
+					translation.x += speed * dt;
 
 				if(Input::IsKeyPressed(HZ_KEY_W))
-					m_Transform[3][1] += speed * dt;
+					translation.y += speed * dt;
 				else if(Input::IsKeyPressed(HZ_KEY_S))
-					m_Transform[3][1] -= speed * dt;
+					translation.y -= speed * dt;
 
 				// if (m_EnableRotation)
 				// {
@@ -241,12 +241,12 @@ namespace Hazel
 			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 
-			auto& squareTrans = m_SquareEntity.GetComponent<TransformComponent>().Transform;
-			ImGui::InputFloat3("Square Trans", glm::value_ptr(squareTrans[3]));
+			auto& squareTrans = m_SquareEntity.GetComponent<TransformComponent>().Translation;
+			ImGui::InputFloat3("Square Trans", glm::value_ptr(squareTrans));
 			ImGui::Separator();
 		}
 
-		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
+		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Translation));
 		if(ImGui::Checkbox("Second Camera:", &m_PrimaryCamera))
 		{
 			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;

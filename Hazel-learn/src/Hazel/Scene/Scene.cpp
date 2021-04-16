@@ -56,12 +56,12 @@ namespace Hazel
 		if(mainCamera)
 		{
 
-			Renderer2D::BeginScene(*mainCamera, mainCameraTrans->Transform);
+			Renderer2D::BeginScene(*mainCamera, mainCameraTrans->GetTransform());
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawQuad(transform, sprite.Color);
+				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
 			}
 			Renderer2D::EndScene();
 		}

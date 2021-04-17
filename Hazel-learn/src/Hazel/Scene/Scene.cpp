@@ -6,6 +6,7 @@
 
 namespace Hazel
 {
+
 	Scene::Scene()
 	{
 	}
@@ -21,6 +22,11 @@ namespace Hazel
 		auto& tag = entity.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "UnNamedEntity" : name;
 		return entity;
+	}
+
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
 	}
 
 	void Scene::OnUpdate(float ts)

@@ -15,7 +15,10 @@ namespace Hazel
 		decltype(auto) AddComponent(Args&&... args)
 		{
 			HZ_CORE_ASSERT(!HasComponent<Component>(), "Entity already has the same component");
-			return m_Scene->m_Registry.emplace<Component>(m_EntityHandle, std::forward<Args>(args)...);
+			Component& component = m_Scene->m_Registry.emplace<Component>(m_EntityHandle, std::forward<Args>(args)...);
+			//TODO, 不知道模板特例化为啥报错
+			//m_Scene->OnComponentAdded<Component>(*this, component);
+			return component;
 		}
 
 		template <typename Component>
@@ -32,14 +35,15 @@ namespace Hazel
 		}
 
 		template <typename T>
-		bool RemoveComponent()
+		void RemoveComponent()
 		{
 			HZ_CORE_ASSERT(HasComponent<Component>(), "Entity does not has the component");
-			return m_Scene->m_Registry.remove<T>(m_EntityHandle);
+			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
 
 		operator bool() const { return m_EntityHandle != entt::null; }
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
+		operator entt::entity() const { return m_EntityHandle; }
 
 		bool operator ==(const Entity& other) const
 		{

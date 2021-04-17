@@ -1,9 +1,9 @@
 #include <imgui/imgui.h>
-#include "SceneHierarchyPanel.h"
+#include <imgui/imgui_internal.h>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "glm/gtc/type_ptr.hpp"
+#include "SceneHierarchyPanel.h"
 #include "Hazel/Scene/Components.h"
-#include "imgui/imgui_internal.h"
 
 namespace Hazel
 {
@@ -29,12 +29,43 @@ namespace Hazel
 		{
 			m_SelectionContext = {};
 		}
+
+		// Right click on blank space
+		if(ImGui::BeginPopupContextWindow(0, 1, false))
+		{
+			if(ImGui::MenuItem("Create Empty Entity"))
+				m_Context->CreateEntity("Empty Entity");
+
+			ImGui::EndPopup();
+		}
+		
 		ImGui::End();
 
 		ImGui::Begin("Properties");
 		if(m_SelectionContext)
 		{
 			DrawComponents(m_SelectionContext);
+
+			if(ImGui::Button("Add Component"))
+				ImGui::OpenPopup("AddComponent");
+
+			if(ImGui::BeginPopup("AddComponent"))
+			{
+				//TODO, add an register for all components in hazel so we can render those all, so if someone write a custom component, we can render it
+				if(ImGui::MenuItem("Camera"))
+				{
+					m_SelectionContext.AddComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+
+				if(ImGui::MenuItem("Sprite"))
+				{
+					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				
+				ImGui::EndPopup();
+			}
 		}
 		ImGui::End();
 	}
@@ -53,10 +84,29 @@ namespace Hazel
 		{
 			m_SelectionContext = entity;
 		}
+
+		// deferred delete, delete at the end of frame render
+		bool entityDeleted = false;
+		if(ImGui::BeginPopupContextItem())
+		{
+			if(ImGui::MenuItem("Delete Entity"))
+				entityDeleted = true;
+
+			ImGui::EndPopup();
+		}
 		
 		if(opened)
 		{
 			ImGui::TreePop();
+		}
+
+		if(entityDeleted)
+		{
+			if(m_SelectionContext == entity)
+			{
+				m_SelectionContext = {};
+			}
+			m_Context->DestroyEntity(entity);
 		}
 	}
 
@@ -130,9 +180,12 @@ namespace Hazel
 			}
 		}
 
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
 		if(entity.HasComponent<TransformComponent>())
 		{
-			if(ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,"Transform"))
+			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags,"Transform");
+			if(open)
 			{
 				auto& transformComp = entity.GetComponent<TransformComponent>();
 
@@ -149,7 +202,7 @@ namespace Hazel
 
 		if(entity.HasComponent<CameraComponent>())
 		{
-			if(ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,"Camera"))
+			if(ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), treeNodeFlags,"Camera"))
 			{
 				auto& cameraComp = entity.GetComponent<CameraComponent>();
 				auto& camera = cameraComp.Camera;
@@ -214,12 +267,33 @@ namespace Hazel
 		}
 		if(entity.HasComponent<SpriteRendererComponent>())
 		{
-			if(ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			bool removeComponent = false;
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
+			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Renderer");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25);
+			if(ImGui::Button("+", ImVec2{20, 20}))
+			{
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			ImGui::PopStyleVar();
+			if(ImGui::BeginPopup("ComponentSettings"))
+			{
+				if(ImGui::MenuItem("Remove"))
+				{
+					removeComponent = true;
+				}
+				ImGui::EndPopup();
+			}
+			if(open)
 			{
 				auto& src = entity.GetComponent<SpriteRendererComponent>();
 				ImGui::ColorEdit4("Color", glm::value_ptr(src.Color));
 				ImGui::TreePop();
 			}
+
+			if(removeComponent)
+				entity.RemoveComponent<SpriteRendererComponent>();
+
 		}
 	}
 }

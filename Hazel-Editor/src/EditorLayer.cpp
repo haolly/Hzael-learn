@@ -223,7 +223,7 @@ namespace Hazel
 		m_SceneHierarchyPanel.OnImGuiRender();
 
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
 
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Statistics:");
@@ -232,36 +232,6 @@ namespace Hazel
 		ImGui::Text("Vertices %d:", stats.GetTotalVertexCount());
 		ImGui::Text("Indices %d:", stats.GetTotatIndexCount());
 
-		if (m_SquareEntity)
-		{
-			ImGui::Separator();
-			auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
-			ImGui::Text("Tag:%s", tag.c_str());
-
-			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-
-			auto& squareTrans = m_SquareEntity.GetComponent<TransformComponent>().Translation;
-			ImGui::InputFloat3("Square Trans", glm::value_ptr(squareTrans));
-			ImGui::Separator();
-		}
-
-		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Translation));
-		if(ImGui::Checkbox("Second Camera:", &m_PrimaryCamera))
-		{
-			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
-			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
-		}
-
-		{
-			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
-			auto orthSize = camera.GetOrthographicSize();
-			if(ImGui::DragFloat("Second Camera Orth Size:", &orthSize))
-			{
-				camera.SetOrthographicSize(orthSize);
-			}
-		}
-		
 		ImGui::End();
 
 		//Viewport

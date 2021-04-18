@@ -17,12 +17,14 @@ IncludeDir["imgui"] = "Hazel-learn/vendor/imgui"
 IncludeDir["glm"] = "Hazel-learn/vendor/glm"
 IncludeDir["stb_image"] = "Hazel-learn/vendor/stb_image"
 IncludeDir["entt"] = "Hazel-learn/vendor/entt/include"
+IncludeDir["yaml_cpp"] = "Hazel-learn/vendor/yaml-cpp/include"
 
 -- include another premake5.lua into this like C language
 group "Dependencies"
 	include "Hazel-learn/vendor/GLFW"
 	include "Hazel-learn/vendor/Glad"
 	include "Hazel-learn/vendor/imgui"
+	include "Hazel-learn/vendor/yaml-cpp"
 group ""
 
 project "Hazel-learn"
@@ -48,6 +50,11 @@ project "Hazel-learn"
 		"%{prj.name}/vendor/stb_image/**.cpp",
 	}
 
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
+	}
+
 	includedirs
 	{
 		"%{prj.name}/src",
@@ -58,6 +65,7 @@ project "Hazel-learn"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}",
 	}
 
 	-- link static lib
@@ -67,6 +75,7 @@ project "Hazel-learn"
 		"Glad",
 		"imgui",
 		"opengl32.lib",
+		"yaml-cpp",
 	}
 
 	filter "system:windows"
@@ -119,6 +128,7 @@ project "Sandbox"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}",
 	}
 
 	links {"Hazel-learn"}
@@ -170,6 +180,7 @@ project "Hazel-Editor"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}",
 	}
 
 	links {"Hazel-learn"}

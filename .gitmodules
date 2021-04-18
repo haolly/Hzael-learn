@@ -10,3 +10,6 @@
 [submodule "Hazel-learn/vendor/glm"]
 	path = Hazel-learn/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Hazel-learn/vendor/yaml-cpp"]
+	path = Hazel-learn/vendor/yaml-cpp
+	url = https://github.com/haolly/yaml-cpp

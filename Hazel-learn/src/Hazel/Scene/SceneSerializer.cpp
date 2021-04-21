@@ -122,12 +122,12 @@ namespace Hazel
 			out << YAML::Key << "Camera" << YAML::Value;
 			out << YAML::BeginMap; // Camera
 			out << YAML::Key << "ProjectionType" << YAML::Value << (int)camera.GetProjectionType();
-			out << YAML::Key << "PerspectiveFOV" << YAML::Value << (int)camera.GetPerspectiveVerticalFOV();
-			out << YAML::Key << "PerspectiveNear" << YAML::Value << (int)camera.GetPerspectiveNearClip();
-			out << YAML::Key << "PerspectiveFar" << YAML::Value << (int)camera.GetPerspectiveFarClip();
-			out << YAML::Key << "OrthographicSize" << YAML::Value << (int)camera.GetOrthographicSize();
-			out << YAML::Key << "OrthographicNear" << YAML::Value << (int)camera.GetOrthographicNearClip();
-			out << YAML::Key << "OrthographicFar" << YAML::Value << (int)camera.GetOrthographicFarClip();
+			out << YAML::Key << "PerspectiveFOV" << YAML::Value << camera.GetPerspectiveVerticalFOV();
+			out << YAML::Key << "PerspectiveNear" << YAML::Value << camera.GetPerspectiveNearClip();
+			out << YAML::Key << "PerspectiveFar" << YAML::Value << camera.GetPerspectiveFarClip();
+			out << YAML::Key << "OrthographicSize" << YAML::Value << camera.GetOrthographicSize();
+			out << YAML::Key << "OrthographicNear" << YAML::Value << camera.GetOrthographicNearClip();
+			out << YAML::Key << "OrthographicFar" << YAML::Value << camera.GetOrthographicFarClip();
 			out << YAML::EndMap;	// Camera
 			
 			out << YAML::Key << "Primary" << YAML::Value << cameraComponent.Primary;
@@ -223,6 +223,11 @@ namespace Hazel
 				if(cameraComponent)
 				{
 					auto& cc = deserializedEntity.AddComponent<CameraComponent>();
+					// Update projection matrix
+					//todo, remove when Scene:OnComponentAdded is OK
+					auto Scene = deserializedEntity.GetScene();
+					cc.Camera.SetViewportSize(Scene->GetViewPortWidth(), Scene->GetViewPortHeight());
+					
 					auto& cameraProps = cameraComponent["Camera"];
 					cc.Camera.SetProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 

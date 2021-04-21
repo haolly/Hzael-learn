@@ -17,6 +17,7 @@ namespace Hazel
 			HZ_CORE_ASSERT(!HasComponent<Component>(), "Entity already has the same component");
 			Component& component = m_Scene->m_Registry.emplace<Component>(m_EntityHandle, std::forward<Args>(args)...);
 			//TODO, 不知道模板特例化为啥报错
+			// 当add 一个cameraComp的时候，要去设置camera的viewSize
 			//m_Scene->OnComponentAdded<Component>(*this, component);
 			return component;
 		}
@@ -51,6 +52,9 @@ namespace Hazel
 		}
 
 		bool operator !=(const Entity& other) const { return !(*this == other); }
+
+	public:
+		Scene* GetScene() { return m_Scene;}
 
 	private:
 		entt::entity m_EntityHandle = entt::null;

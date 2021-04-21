@@ -1,5 +1,7 @@
 #pragma once
 #include <Hazel.h>
+
+#include "Hazel/Events/KeyEvent.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace Hazel
@@ -14,6 +16,11 @@ namespace Hazel
 		void OnUpdate(float deltaTime) override;
 		void OnImGuiRenderer() override;
 		void OnEvent(Event& e) override;
+	private:
+		bool OnKeyPressed(KeyPressedEvent& e);
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
 	private:
 		OrthographicCameraController m_CameraController;
 

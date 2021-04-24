@@ -92,4 +92,16 @@ namespace Hazel
 		}
 
 	}
+
+	Entity Scene::GetPrimaryCameraEntity()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto && entity : view)
+		{
+			const auto& cameraComp = view.get<CameraComponent>(entity);
+			if(cameraComp.Primary)
+				return Entity{entity, this};
+		}
+		return {};
+	}
 }

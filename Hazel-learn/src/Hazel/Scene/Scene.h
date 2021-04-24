@@ -16,6 +16,7 @@ namespace Hazel
 		void OnViewportResize(uint32_t width, uint32_t height);
 		uint32_t GetViewPortWidth() { return m_ViewportWidth;}
 		uint32_t GetViewPortHeight() { return m_ViewportHeight;}
+		Entity GetPrimaryCameraEntity();
 	private:
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;

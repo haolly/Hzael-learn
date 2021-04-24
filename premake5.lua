@@ -18,6 +18,7 @@ IncludeDir["glm"] = "Hazel-learn/vendor/glm"
 IncludeDir["stb_image"] = "Hazel-learn/vendor/stb_image"
 IncludeDir["entt"] = "Hazel-learn/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Hazel-learn/vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"] = "Hazel-learn/vendor/ImGuizmo"
 
 -- include another premake5.lua into this like C language
 group "Dependencies"
@@ -48,6 +49,8 @@ project "Hazel-learn"
 		"%{prj.name}/vendor/glm/glm/**.inl",
 		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.h",
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.cpp",
 	}
 
 	defines
@@ -66,6 +69,7 @@ project "Hazel-learn"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}",
 	}
 
 	-- link static lib
@@ -77,6 +81,9 @@ project "Hazel-learn"
 		"opengl32.lib",
 		"yaml-cpp",
 	}
+
+	filter "files:Hazel-learn/vendor/ImGuizmo/**.cpp"
+		flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "latest"

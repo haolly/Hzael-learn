@@ -13,3 +13,6 @@
 [submodule "Hazel-learn/vendor/yaml-cpp"]
 	path = Hazel-learn/vendor/yaml-cpp
 	url = https://github.com/haolly/yaml-cpp
+[submodule "Hazel-learn/vendor/ImGuizmo"]
+	path = Hazel-learn/vendor/ImGuizmo
+	url = https://github.com/haolly/ImGuizmo

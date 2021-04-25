@@ -223,11 +223,6 @@ namespace Hazel
 				if(cameraComponent)
 				{
 					auto& cc = deserializedEntity.AddComponent<CameraComponent>();
-					// Update projection matrix
-					//todo, remove when Scene:OnComponentAdded is OK
-					auto Scene = deserializedEntity.GetScene();
-					cc.Camera.SetViewportSize(Scene->GetViewPortWidth(), Scene->GetViewPortHeight());
-					
 					auto& cameraProps = cameraComponent["Camera"];
 					cc.Camera.SetProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 

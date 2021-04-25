@@ -49,5 +49,7 @@ namespace Hazel
 
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+
+		EditorCamera m_EditorCamera;
 	};
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "EditorCamera.h"
 #include "glm/glm.hpp"
 
 namespace Hazel
@@ -15,6 +16,7 @@ namespace Hazel
 		static void Shutdown();
 
 		static void BeginScene(const OrthographicCamera& camera);	//todo, remove
+		static void BeginScene(const EditorCamera& camera);	//todo, remove
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 		static void Flush();

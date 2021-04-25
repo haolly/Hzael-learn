@@ -7,6 +7,44 @@
 namespace Hazel
 {
 
+	/// <summary>
+	/// Note, 这些模板特例化必须在使用任何实例之前，不然就会报错 https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="entity"></param>
+	/// <param name="component"></param>
+	template<typename T>
+	void Scene::OnComponentAdded(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
+	}
+
 	Scene::Scene()
 	{
 	}
@@ -29,7 +67,21 @@ namespace Hazel
 		m_Registry.destroy(entity);
 	}
 
-	void Scene::OnUpdate(float ts)
+	void Scene::OnUpdateEditor(float ts, EditorCamera& camera)
+	{
+		// 本质上就是 shader 中的viewProjection 不同
+		Renderer2D::BeginScene(camera);
+		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto entity : group)
+		{
+			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+		}
+		Renderer2D::EndScene();
+
+	}
+
+	void Scene::OnUpdateRuntime(float ts)
 	{
 		{
 			// TODO move to Scene::OnScenePlay, and call scriptComponent.Instance->OnDestroy on Scene::OnStopPlay
@@ -104,4 +156,5 @@ namespace Hazel
 		}
 		return {};
 	}
+
 }

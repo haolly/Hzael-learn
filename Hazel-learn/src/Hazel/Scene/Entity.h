@@ -1,10 +1,13 @@
 #pragma once
 
 #include <entt.hpp>
+
 #include "Hazel/Scene/Scene.h"
 
 namespace Hazel
 {
+	//class Scene;
+
 	class Entity
 	{
 	public:
@@ -16,9 +19,10 @@ namespace Hazel
 		{
 			HZ_CORE_ASSERT(!HasComponent<Component>(), "Entity already has the same component");
 			Component& component = m_Scene->m_Registry.emplace<Component>(m_EntityHandle, std::forward<Args>(args)...);
-			//TODO, 不知道模板特例化为啥报错
+			//NOTE, 不知道模板特例化为啥报错....
+			//原因：include 循环了
 			// 当add 一个cameraComp的时候，要去设置camera的viewSize
-			//m_Scene->OnComponentAdded<Component>(*this, component);
+			m_Scene->OnComponentAdded<Component>(*this, component);
 			return component;
 		}
 

@@ -1,8 +1,9 @@
 #pragma once
-#include "Scene.h"
 
 namespace Hazel
 {
+	class Scene;
+
 	class SceneSerializer
 	{
 	public:

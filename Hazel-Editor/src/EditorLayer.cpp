@@ -25,13 +25,18 @@ namespace Hazel
 		m_WoodTextureInSheet = SubTexture2D::CreateFromCoords(m_SpriteSheet, {463, 1}, {64, 64});
 
 		FramebufferSpecification fbSpec;
+		fbSpec.Attachments = {
+			{FramebufferTextureSpecification(FramebufferTextureFormat::RGBA8)},
+			{FramebufferTextureSpecification(FramebufferTextureFormat::RGBA8)},
+			{FramebufferTextureSpecification(FramebufferTextureFormat::Depth)}
+		};
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		m_EditorCamera = EditorCamera(30.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+		m_EditorCamera = EditorCamera(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
 #if 0
 		auto square = m_ActiveScene->CreateEntity();
@@ -294,7 +299,7 @@ namespace Hazel
 			// glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
 
 			//Editor Camera
-			
+
 			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
 			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
@@ -302,11 +307,11 @@ namespace Hazel
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
 
-			
+
 			//Snapping
 			bool snap = Input::IsKeyPressed(HZ_KEY_LEFT_CONTROL);
 			float snapValue = 0.5f;
-			if(m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
 				snapValue = 45.0f;
 			float snapValues[3] = {snapValue, snapValue, snapValue};
 
@@ -314,8 +319,8 @@ namespace Hazel
 			                     (ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL,
 			                     glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
 
-			
-			if(ImGuizmo::IsUsing())
+
+			if (ImGuizmo::IsUsing())
 			{
 				glm::vec3 translation, rotation, scale;
 				Math::DecomposeTransform(transform, translation, rotation, scale);
@@ -380,7 +385,7 @@ namespace Hazel
 			}
 			break;
 
-			//Gizmos
+				//Gizmos
 
 			case HZ_KEY_Q:
 				m_GizmoType = -1;

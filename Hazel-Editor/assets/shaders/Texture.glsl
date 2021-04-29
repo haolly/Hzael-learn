@@ -1,5 +1,5 @@
 // Basic UI shader
-// ÀàËÆ Unity µÄÄ¬ÈÏUI shader , ref https://github.com/TwoTailsGames/Unity-Built-in-Shaders/blob/master/DefaultResourcesExtra/UI/UI-Default.shader
+// ï¿½ï¿½ï¿½ï¿½ Unity ï¿½ï¿½Ä¬ï¿½ï¿½UI shader , ref https://github.com/TwoTailsGames/Unity-Built-in-Shaders/blob/master/DefaultResourcesExtra/UI/UI-Default.shader
 #type vertex
 #version 410 core
 layout(location=0) in vec3 a_Position;
@@ -27,6 +27,7 @@ void main()
 #type fragment
 #version 410 core
 layout(location=0) out vec4 color;
+layout(location=1) out int entityID;
 in vec4 v_Color;
 in vec2 v_TexCoord;
 in float v_TexIndex;
@@ -39,5 +40,6 @@ void main()
 {
 	color = texture(u_Textures[int(v_TexIndex)], v_TexCoord * v_TilingFactor ) * v_Color;
 	//color = v_Color;
+	entityID = 50;
 }
 

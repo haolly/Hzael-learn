@@ -43,6 +43,7 @@ namespace Hazel
 		glm::vec4 m_SquareColor = {0.2f, 0.3f, 0.78f, 1.0f};
 
 		glm::vec2 m_ViewportSize = {0.0f, 0.0f};
+		glm::vec2 m_ViewportBounds[2];
 
 		// Gizmo
 		int m_GizmoType = -1;

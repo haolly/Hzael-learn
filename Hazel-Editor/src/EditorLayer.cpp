@@ -27,7 +27,7 @@ namespace Hazel
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = {
 			{FramebufferTextureSpecification(FramebufferTextureFormat::RGBA8)},
-			{FramebufferTextureSpecification(FramebufferTextureFormat::RGBA8)},
+			{FramebufferTextureSpecification(FramebufferTextureFormat::RED_INTEGER)},
 			{FramebufferTextureSpecification(FramebufferTextureFormat::Depth)}
 		};
 		fbSpec.Width = 1280;
@@ -117,7 +117,7 @@ namespace Hazel
 	{
 		HZ_PROFILE_FUNC();
 
-		// Note, ÕâÀïäÖÈ¾Ïà¹ØµÄÒª·ÅÔÚupdateÖĞ£¬²»È»ÍÏ¶¯viewPortµÄ´óĞ¡¸Ä±äÊ±ºò£¬ÔÚ OnImGUIRender º¯ÊıÖĞ´¦Àí¾Í»á³öÏÖºÚ¿ò
+		// Note, è¿™é‡Œæ¸²æŸ“ç›¸å…³çš„è¦æ”¾åœ¨updateä¸­ï¼Œä¸ç„¶æ‹–åŠ¨viewPortçš„å¤§å°æ”¹å˜æ—¶å€™ï¼Œåœ¨ OnImGUIRender å‡½æ•°ä¸­å¤„ç†å°±ä¼šå‡ºç°é»‘æ¡†
 		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
 			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && (spec.Width != m_ViewportSize.x || spec.Height !=
 				m_ViewportSize.y))
@@ -149,9 +149,23 @@ namespace Hazel
 		m_ActiveScene->OnUpdateEditor(deltaTime, m_EditorCamera);
 		//Renderer2D::EndScene();
 
+		auto[mx, my] = ImGui::GetMousePos();
+		mx -= m_ViewportBounds[0].x;
+		my -= m_ViewportBounds[0].y;
+		glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+		my = viewportSize.y - my;
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		if(mouseX >=0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+			HZ_CORE_WARN("PixelData {0}", pixelData);
+		}
+
 		m_Framebuffer->UnBind();
 
-		HZ_INFO("fps:{0}", 1/deltaTime);
+		//HZ_INFO("fps:{0}", 1/deltaTime);
 	}
 
 	void EditorLayer::OnImGuiRenderer()
@@ -272,6 +286,8 @@ namespace Hazel
 		//Viewport
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
 		ImGui::Begin("Viewport");
+		auto viewportOffset = ImGui::GetCursorPos();	// Include the tab bar
+		
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!(m_ViewportFocused || m_ViewportHovered));
@@ -280,6 +296,15 @@ namespace Hazel
 		m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+
+		auto windowSize = ImGui::GetWindowSize();
+		ImVec2 minBounds = ImGui::GetWindowPos();	// position in window space
+		minBounds.x += viewportOffset.x;
+		minBounds.y += viewportOffset.y;
+		ImVec2 maxBounds = {minBounds.x + windowSize.x, minBounds.y + windowSize.y};
+		m_ViewportBounds[0] = {minBounds.x, minBounds.y};
+		m_ViewportBounds[1] = {maxBounds.x, maxBounds.y};
+
 
 		//Gizmo
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
@@ -326,7 +351,7 @@ namespace Hazel
 				Math::DecomposeTransform(transform, translation, rotation, scale);
 				tc.Translation = translation;
 				// NOTE, to avoid gimbal lock, cause we always ADD values to it
-				// µ«ÊÇ£¬ÕâÀïÒ²»áµ¼ÖÂÁíÒ»¸öÎÊÌâ£¬ rotation Ò»Ö±ÔÚ[-180,180] Ö®¼ä
+				// ä½†æ˜¯ï¼Œè¿™é‡Œä¹Ÿä¼šå¯¼è‡´å¦ä¸€ä¸ªé—®é¢˜ï¼Œ rotation ä¸€ç›´åœ¨[-180,180] ä¹‹é—´
 				auto deltaRotation = rotation - tc.Rotation;
 				tc.Rotation += deltaRotation;
 				tc.Scale = scale;

@@ -8,6 +8,7 @@ namespace Hazel
 
 		// Color
 		RGBA8,
+		RED_INTEGER,
 
 		// Depth/stencil
 		DEPTH24STENCIL8,
@@ -40,7 +41,7 @@ namespace Hazel
 		uint32_t Width, Height;
 		uint32_t Samples = 1;
 		FramebufferAttachmentSpecification Attachments;
-		// Render pass »áÓÃµ½Õâ¸ö¸ÅÄî£¬Ò»¸örender pass ÆäÊµ¾ÍÊÇÒ»¸ö framebuffer
+		// Render pass ä¼šç”¨åˆ°è¿™ä¸ªæ¦‚å¿µï¼Œä¸€ä¸ªrender pass å…¶å®žå°±æ˜¯ä¸€ä¸ª framebuffer
 		bool SwapChainTarget = false;
 	};
 
@@ -50,11 +51,12 @@ namespace Hazel
 		//TODO, REMOVE
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
-
+		
 		virtual ~Framebuffer() = default;
-
-
+		
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
+		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) = 0;
+		
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
 

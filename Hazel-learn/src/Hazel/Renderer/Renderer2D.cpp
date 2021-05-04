@@ -20,6 +20,9 @@ namespace Hazel {
 		glm::vec2 TexCoord;
 		float TexIndex;
 		float TilingFactor;
+
+		// Editor only
+		int EntityID;
 	};
 
 	struct Renderer2DData
@@ -61,6 +64,7 @@ namespace Hazel {
 			{ShaderDataType::Float2, "a_TexCoord"},
 			{ShaderDataType::Float, "a_TexIndex"},
 			{ShaderDataType::Float, "a_TilingFactor"},
+			{ShaderDataType::Int, "a_EntityID"},
 		};
 		s_Data.QuadVertexBuffer->SetLayout(quadLayout);
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
@@ -181,7 +185,7 @@ namespace Hazel {
 		s_Data.Stats.DrawCalls++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		if(s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
 		{
@@ -191,7 +195,7 @@ namespace Hazel {
 		const float textureIndex = 0.0f;	// White Texture
 		const float tilingFactor = 1.0f;
 
-		// ÕâÀïµÄ Position ¶¼ÊÇÔÚworld spaceÖÐ
+		// è¿™é‡Œçš„ Position éƒ½æ˜¯åœ¨world spaceä¸­
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[quadVertexCount] = {
 			{0.0f, 0.0f},
@@ -206,6 +210,7 @@ namespace Hazel {
 			s_Data.QuadVertexBufferPtr->TexCoord =  textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
@@ -238,7 +243,7 @@ namespace Hazel {
 	}
 
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor,
-		const glm::vec4& tintColor)
+		const glm::vec4& tintColor, int entityID)
 	{
 		if(s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
 		{
@@ -278,6 +283,7 @@ namespace Hazel {
 			s_Data.QuadVertexBufferPtr->TexCoord =  textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
@@ -385,7 +391,7 @@ namespace Hazel {
 							 * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
 							 * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		// ÕâÀïµÄ Position ¶¼ÊÇÔÚworld spaceÖÐ
+		// è¿™é‡Œçš„ Position éƒ½æ˜¯åœ¨world spaceä¸­
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[quadVertexCount] = {
 			{0.0f, 0.0f},
@@ -467,6 +473,11 @@ namespace Hazel {
 		s_Data.QuadIndexCount += 6;
 
 		s_Data.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& spriteComp, int entityID)
+	{
+		DrawQuad(transform, spriteComp.Color, entityID);
 	}
 
 	Renderer2D::Statistics Renderer2D::GetStats()

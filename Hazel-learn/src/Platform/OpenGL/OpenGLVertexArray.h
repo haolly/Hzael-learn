@@ -17,6 +17,7 @@ namespace Hazel {
 		virtual const Ref<IndexBuffer>& GetIndexBuffer() const override;
 	private:
 		uint32_t m_RendererID;
+		uint32_t m_VertexBuferIndex = 0;
 		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
 		Ref<IndexBuffer> m_IndexBuffer;
 

@@ -18,6 +18,7 @@ namespace Hazel
 		void OnEvent(Event& e) override;
 	private:
 		bool OnKeyPressed(KeyPressedEvent& e);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 		void NewScene();
 		void OpenScene();
 		void SaveSceneAs();
@@ -52,5 +53,7 @@ namespace Hazel
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 
 		EditorCamera m_EditorCamera;
+
+		Entity m_HoveredEntity;
 	};
 }

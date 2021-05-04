@@ -8,7 +8,7 @@ namespace Hazel
 {
 
 	/// <summary>
-	/// Note, ÕâĞ©Ä£°åÌØÀı»¯±ØĞëÔÚÊ¹ÓÃÈÎºÎÊµÀıÖ®Ç°£¬²»È»¾Í»á±¨´í https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
+	/// Note, è¿™äº›æ¨¡æ¿ç‰¹ä¾‹åŒ–å¿…é¡»åœ¨ä½¿ç”¨ä»»ä½•å®ä¾‹ä¹‹å‰ï¼Œä¸ç„¶å°±ä¼šæŠ¥é”™ https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="entity"></param>
@@ -69,13 +69,13 @@ namespace Hazel
 
 	void Scene::OnUpdateEditor(float ts, EditorCamera& camera)
 	{
-		// ±¾ÖÊÉÏ¾ÍÊÇ shader ÖĞµÄviewProjection ²»Í¬
+		// æœ¬è´¨ä¸Šå°±æ˜¯ shader ä¸­çš„viewProjection ä¸åŒ
 		Renderer2D::BeginScene(camera);
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group)
 		{
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+			Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
 		}
 		Renderer2D::EndScene();
 

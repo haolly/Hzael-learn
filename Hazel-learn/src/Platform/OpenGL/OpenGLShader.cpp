@@ -6,17 +6,30 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Hazel {
-
-	static GLenum ShaderTypeFromString(const std::string& type)
+namespace Hazel
+{
+	namespace Utils
 	{
-		if (type == "vertex")
-			return GL_VERTEX_SHADER;
-		if (type == "fragment" || type == "pixel")
-			return GL_FRAGMENT_SHADER;
-		HZ_CORE_ASSERT(false, "Unknow shader type:{0}", type);
-		return 0;
+		static GLenum ShaderTypeFromString(const std::string& type)
+		{
+			if (type == "vertex")
+				return GL_VERTEX_SHADER;
+			if (type == "fragment" || type == "pixel")
+				return GL_FRAGMENT_SHADER;
+			HZ_CORE_ASSERT(false, "Unknow shader type:{0}", type);
+			return 0;
+		}
+
+		static shaderc_shader_kind GLShaderStageToShaderC(GLenum stage)
+		{
+			switch (stage)
+			{
+			case GL_VERTEX_SHADER:
+				return shaderc_glsl_vertex_shader;
+			}
+		}
 	}
+
 
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
@@ -157,7 +170,7 @@ namespace Hazel {
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	
+
 	std::string OpenGLShader::ReadFile(const std::string& filepath) const
 	{
 		HZ_PROFILE_FUNC();
@@ -207,6 +220,22 @@ namespace Hazel {
 		return shaderSources;
 	}
 
+	void OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources)
+	{
+	}
+
+	void OpenGLShader::CompileOrGetOpenGLBinaries()
+	{
+	}
+
+	void OpenGLShader::CreateProgram()
+	{
+	}
+
+	void OpenGLShader::Reflect(GLenum stage, const std::vector<uint32_t>& shaderData)
+	{
+	}
+
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
 		HZ_PROFILE_FUNC();
@@ -223,7 +252,7 @@ namespace Hazel {
 
 			// Send the vertex shader source code to GL
 			// Note that std::string's .c_str is NULL character terminated.
-			const GLchar *source_c = source.c_str();
+			const GLchar* source_c = source.c_str();
 			glShaderSource(shader, 1, &source_c, 0);
 
 			// Compile the vertex shader
@@ -231,7 +260,7 @@ namespace Hazel {
 
 			GLint isCompiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
-			if(isCompiled == GL_FALSE)
+			if (isCompiled == GL_FALSE)
 			{
 				GLint maxLength = 0;
 				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
@@ -239,9 +268,9 @@ namespace Hazel {
 				// The maxLength includes the NULL character
 				std::vector<GLchar> infoLog(maxLength);
 				glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
-				
+
 				// We don't need the shader anymore.
-				if(type == GL_FRAGMENT_SHADER)
+				if (type == GL_FRAGMENT_SHADER)
 				{
 					for (auto shaderID : glShaderIDs)
 					{
@@ -268,7 +297,7 @@ namespace Hazel {
 
 		// Note the different functions here: glGetProgram* instead of glGetShader*.
 		GLint isLinked = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, (int *)&isLinked);
+		glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
 		if (isLinked == GL_FALSE)
 		{
 			GLint maxLength = 0;
@@ -277,7 +306,7 @@ namespace Hazel {
 			// The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
 			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-			
+
 			// We don't need the program anymore.
 			glDeleteProgram(program);
 
@@ -297,5 +326,4 @@ namespace Hazel {
 		}
 		m_RenderID = program;
 	}
-
 }

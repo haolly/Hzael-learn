@@ -10,15 +10,37 @@ workspace "Hazel-learn"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+VULKAN_SDK = os.getenv("VULKAN_SDK")
+
 IncludeDir = {}
-IncludeDir["GLFW"] = "Hazel-learn/vendor/GLFW/include"
-IncludeDir["Glad"] = "Hazel-learn/vendor/Glad/include"
-IncludeDir["imgui"] = "Hazel-learn/vendor/imgui"
-IncludeDir["glm"] = "Hazel-learn/vendor/glm"
-IncludeDir["stb_image"] = "Hazel-learn/vendor/stb_image"
-IncludeDir["entt"] = "Hazel-learn/vendor/entt/include"
-IncludeDir["yaml_cpp"] = "Hazel-learn/vendor/yaml-cpp/include"
-IncludeDir["ImGuizmo"] = "Hazel-learn/vendor/ImGuizmo"
+IncludeDir["GLFW"] = "%{wks.location}/Hazel-learn/vendor/GLFW/include"
+IncludeDir["Glad"] = "%{wks.location}/Hazel-learn/vendor/Glad/include"
+IncludeDir["imgui"] = "%{wks.location}/Hazel-learn/vendor/imgui"
+IncludeDir["glm"] = "%{wks.location}/Hazel-learn/vendor/glm"
+IncludeDir["stb_image"] = "%{wks.location}/Hazel-learn/vendor/stb_image"
+IncludeDir["entt"] = "%{wks.location}/Hazel-learn/vendor/entt/include"
+IncludeDir["yaml_cpp"] = "%{wks.location}/Hazel-learn/vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"] = "%{wks.location}/Hazel-learn/vendor/ImGuizmo"
+IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
+
+LibraryDir = {}
+
+LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
+LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/Hazel-learn/vendor/VulkanSDK/Lib"
+
+Library = {}
+Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
+Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK}/VkLayer_utils.lib"
+
+Library["ShaderC_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/shaderc_sharedd.lib"
+Library["SPIRV_Cross_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-cored.lib"
+Library["SPIRV_Cross_GLSL_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-glsld.lib"
+Library["SPIRV_Tools_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/SPIRV-Toolsd.lib"
+
+Library["ShaderC_Release"] = "%{LibraryDir.VulkanSDK_Debug}/shaderc_shared.lib"
+Library["SPIRV_Cross_Release"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-core.lib"
+Library["SPIRV_Cross_GLSL_Release"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-glsl.lib"
+
 
 -- include another premake5.lua into this like C language
 group "Dependencies"
@@ -33,7 +55,7 @@ project "Hazel-learn"
 	location "Hazel-learn"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -70,6 +92,7 @@ project "Hazel-learn"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.VulkanSDK}",
 	}
 
 	-- link static lib
@@ -100,15 +123,37 @@ project "Hazel-learn"
 		runtime "Debug"
 		symbols "on"
 
+		links
+		{
+			"%{Library.ShaderC_Debug}",
+			"%{Library.SPIRV_Cross_Debug}",
+			"%{Library.SPIRV_Cross_GLSL_Debug}",
+		}
+
 	filter "configurations:Release"
 		defines { "HZ_RELEASE" }
 		runtime "Release"
 		optimize "on"
 
+		links
+		{
+			"%{Library.ShaderC_Release",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}",
+		}
+
 	filter "configurations:Dist"
 		defines { "HZ_DIST" }
 		runtime "Release"
 		optimize "on"
+
+		links
+		{
+			"%{Library.ShaderC_Release",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}",
+		}
+
 
 project "Sandbox"
 	kind "ConsoleApp"
@@ -168,7 +213,7 @@ project "Hazel-Editor"
 	location "Hazel-Editor"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")

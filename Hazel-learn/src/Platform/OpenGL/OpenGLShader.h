@@ -1,6 +1,7 @@
 #pragma once
 #include "Hazel/Renderer/Shader.h"
 #include <glm/glm.hpp>
+
 #include <glad/glad.h>
 
 namespace Hazel {

@@ -2,8 +2,12 @@
 .vs/
 bin/
 bin-int/
+Hazel-learn/vendor/VulkanSDK
+Hazel-Editor/assets/cache
+scripts/__pycache__
 
 imgui.ini
+
 
 # User-specific files, copy from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 *.rsuser

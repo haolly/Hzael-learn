@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Hazel/Core/Core.h"
+#include "Hazel/Core/Base.h"
 
 namespace Hazel
 {

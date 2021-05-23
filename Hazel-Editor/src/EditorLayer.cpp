@@ -34,7 +34,7 @@ namespace Hazel
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = Ref<Scene>::Create();
 
 		m_EditorCamera = EditorCamera(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
@@ -165,7 +165,7 @@ namespace Hazel
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
 			HZ_CORE_WARN("PixelData {0}", pixelData);
-			m_HoveredEntity = pixelData == -1 ? Entity() : Entity(static_cast<entt::entity>(pixelData), m_ActiveScene.get());
+			m_HoveredEntity = pixelData == -1 ? Entity() : Entity(static_cast<entt::entity>(pixelData), m_ActiveScene.Raw());
 		}
 
 		m_Framebuffer->UnBind();
@@ -448,7 +448,7 @@ namespace Hazel
 
 	void EditorLayer::NewScene()
 	{
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = Ref<Scene>::Create();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
@@ -458,7 +458,7 @@ namespace Hazel
 		std::string filepath = FileDialogs::OpenFile("Hazel Scene(*.hazel)\0*.hazel\0");
 		if (!filepath.empty())
 		{
-			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene = Ref<Scene>::Create();
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 

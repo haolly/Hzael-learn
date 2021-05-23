@@ -144,10 +144,15 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Hazel\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Hazel.h" />
+    <ClInclude Include="src\Hazel\Asset\Asset.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetImporter.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetManager.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetMetadata.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetSerializer.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetTypes.h" />
     <ClInclude Include="src\Hazel\Core\Application.h" />
-    <ClInclude Include="src\Hazel\Core\Core.h" />
+    <ClInclude Include="src\Hazel\Core\Base.h" />
     <ClInclude Include="src\Hazel\Core\EntryPoint.h" />
     <ClInclude Include="src\Hazel\Core\Input.h" />
     <ClInclude Include="src\Hazel\Core\KeyCodes.h" />
@@ -155,6 +160,7 @@
     <ClInclude Include="src\Hazel\Core\LayerStack.h" />
     <ClInclude Include="src\Hazel\Core\Log.h" />
     <ClInclude Include="src\Hazel\Core\MouseButtonCodes.h" />
+    <ClInclude Include="src\Hazel\Core\Ref.h" />
     <ClInclude Include="src\Hazel\Core\Window.h" />
     <ClInclude Include="src\Hazel\Debug\Instrumentor.h" />
     <ClInclude Include="src\Hazel\Events\ApplicationEvent.h" />
@@ -165,6 +171,7 @@
     <ClInclude Include="src\Hazel\Math\Math.h" />
     <ClInclude Include="src\Hazel\Renderer\Buffer.h" />
     <ClInclude Include="src\Hazel\Renderer\Camera.h" />
+    <ClInclude Include="src\Hazel\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Hazel\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Hazel\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Hazel\Renderer\OrthographicCamera.h" />
@@ -184,6 +191,7 @@
     <ClInclude Include="src\Hazel\Scene\SceneSerializer.h" />
     <ClInclude Include="src\Hazel\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\Hazel\Utils\PlatformUtils.h" />
+    <ClInclude Include="src\Hazel\Utils\StringUtils.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -610,7 +618,9 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Hazel\Renderer\EditorCamera.cpp" />
+    <ClCompile Include="src\Hazel\Asset\AssetImporter.cpp" />
+    <ClCompile Include="src\Hazel\Asset\AssetManager.cpp" />
+    <ClCompile Include="src\Hazel\Asset\AssetSerializer.cpp" />
     <ClCompile Include="src\Hazel\Core\Application.cpp" />
     <ClCompile Include="src\Hazel\Core\Layer.cpp" />
     <ClCompile Include="src\Hazel\Core\LayerStack.cpp" />
@@ -620,6 +630,7 @@
     <ClCompile Include="src\Hazel\Math\Math.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Hazel\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Hazel\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Hazel\Renderer\OrthographicCameraController.cpp" />
@@ -636,6 +647,7 @@
     <ClCompile Include="src\Hazel\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Hazel\Scene\SceneSerializer.cpp" />
     <ClCompile Include="src\Hazel\Scene\ScriptableEntity.cpp" />
+    <ClCompile Include="src\Hazel\Utils\StringUtils.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />

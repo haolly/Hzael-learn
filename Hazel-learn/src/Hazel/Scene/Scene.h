@@ -1,12 +1,14 @@
 #pragma once
 #include <entt.hpp>
 
+#include "Hazel/Asset/Asset.h"
+
 namespace Hazel
 {
 	class EditorCamera;
 	class Entity;
 
-	class Scene
+	class Scene : public Asset
 	{
 	public:
 		Scene();

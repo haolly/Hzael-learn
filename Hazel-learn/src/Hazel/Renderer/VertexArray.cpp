@@ -17,7 +17,7 @@ namespace Hazel {
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLVertexArray>();
+				return Ref<OpenGLVertexArray>::Create();
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");

@@ -23,7 +23,7 @@ namespace Hazel
 		ImGui::Begin("Scene Hierarchy");
 		m_Context->m_Registry.each([&](auto entityHandler)
 		{
-			Entity entity{entityHandler, m_Context.get()};
+			Entity entity{entityHandler, m_Context.Raw()};
 			DrawEntityNode(entity);
 		});
 		if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())

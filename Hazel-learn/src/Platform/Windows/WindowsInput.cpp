@@ -4,12 +4,14 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Hazel/Core/KeyCodes.h"
+
 namespace Hazel
 {
-	bool Input::IsKeyPressed(int keycode)
+	bool Input::IsKeyPressed(KeyCode keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		int status = glfwGetKey(window, keycode);
+		int status = glfwGetKey(window, static_cast<int32_t>(keycode));
 		return status == GLFW_PRESS || status == GLFW_REPEAT;
 	}
 

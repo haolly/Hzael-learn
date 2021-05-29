@@ -1,6 +1,6 @@
 #pragma once
-
 #include <memory>
+#include "Ref.h"
 
 #ifdef HZ_PLATFORM_WINDOWS
  #if HZ_DYNAMIC_LINK
@@ -24,14 +24,14 @@
 	#define HZ_CORE_ASSERT(x, ...) 
 #endif
 
-#define Bit(x) (1 << x)
+#define BIT(x) (1 << x)
 
 // #define HZ_BIND_EVENT_FN(fn)  std::bind(&fn, this, std::placeholders::_1) 
 #define HZ_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 namespace Hazel {
 	/// <summary>
-	/// ÎªÉ¶ĞèÒªÕâĞ©ÄØ£¿1. ²»Í¬Ä£¿éĞèÒªÇ¿ÒıÓÃ£¬²»ÄÜ³öÏÖAÄ£¿éÊÍ·ÅÁËÖ®ºóµ¼ÖÂBÄ£¿é»ñÈ¡²»µ½×ÊÔ´¡£ 2. asset ÀàĞÍµÄ×ÊÔ´²»ÊÊºÏ¿½±´
-	/// ÕâÀïÏàµ±ÓÚÒ»¸öÒıÇæµÄ×ÊÔ´¹ÜÀí
+	/// ä¸ºå•¥éœ€è¦è¿™äº›å‘¢ï¼Ÿ1. ä¸åŒæ¨¡å—éœ€è¦å¼ºå¼•ç”¨ï¼Œä¸èƒ½å‡ºç°Aæ¨¡å—é‡Šæ”¾äº†ä¹‹åå¯¼è‡´Bæ¨¡å—è·å–ä¸åˆ°èµ„æºã€‚ 2. asset ç±»å‹çš„èµ„æºä¸é€‚åˆæ‹·è´
+	/// è¿™é‡Œç›¸å½“äºä¸€ä¸ªå¼•æ“çš„èµ„æºç®¡ç†
 	/// ref https://www.youtube.com/watch?v=HkGZ378nArE&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=41&t=131s
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
@@ -44,6 +44,7 @@ namespace Hazel {
 		return std::make_unique<T>(std::forward<Args>(args)...);
 	}
 
+	/*
 	template<typename T>
 	using Ref = std::shared_ptr<T>;
 
@@ -52,4 +53,5 @@ namespace Hazel {
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+*/
 }

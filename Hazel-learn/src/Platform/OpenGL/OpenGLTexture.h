@@ -8,7 +8,7 @@ namespace Hazel
 	{
 	public:
 		OpenGLTexture2D(uint32_t width, uint32_t height);
-		OpenGLTexture2D(const std::string& path);
+		explicit OpenGLTexture2D(const std::string& path);
 		virtual ~OpenGLTexture2D();
 		uint32_t GetWidth() const override;
 		uint32_t GetHeight() const override;
@@ -23,11 +23,15 @@ namespace Hazel
 		{
 			return m_RendererID;
 		}
+
+		bool Loaded() const override { return m_Loaded;}
 	private:
 		std::string m_Path;
 		uint32_t m_Width, m_Height;
 		uint32_t m_RendererID{};
 		GLenum m_InternalFormat, m_DataFormat;
+
+		bool m_Loaded = false;
 	};
 }
 

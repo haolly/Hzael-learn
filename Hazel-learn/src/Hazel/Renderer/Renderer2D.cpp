@@ -265,7 +265,7 @@ namespace Hazel {
 		float textureIndex = 0.0f;
 		for (int i = 1; i < s_Data.TextureSlotIndex; ++i)
 		{
-			if(*s_Data.TextureSlots[i] == *texture.get())
+			if(*s_Data.TextureSlots[i].Raw() == *texture.Raw())
 			{
 				textureIndex = i;
 				break;
@@ -341,7 +341,7 @@ namespace Hazel {
 		float textureIndex = 0.0f;
 		for (int i = 1; i < s_Data.TextureSlotIndex; ++i)
 		{
-			if(*s_Data.TextureSlots[i] == *texture.get())
+			if(*s_Data.TextureSlots[i].Raw() == *texture.Raw())
 			{
 				textureIndex = i;
 				break;
@@ -445,7 +445,7 @@ namespace Hazel {
 		float textureIndex = 0.0f;
 		for (int i = 1; i < s_Data.TextureSlotIndex; ++i)
 		{
-			if(*s_Data.TextureSlots[i] == *texture.get())
+			if(*s_Data.TextureSlots[i].Raw() == *texture.Raw())
 			{
 				textureIndex = i;
 				break;

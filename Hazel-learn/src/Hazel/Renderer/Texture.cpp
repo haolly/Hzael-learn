@@ -16,7 +16,7 @@ namespace Hazel {
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLTexture2D>(width, height);
+				return Ref<OpenGLTexture2D>::Create(width, height);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");
@@ -35,7 +35,7 @@ namespace Hazel {
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLTexture2D>(path);
+				return Ref<OpenGLTexture2D>::Create(path);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");

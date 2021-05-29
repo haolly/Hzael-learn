@@ -3,7 +3,7 @@
 #include "Hazel/Renderer/Buffer.h"
 
 namespace Hazel {
-	class VertexArray
+	class VertexArray : public RefCounted
 	{
 	public:
 		virtual ~VertexArray() {}

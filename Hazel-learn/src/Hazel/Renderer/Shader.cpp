@@ -16,7 +16,7 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLShader>(filepath);
+				return Ref<OpenGLShader>::Create(filepath);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");
@@ -35,7 +35,7 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLShader>(name, vertexSrc, framentSrc);
+				return Ref<OpenGLShader>::Create(name, vertexSrc, framentSrc);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");

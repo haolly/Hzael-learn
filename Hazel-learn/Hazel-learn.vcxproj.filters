@@ -7,6 +7,9 @@
     <Filter Include="src\Hazel">
       <UniqueIdentifier>{F0370AB3-5CA2-BE29-A5E0-6FCF118A9C7E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazel\Asset">
+      <UniqueIdentifier>{7F20ACB2-EBAB-1977-F4BC-9C6B60C77577}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazel\Core">
       <UniqueIdentifier>{48D253A8-34A0-47AE-1D34-B8D409A12313}</UniqueIdentifier>
     </Filter>
@@ -72,10 +75,28 @@
     <ClInclude Include="src\Hazel.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Asset\Asset.h">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Asset\AssetImporter.h">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Asset\AssetManager.h">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Asset\AssetMetadata.h">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Asset\AssetSerializer.h">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Asset\AssetTypes.h">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazel\Core\Application.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazel\Core\Core.h">
+    <ClInclude Include="src\Hazel\Core\Base.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Core\EntryPoint.h">
@@ -97,6 +118,9 @@
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Core\MouseButtonCodes.h">
+      <Filter>src\Hazel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Core\Ref.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Core\Timer.h">
@@ -193,6 +217,9 @@
       <Filter>src\Hazel\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Utils\PlatformUtils.h">
+      <Filter>src\Hazel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Utils\StringUtils.h">
       <Filter>src\Hazel\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
@@ -1472,6 +1499,15 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Hazel\Asset\AssetImporter.cpp">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\Asset\AssetManager.cpp">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\Asset\AssetSerializer.cpp">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazel\Core\Application.cpp">
       <Filter>src\Hazel\Core</Filter>
     </ClCompile>
@@ -1552,6 +1588,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazel\Scene\ScriptableEntity.cpp">
       <Filter>src\Hazel\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\Utils\StringUtils.cpp">
+      <Filter>src\Hazel\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>

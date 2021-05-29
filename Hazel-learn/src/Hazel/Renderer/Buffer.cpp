@@ -18,7 +18,7 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLIndexBuffer>(indices, count);
+				return Ref<OpenGLIndexBuffer>::Create(indices, count);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");
@@ -36,7 +36,7 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLVertexBuffer>(size);
+				return Ref<OpenGLVertexBuffer>::Create(size);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");
@@ -55,7 +55,7 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLVertexBuffer>(vertices, size);
+				return Ref<OpenGLVertexBuffer>::Create(vertices, size);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");

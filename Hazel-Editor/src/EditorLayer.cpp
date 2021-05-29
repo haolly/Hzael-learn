@@ -34,7 +34,7 @@ namespace Hazel
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = Ref<Scene>::Create();
 
 		m_EditorCamera = EditorCamera(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
@@ -107,6 +107,7 @@ namespace Hazel
 #endif
 
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -165,7 +166,7 @@ namespace Hazel
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
 			HZ_CORE_WARN("PixelData {0}", pixelData);
-			m_HoveredEntity = pixelData == -1 ? Entity() : Entity(static_cast<entt::entity>(pixelData), m_ActiveScene.get());
+			m_HoveredEntity = pixelData == -1 ? Entity() : Entity(static_cast<entt::entity>(pixelData), m_ActiveScene.Raw());
 		}
 
 		m_Framebuffer->UnBind();
@@ -275,6 +276,7 @@ namespace Hazel
 		ImGui::End();
 
 		m_SceneHierarchyPanel.OnImGuiRender();
+		m_ContentBrowserPanel->OnImGuiRender();
 
 
 		ImGui::Begin("Stats");
@@ -340,7 +342,7 @@ namespace Hazel
 
 
 			//Snapping
-			bool snap = Input::IsKeyPressed(HZ_KEY_LEFT_CONTROL);
+			bool snap = Input::IsKeyPressed(KeyCode::HZ_KEY_LEFT_CONTROL);
 			float snapValue = 0.5f;
 			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
 				snapValue = 45.0f;
@@ -382,7 +384,7 @@ namespace Hazel
 	{
 		if(e.GetMouseButton() == Mouse::ButtonLeft)
 		{
-			bool canMousePick = m_ViewportHovered && ! ImGuizmo::IsOver() && !Input::IsKeyPressed(HZ_KEY_LEFT_ALT);
+			bool canMousePick = m_ViewportHovered && ! ImGuizmo::IsOver() && !Input::IsKeyPressed(KeyCode::HZ_KEY_LEFT_ALT);
 			if(canMousePick)
 				m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
 		}
@@ -395,12 +397,12 @@ namespace Hazel
 		if (e.GetRepeatCount() > 0)
 			return false;
 
-		bool control = Input::IsKeyPressed(HZ_KEY_LEFT_CONTROL) || Input::IsKeyPressed(HZ_KEY_RIGHT_CONTROL);
-		bool shift = Input::IsKeyPressed(HZ_KEY_LEFT_SHIFT) || Input::IsKeyPressed(HZ_KEY_RIGHT_SHIFT);
+		bool control = Input::IsKeyPressed(KeyCode::HZ_KEY_LEFT_CONTROL) || Input::IsKeyPressed(KeyCode::HZ_KEY_RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(KeyCode::HZ_KEY_LEFT_SHIFT) || Input::IsKeyPressed(KeyCode::HZ_KEY_RIGHT_SHIFT);
 
 		switch (e.GetKeyCode())
 		{
-			case HZ_KEY_S:
+			case KeyCode::HZ_KEY_S:
 			{
 				if (control && shift)
 				{
@@ -409,7 +411,7 @@ namespace Hazel
 			}
 			break;
 
-			case HZ_KEY_N:
+			case KeyCode::HZ_KEY_N:
 			{
 				if (control)
 				{
@@ -419,7 +421,7 @@ namespace Hazel
 			break;
 
 
-			case HZ_KEY_O:
+			case KeyCode::HZ_KEY_O:
 			{
 				if (control)
 				{
@@ -430,16 +432,16 @@ namespace Hazel
 
 				//Gizmos
 
-			case HZ_KEY_Q:
+			case KeyCode::HZ_KEY_Q:
 				m_GizmoType = -1;
 				break;
-			case HZ_KEY_W:
+			case KeyCode::HZ_KEY_W:
 				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 				break;
-			case HZ_KEY_E:
+			case KeyCode::HZ_KEY_E:
 				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 				break;
-			case HZ_KEY_R:
+			case KeyCode::HZ_KEY_R:
 				m_GizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 		}
@@ -448,7 +450,7 @@ namespace Hazel
 
 	void EditorLayer::NewScene()
 	{
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = Ref<Scene>::Create();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
@@ -458,7 +460,7 @@ namespace Hazel
 		std::string filepath = FileDialogs::OpenFile("Hazel Scene(*.hazel)\0*.hazel\0");
 		if (!filepath.empty())
 		{
-			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene = Ref<Scene>::Create();
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 

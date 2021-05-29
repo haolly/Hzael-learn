@@ -2,6 +2,7 @@
 #include <Hazel.h>
 
 #include "Hazel/Events/KeyEvent.h"
+#include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace Hazel
@@ -51,6 +52,7 @@ namespace Hazel
 
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		Scope<ContentBrowserPanel> m_ContentBrowserPanel;
 
 		EditorCamera m_EditorCamera;
 

@@ -155,6 +155,7 @@ namespace Hazel
 	}
 
 	std::unordered_map<AssetHandle, Ref<Asset>> AssetManager::s_LoadedAssets;
+	// store imported asset
 	std::unordered_map<std::string, AssetMetadata> AssetManager::s_AssetRegistry;
 	//AssetsChangeEventFn AssetManager::s_AssetsChangeCallback;
 	

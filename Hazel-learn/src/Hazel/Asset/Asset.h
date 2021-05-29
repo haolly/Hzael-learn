@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "AssetTypes.h"
+#include "Hazel/Core/UUID.h"
 
 namespace Hazel
 {
-	//todo
-	using AssetHandle = uint32_t;
+	using AssetHandle = UUID;
 	
 	/**
 	 * \brief Mesh, Texture, Scene is Asset, but Shader, Material, Vertex/Index buffer is not , TODO: why?

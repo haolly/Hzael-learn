@@ -167,11 +167,11 @@ public:
 
 		Hazel::Renderer::BeginScene(m_CameraController.GetCamera());
 
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+		m_FlatColorShader.As<Hazel::OpenGLShader>()->Bind();
+		m_FlatColorShader.As<Hazel::OpenGLShader>()->UploadUniformFloat3("u_Color", m_SquareColor);
 
-		const auto textureShader = shaderLibrary.Get("Texture");	
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
+		const auto textureShader = shaderLibrary.Get("Texture");
+		textureShader.As<Hazel::OpenGLShader>()->Bind();
 
 		for(int y=0; y <20; ++y)
 		{

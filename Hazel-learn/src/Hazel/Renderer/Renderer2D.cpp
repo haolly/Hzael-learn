@@ -11,6 +11,7 @@
 #include "UniformBuffer.h"
 #include "VertexArray.h"
 #include "glm/gtx/transform.hpp"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hazel {
 
@@ -129,8 +130,8 @@ namespace Hazel {
 
 
 		s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
-		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data.TextureShader.As<OpenGLShader>()->UploadUniformIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+		s_Data.TextureShader.As<OpenGLShader>()->UploadUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
 		StartBatch();
 	}

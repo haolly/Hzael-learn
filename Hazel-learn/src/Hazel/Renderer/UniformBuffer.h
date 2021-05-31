@@ -2,7 +2,7 @@
 
 namespace Hazel
 {
-	class UniformBuffer
+	class UniformBuffer : public RefCounted
 	{
 	public:
 		virtual ~UniformBuffer() {}

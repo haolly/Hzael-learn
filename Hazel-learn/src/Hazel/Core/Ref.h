@@ -1,15 +1,20 @@
 ﻿#pragma once
+#include <assert.h>
+
 namespace Hazel
 {
 	class RefCounted
 	{
 	public:
+		virtual ~RefCounted() = default;
+
 		void IncRefCount() const
 		{
 			m_RefCount++;
 		}
 		void DecRefCount() const
 		{
+			assert (m_RefCount > 0);
 			m_RefCount--;
 		}
 

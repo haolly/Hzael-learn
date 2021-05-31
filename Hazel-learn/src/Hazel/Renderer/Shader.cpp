@@ -1,31 +1,37 @@
 #include "hazelPCH.h"
 #include "Hazel/Renderer/Shader.h"
+
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "Renderer.h"
 
 namespace Hazel
 {
-	Ref<Shader> Shader::Create(const std::string& filepath)
-	{
-		switch (Renderer::GetAPI())
-		{
-			case RendererAPI::API::None:
-			{
-				HZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
-				return nullptr;
-			}
-			case RendererAPI::API::OpenGL:
-			{
-				return CreateRef<OpenGLShader>(filepath);
-			}
-		}
-		HZ_CORE_ASSERT(false, "RendererAPI is not set");
-		return nullptr;
+	std::vector<Ref<Shader>> Shader::s_AllShaders;
 
+	ShaderUniform::ShaderUniform(const std::string& name, ShaderUniformType type, uint32_t size, uint32_t offset)
+		: m_Name(name), m_Type(type), m_Size(size), m_Offset(offset)
+	{
 	}
 
-	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& framentSrc)
+	const std::string& ShaderUniform::UniformTypeToString(ShaderUniformType type)
 	{
+		switch (type)
+		{
+			case ShaderUniformType::Bool:
+				return "Boolean";
+			
+			case ShaderUniformType::Int:
+				return "Int";
+			
+			case ShaderUniformType::Float:
+				return "Float";
+		}
+		return "None";
+	}
+
+	Ref<Shader> Shader::CreateFromString(const std::string& source)
+	{
+		Ref<Shader> result = nullptr;
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:
@@ -35,11 +41,42 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLShader>(name, vertexSrc, framentSrc);
+				result = OpenGLShader::CreateFromString(source);
+				break;
 			}
 		}
-		HZ_CORE_ASSERT(false, "RendererAPI is not set");
-		return nullptr;
+		if(!result)
+		{
+			HZ_CORE_ASSERT(false, "RendererAPI is not set");
+			return nullptr;
+		}
+		s_AllShaders.push_back(result);
+		return result;
+	}
+	
+	Ref<Shader> Shader::Create(const std::string& filepath, bool forceCompile)
+	{
+		Ref<Shader> result = nullptr;
+		switch (Renderer::GetAPI())
+		{
+			case RendererAPI::API::None:
+			{
+				HZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
+				return nullptr;
+			}
+			case RendererAPI::API::OpenGL:
+			{
+				result = Ref<OpenGLShader>::Create(filepath, forceCompile);
+				break;
+			}
+		}
+		if(!result)
+		{
+			HZ_CORE_ASSERT(false, "RendererAPI is not set");
+			return nullptr;
+		}
+		s_AllShaders.push_back(result);
+		return result;
 	}
 
 	void ShaderLibrary::Add(const Ref<Shader>& shader)

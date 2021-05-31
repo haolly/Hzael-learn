@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "GLFW/glfw3.h"
+#include "Hazel/Asset/AssetManager.h"
 #include "Hazel/Renderer/Renderer.h"
 
 namespace Hazel
@@ -23,10 +24,13 @@ namespace Hazel
 		
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+
+		AssetManager::Init();
 	}
 
 	Application::~Application()
 	{
+		AssetManager::Shutdown();
 	}
 
 	void Application::Run()

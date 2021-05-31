@@ -1,16 +1,17 @@
 #pragma once
-#include "Hazel/Core/Core.h"
+#include "KeyCodes.h"
+#include "Hazel/Core/Base.h"
 
 namespace Hazel
 {
 	/// <summary>
-	/// Input class ÔÚ²»Í¬µÄÆ½Ì¨Ö»»áÓĞÒ»¸öÊµÀı£¬²»»á´æÔÚruntimeÊ±ºòµÄÇĞ»»£¬ËùÒÔÑ¡ÔñÊ¹ÓÃÄÄ¸öinputImpl Êµ¼ÊÓ¦¸ÃÔÚcompile time¾Í¾ö¶¨ÁË£»
-	/// Ïà·´£¬renderer API ÊÇÓ¦¸ÃÔÚ²»Í¬µÄÆ½Ì¨¶¼°üº¬µÄ£¬¿ÉÒÔÔÚruntimeµÄÊ±ºò½øĞĞÇĞ»»£»
+	/// Input class åœ¨ä¸åŒçš„å¹³å°åªä¼šæœ‰ä¸€ä¸ªå®ä¾‹ï¼Œä¸ä¼šå­˜åœ¨runtimeæ—¶å€™çš„åˆ‡æ¢ï¼Œæ‰€ä»¥é€‰æ‹©ä½¿ç”¨å“ªä¸ªinputImpl å®é™…åº”è¯¥åœ¨compile timeå°±å†³å®šäº†ï¼›
+	/// ç›¸åï¼Œrenderer API æ˜¯åº”è¯¥åœ¨ä¸åŒçš„å¹³å°éƒ½åŒ…å«çš„ï¼Œå¯ä»¥åœ¨runtimeçš„æ—¶å€™è¿›è¡Œåˆ‡æ¢ï¼›
 	/// </summary>
 	class HAZEL_API Input
 	{
 	public:
-		static bool IsKeyPressed(int keycode);
+		static bool IsKeyPressed(KeyCode keycode);
 		static bool IsMouseButtonPressed(int button);
 
 		static std::pair<float, float> GetMousePosition();

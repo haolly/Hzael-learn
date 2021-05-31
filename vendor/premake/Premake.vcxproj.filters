@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{61705900-4DFC-870B-B6AA-880BA255880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Hazel-Editor">
+      <UniqueIdentifier>{5847B032-C4D2-1DF7-CDE3-A0EB39EE79F7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Hazel-learn">
+      <UniqueIdentifier>{E327729F-CFF5-65A5-B889-D6CBA4F6410A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Hazel-learn\vendor">
+      <UniqueIdentifier>{E0A0934D-4C0D-4F48-1501-E7A5812C71B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Hazel-learn\vendor\GLFW">
+      <UniqueIdentifier>{1FE8D508-0BF8-81D9-74B1-E6F760E07072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Hazel-learn\vendor\Glad">
+      <UniqueIdentifier>{C773D608-B383-82D9-1C3D-E7F7086C7172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Hazel-learn\vendor\imgui">
+      <UniqueIdentifier>{4AD60C26-B6E3-3A0C-3FCA-36F7ABD606C3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Hazel-learn\vendor\yaml-cpp">
+      <UniqueIdentifier>{9203ADA5-7E29-770C-676F-FCD753349CD8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Sandbox">
+      <UniqueIdentifier>{3F7B6B1D-2B33-AD6A-943A-86C68011485B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Hazel-Editor\premake5.lua">
+      <Filter>..\Hazel-Editor</Filter>
+    </None>
+    <None Include="..\..\Hazel-learn\premake5.lua">
+      <Filter>..\Hazel-learn</Filter>
+    </None>
+    <None Include="..\..\Hazel-learn\vendor\GLFW\premake5.lua">
+      <Filter>..\Hazel-learn\vendor\GLFW</Filter>
+    </None>
+    <None Include="..\..\Hazel-learn\vendor\Glad\premake5.lua">
+      <Filter>..\Hazel-learn\vendor\Glad</Filter>
+    </None>
+    <None Include="..\..\Hazel-learn\vendor\imgui\premake5.lua">
+      <Filter>..\Hazel-learn\vendor\imgui</Filter>
+    </None>
+    <None Include="..\..\Hazel-learn\vendor\yaml-cpp\premake5.lua">
+      <Filter>..\Hazel-learn\vendor\yaml-cpp</Filter>
+    </None>
+    <None Include="..\..\Sandbox\premake5.lua">
+      <Filter>..\Sandbox</Filter>
+    </None>
+    <None Include="..\..\premake5.lua">
+      <Filter>..</Filter>
+    </None>
+    <None Include="premake5.lua" />
+  </ItemGroup>
+</Project>

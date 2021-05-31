@@ -14,6 +14,7 @@
 #include "Sandbox2D.h"
 // temporary
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
 {
@@ -149,10 +150,10 @@ public:
 		m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
+		textureShader->Bind();
 
-		// TODO ÕâÀïµÄslot ÔÚmaterialÖÐÓ³Éä
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+		// TODO ï¿½ï¿½ï¿½ï¿½ï¿½slot ï¿½ï¿½materialï¿½ï¿½Ó³ï¿½ï¿½
+		textureShader.As<Hazel::OpenGLShader>()->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(float deltaTime) override
@@ -166,11 +167,11 @@ public:
 
 		Hazel::Renderer::BeginScene(m_CameraController.GetCamera());
 
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+		m_FlatColorShader.As<Hazel::OpenGLShader>()->Bind();
+		m_FlatColorShader.As<Hazel::OpenGLShader>()->UploadUniformFloat3("u_Color", m_SquareColor);
 
-		const auto textureShader = shaderLibrary.Get("Texture");	
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
+		const auto textureShader = shaderLibrary.Get("Texture");
+		textureShader.As<Hazel::OpenGLShader>()->Bind();
 
 		for(int y=0; y <20; ++y)
 		{

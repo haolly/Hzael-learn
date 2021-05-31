@@ -20,6 +20,6 @@ namespace Hazel
 		glm::vec2 min = {coords.x / textureWidth, coords.y / textureHeight};
 		glm::vec2 max = {(coords.x + spriteSize.x) / textureWidth, (coords.y + spriteSize.y) / textureHeight};
 
-		return  CreateRef<SubTexture2D>(texture, min, max);
+		return  Ref<SubTexture2D>::Create(texture, min, max);
 	}
 }

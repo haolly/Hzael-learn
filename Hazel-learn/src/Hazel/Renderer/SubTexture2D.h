@@ -4,12 +4,13 @@
 
 namespace Hazel
 {
-	class SubTexture2D
+	class SubTexture2D : public Asset
 	{
 	public:
 		SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& min, const glm::vec2& max);
-		const Ref<Texture2D> GetTexture() { return m_Texture; }
-		const glm::vec2* GetTextureCoords() { return m_TextureCoords; }
+		Ref<Texture2D> GetTexture() { return m_Texture; }
+		const Ref<Texture2D> GetTexture() const { return m_Texture; }
+		const glm::vec2* GetTextureCoords() const { return m_TextureCoords; }
 
 		static Ref<SubTexture2D> CreateFromCoords(const Ref<Texture2D>& texture, const glm::vec2& coords, const glm::vec2& spriteSize);
 	private:

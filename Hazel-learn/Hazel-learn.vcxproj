@@ -77,11 +77,11 @@
       <PrecompiledHeaderFile>hazelPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HZ_PLATFORM_WINDOWS;HZ_BUILD_DLL;HZ_ENABLE_ASSERT;GLFW_INCLUDE_NONE;HZ_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;C:\VulkanSDK\1.2.176.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -90,7 +90,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;vendor\VulkanSDK\Lib\shaderc_sharedd.lib;vendor\VulkanSDK\Lib\spirv-cross-cored.lib;vendor\VulkanSDK\Lib\spirv-cross-glsld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -99,13 +99,13 @@
       <PrecompiledHeaderFile>hazelPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HZ_PLATFORM_WINDOWS;HZ_BUILD_DLL;HZ_ENABLE_ASSERT;GLFW_INCLUDE_NONE;HZ_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;C:\VulkanSDK\1.2.176.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -115,7 +115,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%{Library.ShaderC_Release.lib;vendor\VulkanSDK\Lib\spirv-cross-core.lib;vendor\VulkanSDK\Lib\spirv-cross-glsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -124,13 +124,13 @@
       <PrecompiledHeaderFile>hazelPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HZ_PLATFORM_WINDOWS;HZ_BUILD_DLL;HZ_ENABLE_ASSERT;GLFW_INCLUDE_NONE;HZ_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;vendor\yaml-cpp\include;vendor\ImGuizmo;C:\VulkanSDK\1.2.176.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -140,14 +140,20 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%{Library.ShaderC_Release.lib;vendor\VulkanSDK\Lib\spirv-cross-core.lib;vendor\VulkanSDK\Lib\spirv-cross-glsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Hazel\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Hazel.h" />
+    <ClInclude Include="src\Hazel\Asset\Asset.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetImporter.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetManager.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetMetadata.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetSerializer.h" />
+    <ClInclude Include="src\Hazel\Asset\AssetTypes.h" />
     <ClInclude Include="src\Hazel\Core\Application.h" />
-    <ClInclude Include="src\Hazel\Core\Core.h" />
+    <ClInclude Include="src\Hazel\Core\Base.h" />
+    <ClInclude Include="src\Hazel\Core\Buffer.h" />
     <ClInclude Include="src\Hazel\Core\EntryPoint.h" />
     <ClInclude Include="src\Hazel\Core\Input.h" />
     <ClInclude Include="src\Hazel\Core\KeyCodes.h" />
@@ -155,6 +161,9 @@
     <ClInclude Include="src\Hazel\Core\LayerStack.h" />
     <ClInclude Include="src\Hazel\Core\Log.h" />
     <ClInclude Include="src\Hazel\Core\MouseButtonCodes.h" />
+    <ClInclude Include="src\Hazel\Core\Timer.h" />
+    <ClInclude Include="src\Hazel\Core\Ref.h" />
+    <ClInclude Include="src\Hazel\Core\UUID.h" />
     <ClInclude Include="src\Hazel\Core\Window.h" />
     <ClInclude Include="src\Hazel\Debug\Instrumentor.h" />
     <ClInclude Include="src\Hazel\Events\ApplicationEvent.h" />
@@ -165,8 +174,11 @@
     <ClInclude Include="src\Hazel\Math\Math.h" />
     <ClInclude Include="src\Hazel\Renderer\Buffer.h" />
     <ClInclude Include="src\Hazel\Renderer\Camera.h" />
+    <ClInclude Include="src\Hazel\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Hazel\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Hazel\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Hazel\Renderer\Image.h" />
+    <ClInclude Include="src\Hazel\Renderer\Material.h" />
     <ClInclude Include="src\Hazel\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Hazel\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Hazel\Renderer\RenderCommand.h" />
@@ -174,8 +186,10 @@
     <ClInclude Include="src\Hazel\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Hazel\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Hazel\Renderer\Shader.h" />
+    <ClInclude Include="src\Hazel\Renderer\ShaderUniform.h" />
     <ClInclude Include="src\Hazel\Renderer\SubTexture2D.h" />
     <ClInclude Include="src\Hazel\Renderer\Texture.h" />
+    <ClInclude Include="src\Hazel\Renderer\UniformBuffer.h" />
     <ClInclude Include="src\Hazel\Renderer\VertexArray.h" />
     <ClInclude Include="src\Hazel\Scene\Components.h" />
     <ClInclude Include="src\Hazel\Scene\Entity.h" />
@@ -183,13 +197,17 @@
     <ClInclude Include="src\Hazel\Scene\SceneCamera.h" />
     <ClInclude Include="src\Hazel\Scene\SceneSerializer.h" />
     <ClInclude Include="src\Hazel\Scene\ScriptableEntity.h" />
+    <ClInclude Include="src\Hazel\Utils\FileSystem.h" />
     <ClInclude Include="src\Hazel\Utils\PlatformUtils.h" />
+    <ClInclude Include="src\Hazel\Utils\StringUtils.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLMaterial.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLUniformBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\hazelPCH.h" />
@@ -610,17 +628,23 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Hazel\Renderer\EditorCamera.cpp" />
+    <ClCompile Include="src\Hazel\Asset\AssetImporter.cpp" />
+    <ClCompile Include="src\Hazel\Asset\AssetManager.cpp" />
+    <ClCompile Include="src\Hazel\Asset\AssetSerializer.cpp" />
     <ClCompile Include="src\Hazel\Core\Application.cpp" />
     <ClCompile Include="src\Hazel\Core\Layer.cpp" />
     <ClCompile Include="src\Hazel\Core\LayerStack.cpp" />
     <ClCompile Include="src\Hazel\Core\Log.cpp" />
+    <ClCompile Include="src\Hazel\Core\UUID.cpp" />
     <ClCompile Include="src\Hazel\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Hazel\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Hazel\Math\Math.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Hazel\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="src\Hazel\Renderer\Image.cpp" />
+    <ClCompile Include="src\Hazel\Renderer\Material.cpp" />
     <ClCompile Include="src\Hazel\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Hazel\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Hazel\Renderer\RenderCommand.cpp" />
@@ -630,19 +654,24 @@
     <ClCompile Include="src\Hazel\Renderer\Shader.cpp" />
     <ClCompile Include="src\Hazel\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Hazel\Renderer\UniformBuffer.cpp" />
     <ClCompile Include="src\Hazel\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Hazel\Scene\Entity.cpp" />
     <ClCompile Include="src\Hazel\Scene\Scene.cpp" />
     <ClCompile Include="src\Hazel\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Hazel\Scene\SceneSerializer.cpp" />
     <ClCompile Include="src\Hazel\Scene\ScriptableEntity.cpp" />
+    <ClCompile Include="src\Hazel\Utils\StringUtils.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLMaterial.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLUniformBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsFileSystem.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />

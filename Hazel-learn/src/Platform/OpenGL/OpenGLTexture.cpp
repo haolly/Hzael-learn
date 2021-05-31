@@ -44,6 +44,7 @@ namespace Hazel
 		}
 		m_Width = width;
 		m_Height = height;
+		m_Loaded = true;
 
 		GLenum internalFormat = 0, dataFormat = 0;
 		if(channel == 4)

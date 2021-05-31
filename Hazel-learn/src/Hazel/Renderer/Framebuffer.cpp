@@ -18,7 +18,7 @@ namespace Hazel
 			}
 			case RendererAPI::API::OpenGL:
 			{
-				return CreateRef<OpenGLFramebuffer>(spec);
+				return Ref<OpenGLFramebuffer>::Create(spec);
 			}
 		}
 		HZ_CORE_ASSERT(false, "RendererAPI is not set");

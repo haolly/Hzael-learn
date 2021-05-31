@@ -21,6 +21,8 @@ namespace Hazel
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 		static void Flush();
+		static void StartBatch();
+		static void NextBatch();
 
 		// Primitives
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);

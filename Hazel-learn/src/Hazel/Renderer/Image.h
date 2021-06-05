@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Hazel/Core/Buffer.h"
 
 namespace Hazel
 {
@@ -47,6 +48,7 @@ namespace Hazel
 		TextureCube
 	};
 
+	// Has no relationship with Image
 	struct TextureProperties
 	{
 		TextureWrap SamplerWrap = TextureWrap::Repeat;
@@ -69,5 +71,65 @@ namespace Hazel
 	class Image : public RefCounted
 	{
 	public:
+		virtual ~Image() {}
+
+		virtual void Invalidate() = 0;
+		virtual void Release() = 0;
+
+		virtual uint32_t GetWidth() const = 0;
+		virtual uint32_t GetHeight() const = 0;
+
+		virtual ImageSpecification& GetSpecification() = 0;
+		virtual const ImageSpecification& GetSpecification() const = 0;
+
+		virtual Buffer GetBuffer() const = 0;
+		virtual Buffer& GetBuffer() = 0;
+
+		virtual void CreatePerLayerImageViews() = 0;
+		virtual uint64_t GetHash() const = 0;
 	};
+
+	class Image2D : public Image
+	{
+	public:
+		static Ref<Image2D> Create(ImageSpecification specification, Buffer buffer);
+		static Ref<Image2D> Create(ImageSpecification specification, const void* data = nullptr);
+	};
+
+	namespace Utils
+	{
+		inline uint32_t GetImageFormatBPP(ImageFormat format)
+		{
+			switch (format)
+			{
+				case ImageFormat::RGB:
+				case ImageFormat::SRGB:
+					return 3;
+				
+				case ImageFormat::RGBA:
+					return 4;
+				case ImageFormat::RGBA16F:
+					return 2 * 4;
+				case ImageFormat::RGBA32F:
+					return 4 * 4;
+			}
+			HZ_CORE_ASSERT(false, "format error");
+			return 0;
+		}
+
+		inline uint32_t CalculateMipCount(uint32_t width, uint32_t height)
+		{
+			return (uint32_t)std::floor(std::log2(std::min(width,height))) + 1;
+		}
+		
+		inline uint32_t GetImageMemorySize(ImageFormat format, uint32_t width, uint32_t height)
+		{
+			return width * height * GetImageFormatBPP(format);
+		}
+
+		inline bool IsDepthFormat(ImageFormat format)
+		{
+			return format == ImageFormat::DEPTH24STENCIL8 || format == ImageFormat::DEPTH32F;
+		}
+	}
 }

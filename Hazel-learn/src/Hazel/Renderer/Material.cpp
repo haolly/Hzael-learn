@@ -10,9 +10,9 @@ namespace Hazel
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API::None:
+			case RendererAPIType::None:
 				return nullptr;
-			case RendererAPI::API::OpenGL:
+			case RendererAPIType::OpenGL:
 				return Ref<OpenGLMaterial>::Create(shader, name);
 		}
 		HZ_CORE_ASSERT(false, "Unknow RendererAPI");

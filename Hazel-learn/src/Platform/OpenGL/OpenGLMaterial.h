@@ -21,6 +21,8 @@ namespace Hazel
 		void Set(const std::string& name, const glm::mat3 value) override;
 		void Set(const std::string& name, const glm::mat4 value) override;
 		void Set(const std::string& name, const Ref<Texture2D>& texture) override;
+		void Set(const std::string& name, const Ref<Image2D>& image) override;
+		
 		float& GetFloat(const std::string& name) override;
 		int32_t& GetInt(const std::string& name) override;
 		uint32_t& GetUInt(const std::string& name) override;
@@ -67,6 +69,7 @@ namespace Hazel
 
 		// store all constant data(uniform ?)  for this material with respect to m_Shader
 		Buffer m_UniformStorageBuffer;
+		std::map<uint32_t, Ref<Image2D>> m_Images;
 		std::map<uint32_t, Ref<Texture2D>> m_Texture2Ds;
 	};
 }

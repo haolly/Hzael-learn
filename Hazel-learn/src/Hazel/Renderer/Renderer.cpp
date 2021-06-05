@@ -7,40 +7,92 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hazel {
+	struct RendererData
+	{
+		Ref<ShaderLibrary> m_ShaderLibrary;
+		Ref<Texture2D> WhiteTexture;
+	};
 
-	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
+	struct ShaderDependencies
+	{
+		std::vector<Ref<Pipeline>> Pipelines;
+		std::vector<Ref<Material>> Materials;
+	};
+
+	static RendererData* s_Data = nullptr;
+	static RenderCommandQueue* s_CommandQueue = nullptr;
+	static RenderCommandQueue s_ResourceFreeQueue[3];
+	static RendererAPI* s_RendererAPI = nullptr;
+	static std::unordered_map<size_t, Ref<Pipeline>> s_PipelineCache;
+	static std::unordered_map<size_t, ShaderDependencies> s_ShaderDependencies;
 
 	void Renderer::Init()
 	{
-		RenderCommand::Init();
+		s_Data = new RendererData();
+		s_Data->m_ShaderLibrary = Ref<ShaderLibrary>::Create();
+		s_CommandQueue = new RenderCommandQueue();
+		s_RendererAPI = InitRendererAPI();
+
+		//init load shader
+		s_Data->m_ShaderLibrary->Load("Resources/Shaders/Renderer2D.glsl");
+		//compile shaders
+		WaitAndRender();
+
+		uint32_t whiteTextureData = 0xffffffff;
+		s_Data->WhiteTexture = Texture2D::Create(ImageFormat::RGBA, 1, 1, &whiteTextureData);
+		
+		s_RendererAPI->Init();
 		Renderer2D::Init();
 	}
 
-	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	void Renderer::ShutDown()
 	{
-		RenderCommand::SetViewport(0, 0, width, height);
+		Renderer2D::Shutdown();
+		s_ShaderDependencies.clear();
+		s_RendererAPI->Shutdown();
+
+		delete s_Data;
+		delete s_CommandQueue;
 	}
 
-	void Renderer::BeginScene(OrthographicCamera& camera)
+	RendererCapabilities& Renderer::GetCapabilities()
 	{
-		// TODO, camera, environment, shader uniforms
-		// Copy this because the data will be in the separate thread
-		m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+		return s_RendererAPI->GetCapabilities();
 	}
 
-	void Renderer::EndScene()
+	void Renderer::WaitAndRender()
 	{
+		s_CommandQueue->Execute();
 	}
 
-	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform)
+	void Renderer::BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<RenderPass> renderPass, bool explicitClear)
 	{
-		shader->Bind();
-		// TODO viewProjection do not need to upload every frame, but upload per shader per scene
-		shader.As<OpenGLShader>()->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-		shader.As<OpenGLShader>()->UploadUniformMat4("u_Transform", transform);
-		// Bind should not in RenderCommand
-		vertexArray->Bind();
-		RenderCommand::DrawIndexed(vertexArray);
+		s_RendererAPI->BeginRenderPass(renderCommandBuffer, renderPass, explicitClear);
 	}
 
+	void Renderer::EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer)
+	{
+		s_RendererAPI->EndRenderPass(renderCommandBuffer);
+	}
+
+	void Renderer::BeginFrame()
+	{
+		s_RendererAPI->BeginFrame();
+	}
+
+	void Renderer::EndFrame()
+	{
+		s_RendererAPI->EndFrame();
+	}
+
+	void Renderer::RenderQuad(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipline, Ref<UniformBufferSet> uniformBufferSet,
+		Ref<Material> material, const glm::mat4& transform)
+	{
+		s_RendererAPI->RenderQuad(renderCommandBuffer, pipline, uniformBufferSet, material, transform);
+	}
+
+	RenderCommandQueue& Renderer::GetRenderCommandQueue()
+	{
+		return *s_CommandQueue;
+	}
 }

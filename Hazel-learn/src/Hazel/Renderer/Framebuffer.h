@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/vec4.hpp"
 
 namespace Hazel
 {
@@ -38,11 +39,17 @@ namespace Hazel
 	
 	struct FramebufferSpecification
 	{
+		float Scale = 1.0f;
 		uint32_t Width, Height;
-		uint32_t Samples = 1;
+		glm::vec4 ClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+		
 		FramebufferAttachmentSpecification Attachments;
+		uint32_t Samples = 1;
+		
 		// Render pass 会用到这个概念，一个render pass 其实就是一个 framebuffer
 		bool SwapChainTarget = false;
+
+		std::string DebugName;
 	};
 
 	class Framebuffer : public RefCounted

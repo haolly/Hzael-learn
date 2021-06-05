@@ -1,29 +1,43 @@
 #pragma once
 #include <glm/glm.hpp>
 
-#include "VertexArray.h"
+#include "Material.h"
+#include "Pipeline.h"
 
 namespace Hazel {
+	class RenderPass;
+	struct RendererCapabilities;
+
+	enum class RendererAPIType 
+	{
+		None = 0,
+		OpenGL = 1,
+		Vulkan = 2,
+	};
 	
 	class RendererAPI
 	{
 	public:
 		virtual ~RendererAPI() = default;
-
-		enum class API 
-		{
-			None = 0,
-			OpenGL = 1
-		};
-	public:
+		
 		virtual void Init() = 0;
-		virtual void SetClearColor(const glm::vec4& color) = 0;
-		virtual void Clear() = 0;
-		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount) = 0;
-		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
-		inline static API GetAPI() { return s_API; }
+		virtual void Shutdown() = 0;
+
+		virtual void BeginFrame() = 0;
+		virtual void EndFrame() = 0;
+
+		virtual void BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer, const Ref<RenderPass>& renderPass, bool explicitClear=false) = 0;
+		virtual void EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer) = 0;
+		virtual void SubmitFullscreenQuad(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipeline, Ref<UniformBufferSet> uniformBufferSet, Ref<Material> material) = 0;
+
+		virtual void RenderQuad(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipeline, Ref<UniformBufferSet> uniformBufferSet, Ref<Material> material, const glm::mat4& transform) = 0;
+
+		virtual RendererCapabilities& GetCapabilities() = 0;
+
+		static void SetAPI(RendererAPIType api);
+		static RendererAPIType GetAPI() { return s_CurrentRendererAPI; }
 	private:
-		static API s_API;
+		inline static RendererAPIType s_CurrentRendererAPI = RendererAPIType::OpenGL;
 	};
 
 }

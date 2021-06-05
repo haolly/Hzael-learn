@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include "Hazel/Renderer/Renderer.h"
+
 namespace Hazel
 {
 	OpenGLUniformBuffer::OpenGLUniformBuffer(uint32_t size, uint32_t binding)
@@ -19,6 +21,9 @@ namespace Hazel
 
 	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size, uint32_t offset)
 	{
-		glNamedBufferSubData(m_RendererID, offset, size, data);
+		Renderer::Submit([this, m_RendererID, offset, size, data]()
+		{
+			glNamedBufferSubData(m_RendererID, offset, size, data);
+		});
 	}
 }

@@ -3,7 +3,7 @@
 bin/
 bin-int/
 Hazel-learn/vendor/VulkanSDK
-Hazel-Editor/assets/cache
+Hazel-Editor/Resources/cache
 scripts/__pycache__
 
 imgui.ini

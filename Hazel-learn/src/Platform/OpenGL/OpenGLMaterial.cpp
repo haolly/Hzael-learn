@@ -1,7 +1,9 @@
 ﻿#include "hazelPCH.h"
 #include "OpenGLMaterial.h"
 
+#include "OpenGLImage2D.h"
 #include "OpenGLShader.h"
+#include "Hazel/Renderer/Renderer.h"
 
 namespace Hazel
 {
@@ -74,6 +76,18 @@ namespace Hazel
 		m_Texture2Ds[slot] = texture;
 	}
 
+	void OpenGLMaterial::Set(const std::string& name, const Ref<Image2D>& image)
+	{
+		auto decl = FindResourceDeclaration(name);
+		if(!decl)
+		{
+			HZ_CORE_WARN("Cannot find material property: {0}", name);
+			return;
+		}
+		uint32_t slot = decl->GetRegister();
+		m_Images[slot] = image;
+	}
+
 	float& OpenGLMaterial::GetFloat(const std::string& name)
 	{
 		return Get<float>(name);
@@ -131,7 +145,10 @@ namespace Hazel
 	void OpenGLMaterial::UpdateForRendering()
 	{
 		Ref<OpenGLShader> shader = m_Shader.As<OpenGLShader>();
-		glUseProgram(shader->GetRendererID());
+		Renderer::Submit([shader]()
+		{
+			glUseProgram(shader->GetRendererID());
+		});
 
 		const auto& shaderBuffers = m_Shader->GetShaderBuffers();
 		HZ_CORE_ASSERT(shaderBuffers.size() <= 1, "Currently only support ONE material buffer!");
@@ -205,8 +222,27 @@ namespace Hazel
 			if(texture)
 			{
 				uint32_t textureSlot = slot;
-				//todo
-				//Ref<Image2D> image = 
+				Ref<Image2D> image = texture->GetImage();
+				Ref<OpenGLImage2D> glImage = image.As<OpenGLImage2D>();
+				Renderer::Submit([textureSlot, glImage]()
+				{
+					glBindSampler(textureSlot, glImage->GetSamplerRendererID());
+					glBindTextureUnit(textureSlot, glImage->GetRendererID());
+				});
+			}
+		}
+
+		for(auto& [slot, image] : m_Images)
+		{
+			if(image)
+			{
+				uint32_t textureSlot = slot;
+				Ref<OpenGLImage2D> glImage = image.As<OpenGLImage2D>();
+				Renderer::Submit([textureSlot, glImage]()
+				{
+					glBindSampler(textureSlot, glImage->GetSamplerRendererID());
+					glBindTextureUnit(textureSlot, glImage->GetRendererID());
+				});
 			}
 		}
 	}

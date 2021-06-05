@@ -46,7 +46,7 @@ public:
 		m_VertexBuffer = Hazel::VertexBuffer::Create(vertices, sizeof(vertices));
 		m_VertexBuffer->Bind();
 
-		Hazel::BufferLayout layout = {
+		Hazel::VertexBufferLayout layout = {
 			{Hazel::ShaderDataType::Float3, "a_Position"},
 			{Hazel::ShaderDataType::Float4, "a_Color"}
 		};
@@ -105,7 +105,7 @@ public:
 		m_SquareVB = (Hazel::VertexBuffer::Create(squareVertices, sizeof(squareVertices)) );
 		m_SquareVB->Bind();
 
-		Hazel::BufferLayout squareLayout = {
+		Hazel::VertexBufferLayout squareLayout = {
 			{Hazel::ShaderDataType::Float3, "a_Position"},
 			{Hazel::ShaderDataType::Float2, "a_TexCoord"},
 		};

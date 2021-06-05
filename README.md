@@ -21,11 +21,27 @@
 2. ImGUI的panel resize 不会触发GLFW 的event
 
 ## Renderer
+1. 包含一个RenderCommandQueue，管理render command 的执行
 
-1. Renderer & RenderCommand 作为外层API 接口
-2. Renderer & RenderCommand 最后都将调用转到RenderAPI 里面去
-3. `RenderAPI` 是一个Interface，具体实现由`OpenGLRendererAPI` 等
-4. `Shader` , `VertexBuffer` ,`IndexBuffer` , `VertexArray` 等也是interface，具体由不同的Graphics API 去实现，类似于OGRE 中
+2. 对外暴露API 接口，实际实现是 RendererAPI
+
+### RendererAPI
+1. 抽象类，具体实现有 OpenGLRendererAPI/VulkanRendererAPI
+2. 最后的draw call 都 submit 到了renderer 里面去
+
+### RenderCommandBuffer
+### RenderCommandQueue
+1. 保存renderCommand，也就是一系列的callback
+### SceneRenderer
+### Pipeline
+1. render state + renderpass + shader 之类的
+2. OpenGL 的vertexArray 在这里创建
+### RenderPass
+1. 就是一个FrameBuffer
+### Buffer
+### Texture
+1. Texture 其实就是 image + TextureProperty 
+2. Image 就是image，图片，包含一个buffer用来存储数据。
 
 ## Input
 

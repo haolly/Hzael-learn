@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include "Hazel/Renderer/Renderer.h"
+
 namespace Hazel
 {
 	namespace Utils
@@ -22,18 +24,20 @@ namespace Hazel
 			glBindTexture(TextureTarget(multisampled), id);
 		}
 
-		static void AttachColorTexture(uint32_t id, int samplers,GLenum internalFormat, GLenum accessFormat, uint32_t width, uint32_t height, int index)
+		static void AttachColorTexture(uint32_t id, int samplers, GLenum internalFormat, GLenum accessFormat, uint32_t width,
+		                               uint32_t height, int index)
 		{
 			bool multisampled = samplers > 1;
-			if(multisampled)
+			if (multisampled)
 			{
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samplers, internalFormat, width, height, GL_FALSE);
 			}
 			else
 			{
-				// allocate memory
+				// allocatea a mutable memory instead of immutable
 				glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, accessFormat, GL_UNSIGNED_BYTE, nullptr);
 
+				// ref https://stackoverflow.com/questions/19085956/what-is-the-difference-between-gltexparameter-and-glsamplerparameter
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -46,7 +50,7 @@ namespace Hazel
 		static void AttachDepthTexture(uint32_t id, int samplers, GLenum format, GLenum attachmentType, uint32_t width, uint32_t height)
 		{
 			bool multisampled = samplers > 1;
-			if(multisampled)
+			if (multisampled)
 			{
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samplers, format, width, height, GL_FALSE);
 			}
@@ -59,15 +63,15 @@ namespace Hazel
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
 		}
-		
+
 		static bool IsDepthFormat(FramebufferTextureFormat format)
 		{
 			switch (format)
 			{
-				case FramebufferTextureFormat::DEPTH24STENCIL8:
-					return true;
-				default:
-					return false;
+			case FramebufferTextureFormat::DEPTH24STENCIL8:
+				return true;
+			default:
+				return false;
 			}
 		}
 
@@ -75,10 +79,10 @@ namespace Hazel
 		{
 			switch (format)
 			{
-				case FramebufferTextureFormat::RGBA8:
-					return GL_RGBA8;
-				case FramebufferTextureFormat::RED_INTEGER:
-					return GL_RED_INTEGER;
+			case FramebufferTextureFormat::RGBA8:
+				return GL_RGBA8;
+			case FramebufferTextureFormat::RED_INTEGER:
+				return GL_RED_INTEGER;
 			}
 			HZ_CORE_ASSERT(false, "");
 		}
@@ -89,7 +93,7 @@ namespace Hazel
 	{
 		for (auto specification : m_Specification.Attachments.Attachments)
 		{
-			if(!Utils::IsDepthFormat(specification.TextureFormat))
+			if (!Utils::IsDepthFormat(specification.TextureFormat))
 				m_ColorAttachmentSpecs.emplace_back(specification);
 			else
 				m_DepthAttachmentSpec = specification;
@@ -123,7 +127,7 @@ namespace Hazel
 
 		bool multisample = m_Specification.Samples > 1;
 
-		if(!m_ColorAttachmentSpecs.empty())
+		if (!m_ColorAttachmentSpecs.empty())
 		{
 			m_ColorAttachments.resize(m_ColorAttachmentSpecs.size());
 			Utils::CreateTextures(multisample, m_ColorAttachments.data(), m_ColorAttachments.size());
@@ -136,37 +140,38 @@ namespace Hazel
 				{
 				case FramebufferTextureFormat::RGBA8:
 					Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA8, GL_RGBA,
-						m_Specification.Width, m_Specification.Height, i);
+					                          m_Specification.Width, m_Specification.Height, i);
 					break;
-					
+
 				case FramebufferTextureFormat::RED_INTEGER:
 					Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, GL_RED_INTEGER,
-						m_Specification.Width, m_Specification.Height, i);
+					                          m_Specification.Width, m_Specification.Height, i);
 					break;
 				}
 			}
 		}
 
-		if(m_DepthAttachmentSpec.TextureFormat != FramebufferTextureFormat::None)
+		if (m_DepthAttachmentSpec.TextureFormat != FramebufferTextureFormat::None)
 		{
 			Utils::CreateTextures(multisample, &m_DepthAttachment, 1);
 			Utils::BindTexture(multisample, m_DepthAttachment);
 			switch (m_DepthAttachmentSpec.TextureFormat)
 			{
 			case FramebufferTextureFormat::DEPTH24STENCIL8:
-				Utils::AttachDepthTexture(m_DepthAttachment, m_Specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_Specification.Width, m_Specification.Height);
+				Utils::AttachDepthTexture(m_DepthAttachment, m_Specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT,
+				                          m_Specification.Width, m_Specification.Height);
 				break;
 			}
 		}
 
 		// Multiple Render Target, ref http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
-		if(m_ColorAttachments.size() > 1)
+		if (m_ColorAttachments.size() > 1)
 		{
 			HZ_CORE_ASSERT(m_ColorAttachments.size() <= 4, "Only support 4 color Attachments");
 			GLenum buffers[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
 			glDrawBuffers(m_ColorAttachments.size(), buffers);
 		}
-		else if(m_ColorAttachments.empty())
+		else if (m_ColorAttachments.empty())
 		{
 			// Only depth-pass
 			glDrawBuffer(GL_NONE);
@@ -179,13 +184,18 @@ namespace Hazel
 
 	void OpenGLFramebuffer::Bind() const
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-		// Handle Imgui's Panel resize, which is not handle by glfw event
-		glViewport(0, 0, m_Specification.Width, m_Specification.Height);
+		Ref<const OpenGLFramebuffer> instance = this;
+		Renderer::Submit([instance]()
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, instance->m_RendererID);
+			// Handle Imgui's Panel resize, which is not handle by glfw event
+			glViewport(0, 0, instance->GetSpecification().Width, instance->GetSpecification().Height);
+		});
 	}
 
 	void OpenGLFramebuffer::UnBind() const
 	{
+		//TODO, CHANGE to render cmd
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
@@ -212,6 +222,7 @@ namespace Hazel
 		HZ_CORE_ASSERT(attachmentIndex < m_ColorAttachments.size(), "");
 
 		auto& spec = m_ColorAttachmentSpecs[attachmentIndex];
-		glClearTexImage(m_ColorAttachments[attachmentIndex], 0, Utils::HazelFramebufferTextureFormatToGL(spec.TextureFormat), GL_INT, &data);
+		glClearTexImage(m_ColorAttachments[attachmentIndex], 0, Utils::HazelFramebufferTextureFormatToGL(spec.TextureFormat), GL_INT,
+		                &data);
 	}
 }

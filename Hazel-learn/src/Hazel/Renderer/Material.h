@@ -29,6 +29,7 @@ namespace Hazel
 		virtual void Set(const std::string& name, const glm::mat4 value) = 0;
 
 		virtual void Set(const std::string& name, const Ref<Texture2D>& texture) = 0;
+		virtual void Set(const std::string& name, const Ref<Image2D>& image) = 0;
 
 		virtual float& GetFloat(const std::string& name) = 0;
 		virtual int32_t& GetInt(const std::string& name) = 0;

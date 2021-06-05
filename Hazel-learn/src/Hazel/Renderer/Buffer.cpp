@@ -11,12 +11,12 @@ namespace Hazel
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::None:
+			case RendererAPIType::None:
 			{
 				HZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 				return nullptr;
 			}
-			case RendererAPI::API::OpenGL:
+			case RendererAPIType::OpenGL:
 			{
 				return Ref<OpenGLIndexBuffer>::Create(indices, count);
 			}
@@ -29,12 +29,12 @@ namespace Hazel
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::None:
+			case RendererAPIType::None:
 			{
 				HZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 				return nullptr;
 			}
-			case RendererAPI::API::OpenGL:
+			case RendererAPIType::OpenGL:
 			{
 				return Ref<OpenGLVertexBuffer>::Create(size);
 			}
@@ -48,12 +48,12 @@ namespace Hazel
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::None:
+			case RendererAPIType::None:
 			{
 				HZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 				return nullptr;
 			}
-			case RendererAPI::API::OpenGL:
+			case RendererAPIType::OpenGL:
 			{
 				return Ref<OpenGLVertexBuffer>::Create(vertices, size);
 			}

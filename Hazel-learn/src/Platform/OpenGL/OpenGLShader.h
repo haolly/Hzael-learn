@@ -22,9 +22,8 @@ namespace Hazel {
 		void AddShaderReloadedCallback(const ShaderReloadedCallback& callback) override;
 		const std::unordered_map<std::string, ShaderBuffer>& GetShaderBuffers() const override;
 		const std::unordered_map<std::string, ShaderResourceDeclaration>& GetResources() const override;
-		
 		const std::string& GetName() const override { return m_Name; }
-		
+		const ShaderResourceDeclaration* GetShaderResource(const std::string& name);
 		static void ClearUniformBuffers();
 
 		void SetUniformBuffer(const std::string& name, const void* data, uint32_t size);	
@@ -86,8 +85,10 @@ namespace Hazel {
 
 		// todo, push constant in vulkan, 一个shader 可以有多个const buffer
 		std::unordered_map<std::string, ShaderBuffer> m_Buffers;
-		std::unordered_map<std::string, ShaderResourceDeclaration> m_Resources;
+		// spriv push constant will compiler to opengl glsl's uniform?
 		std::unordered_map<std::string, GLint> m_UniformLocations;
+		// store all samplers in this shader
+		std::unordered_map<std::string, ShaderResourceDeclaration> m_Resources;
 	};
 }
 

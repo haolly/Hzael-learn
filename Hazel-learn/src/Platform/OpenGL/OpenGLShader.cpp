@@ -175,7 +175,14 @@ namespace Hazel
 		// 	instance->CompileOrGetOpenGLBinaries(shaderData, forceCompile);
 		// });
 	}
-	
+
+	const ShaderResourceDeclaration* OpenGLShader::GetShaderResource(const std::string& name)
+	{
+		if(m_Resources.find(name) == m_Resources.end())
+			return nullptr;
+		return &m_Resources.at(name);
+	}
+
 	void OpenGLShader::ClearUniformBuffers()
 	{
 		s_UniformBuffers.clear();

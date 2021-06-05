@@ -23,9 +23,6 @@
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
     <ClCompile Include="src\HazelEditorApp.cpp" />
-    <ClCompile Include="src\ImGui\ImGui.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="src\Panels\ContentBrowserPanel.cpp">
       <Filter>Panels</Filter>
     </ClCompile>

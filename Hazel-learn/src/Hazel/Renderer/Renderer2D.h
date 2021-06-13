@@ -1,5 +1,6 @@
 #pragma once
 #include "EditorCamera.h"
+#include "RenderPass.h"
 #include "glm/glm.hpp"
 #include "Hazel/Scene/Components.h"
 
@@ -17,8 +18,11 @@ namespace Hazel
 		static void Shutdown();
 
 		static void BeginScene(const OrthographicCamera& camera);	//todo, remove
-		static void BeginScene(const EditorCamera& camera);	//todo, remove
-		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const glm::mat4& viewProj, bool depthTest = true);
+
+		static Ref<RenderPass> GetTargetRenderPass();
+		static void SetTargetRenderPass(Ref<RenderPass> renderPass);
+		
 		static void EndScene();
 		static void Flush();
 		static void StartBatch();
@@ -68,6 +72,7 @@ namespace Hazel
 
 	private:
 		static void FlushAndReset();
+		static void FlushAndResetLines();
 	};
 }
 

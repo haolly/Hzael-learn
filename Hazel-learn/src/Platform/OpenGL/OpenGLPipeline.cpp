@@ -29,8 +29,8 @@ namespace Hazel
 	OpenGLPipeline::OpenGLPipeline(const PipelineSpecification& spec)
 		: m_Specification(spec)
 	{
-		HZ_CORE_ASSERT(spec.Shader);
-		HZ_CORE_ASSERT(spec.RenderPass);
+		HZ_CORE_ASSERT(spec.Shader, "");
+		HZ_CORE_ASSERT(spec.RenderPass, "");
 		Invalidate();
 	}
 
@@ -73,7 +73,7 @@ namespace Hazel
 			uint32_t attributeIndex = 0;
 			for(const auto& element : layout)
 			{
-				auto glBaseType = ShaderDataTypeToOpenGLBaseType(element.Type);
+				const auto glBaseType = ShaderDataTypeToOpenGLBaseType(element.Type);
 				glEnableVertexAttribArray(attributeIndex);
 				if(glBaseType == GL_INT)
 				{

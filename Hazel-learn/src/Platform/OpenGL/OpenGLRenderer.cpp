@@ -1,8 +1,11 @@
 ﻿#include "hazelPCH.h"
 #include "OpenGLRenderer.h"
 
+#include "OpenGLMaterial.h"
+#include "OpenGLShader.h"
 #include "glad/glad.h"
 #include "Hazel/Renderer/Renderer.h"
+#include "Hazel/Renderer/RenderPass.h"
 #include "Hazel/Renderer/RendererCapabilities.h"
 
 namespace Hazel
@@ -79,11 +82,45 @@ namespace Hazel
 
 			auto& caps = s_Data->RenderCaps;
 			caps.Vendor = (const char*)glGetString(GL_VENDOR);
+			caps.Device = (const char*)glGetString(GL_RENDERER);
+			caps.Version = (const char*)glGetString(GL_VERSION);
+			HZ_CORE_TRACE("OpenGLRendererData::Init");
+			Utils::DumpGPUInfo();
+
+			//TODO, WHY NOT USE PIPELINE?
+			unsigned int vao;
+			glGenVertexArrays(1, &vao);
+			glBindVertexArray(vao);
+
+			glEnable(GL_DEPTH_TEST);
+			glFrontFace(GL_CCW);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glEnable(GL_MULTISAMPLE);
+			glEnable(GL_STENCIL_TEST);
+
+			glGetIntegerv(GL_MAX_SAMPLES, &caps.MaxSamples);
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &caps.MaxAnisotropy);
+
+			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &caps.MaxTextureUnits);
+
+			GLenum error = glGetError();
+			while (error != GL_NO_ERROR)
+			{
+				HZ_CORE_ERROR("OpenGL Error : {0}", error);
+				error = glGetError();
+			}
 		});
+
+		// create fullscreen quad
 	}
 
 	void OpenGLRenderer::Shutdown()
 	{
+		OpenGLShader::ClearUniformBuffers();
+		delete s_Data;
 	}
 
 	void OpenGLRenderer::BeginFrame()
@@ -97,13 +134,83 @@ namespace Hazel
 	void OpenGLRenderer::BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer, const Ref<RenderPass>& renderPass,
 	                                     bool explicitClear)
 	{
+		s_Data->ActiveRenderPass = renderPass;
+		renderPass->GetSpecification().TargetFramebuffer->Bind();
+		if(explicitClear)
+		{
+			const glm::vec4& clearColor = renderPass->GetSpecification().TargetFramebuffer->GetSpecification().ClearColor;
+			Renderer::Submit([=]()
+			{
+				Utils::Clear(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+			});
+		}
 	}
 
 	void OpenGLRenderer::EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer)
 	{
+		s_Data->ActiveRenderPass = nullptr;
 	}
 
 	RendererCapabilities& OpenGLRenderer::GetCapabilities()
 	{
+		return s_Data->RenderCaps;
+	}
+
+	void OpenGLRenderer::SubmitFullscreenQuad(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipeline,
+		Ref<UniformBufferSet> uniformBufferSet, Ref<Material> material)
+	{
+		auto shader = material->GetShader();
+		bool depthTest = true;
+		Ref<OpenGLMaterial> glMaterial = material.As<OpenGLMaterial>();
+		if(material)
+		{
+			glMaterial->UpdateForRendering();
+			depthTest = material->GetFlag(MaterialFlag::DepthTest);
+		}
+
+		pipeline->Bind();
+		s_Data->m_FullscreenQuadVertexBuffer->Bind();
+		s_Data->m_FullscreenQuadIndexBuffer->Bind();
+		Renderer::Submit([depthTest]()
+		{
+			if(!depthTest)
+				glDisable(GL_DEPTH_TEST);
+
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+			if(!depthTest)
+				glEnable(GL_DEPTH_TEST);
+		});
+	}
+
+	void OpenGLRenderer::RenderQuad(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipeline,
+		Ref<UniformBufferSet> uniformBufferSet, Ref<Material> material, const glm::mat4& transform)
+	{
+		pipeline->Bind();
+		s_Data->m_FullscreenQuadVertexBuffer->Bind();
+		s_Data->m_FullscreenQuadIndexBuffer->Bind();
+		Ref<OpenGLMaterial> glMaterial = material.As<OpenGLMaterial>();
+		glMaterial->UpdateForRendering();
+
+		auto shader = material->GetShader().As<OpenGLShader>();
+		HZ_CORE_ASSERT(shader == pipeline->GetSpecification().Shader, "");
+		shader->SetUniform("u_Renderer.Transform", transform);
+
+		Renderer::Submit([material]()
+		{
+			if(material->GetFlag(MaterialFlag::DepthTest))
+				glEnable(GL_DEPTH_TEST);
+			else
+				glDisable(GL_DEPTH_TEST);
+
+			glDrawElements(GL_TRIANGLES, s_Data->m_FullscreenQuadIndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+		});
+	}
+
+	void OpenGLRenderer::RenderGeometry(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipeline,
+		Ref<UniformBufferSet> uniformBufferSet, Ref<Material> material, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
+		const glm::mat4& transform, uint32_t indexCount)
+	{
+		//todo, empty
 	}
 }

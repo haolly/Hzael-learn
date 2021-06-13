@@ -35,7 +35,7 @@
 ### SceneRenderer
 ### Pipeline
 1. render state + renderpass + shader 之类的
-2. OpenGL 的vertexArray 在这里创建
+2. OpenGL 的vertexArray 在这里创建，vertexbufferLayout 在这里设置
 ### RenderPass
 1. 就是一个FrameBuffer
 ### Buffer

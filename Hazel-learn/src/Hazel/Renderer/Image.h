@@ -8,6 +8,8 @@ namespace Hazel
 		None = 0,
 		RGB,
 		RGBA,
+		RGBA8,
+		RED_INTEGER,
 		RGBA16F,
 		RGBA32F,
 		RG32F,

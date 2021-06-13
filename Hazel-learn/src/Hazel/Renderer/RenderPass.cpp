@@ -2,11 +2,10 @@
 #include "RenderPass.h"
 
 #include "Renderer.h"
+#include "Platform/OpenGL/OpenGLRenderPass.h"
 
 namespace Hazel
 {
-	class OpenGLRenderPass;
-
 	Ref<RenderPass> RenderPass::Create(const RenderPassSpecification& spc)
 	{
 		switch (Renderer::GetAPI())

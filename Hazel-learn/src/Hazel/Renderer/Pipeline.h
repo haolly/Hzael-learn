@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Buffer.h"
+#include "RenderPass.h"
 #include "Shader.h"
 #include "UniformBuffer.h"
 

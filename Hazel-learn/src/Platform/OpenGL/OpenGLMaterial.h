@@ -56,6 +56,23 @@ namespace Hazel
 		}
 		
 		void UpdateForRendering();
+	
+		uint32_t GetFlags() const override { return m_MaterialFlags; }
+		bool GetFlag(MaterialFlag flag) const override { return (uint32_t)flag & m_MaterialFlags;}
+		void SetFlag(MaterialFlag flag, bool value) override
+		{
+			if(value)
+			{
+				m_MaterialFlags |= (uint32_t)flag;
+			}
+			else
+			{
+				m_MaterialFlags &= ~(uint32_t)flag;
+			}
+		}
+		Ref<Shader> GetShader() override { return m_Shader; }
+		const std::string& GetName() const override { return m_Name; }
+	
 	private:
 		void AllocateStorage();
 		void OnShaderReloaded();

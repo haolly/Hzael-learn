@@ -26,9 +26,9 @@ namespace Hazel
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = {
-			{FramebufferTextureSpecification(FramebufferTextureFormat::RGBA8)},
-			{FramebufferTextureSpecification(FramebufferTextureFormat::RED_INTEGER)},
-			{FramebufferTextureSpecification(FramebufferTextureFormat::Depth)}
+			{FramebufferTextureSpecification(ImageFormat::RGBA8)},
+			{FramebufferTextureSpecification(ImageFormat::RED_INTEGER)},
+			{FramebufferTextureSpecification(ImageFormat::Depth)}
 		};
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;

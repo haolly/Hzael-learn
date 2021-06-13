@@ -3,6 +3,7 @@
 
 #include "GLFW/glfw3.h"
 #include "Hazel/Asset/AssetManager.h"
+#include "Hazel/Renderer/Framebuffer.h"
 #include "Hazel/Renderer/Renderer.h"
 
 namespace Hazel
@@ -102,7 +103,11 @@ namespace Hazel
 			return false;
 		}
 		m_Minimized = false;
-		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		auto& framebuffers = FramebufferPool::GetGlobal()->GetAll();\
+		for(auto& fb: framebuffers)
+		{
+			fb->Resize(e.GetWidth(), e.GetHeight());
+		}
 		return false;
 	}
 

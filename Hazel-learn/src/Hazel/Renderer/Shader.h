@@ -84,7 +84,7 @@ namespace Hazel
 	};
 
 	//TODO, replace by Asset Manager
-	class ShaderLibrary
+	class ShaderLibrary : public RefCounted
 	{
 	public:
 		void Add(const Ref<Shader>& shader);

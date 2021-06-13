@@ -4,6 +4,7 @@
 
 
 #include "Renderer2D.h"
+#include "Platform/OpenGL/OpenGLRenderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hazel {
@@ -18,6 +19,16 @@ namespace Hazel {
 		std::vector<Ref<Pipeline>> Pipelines;
 		std::vector<Ref<Material>> Materials;
 	};
+
+	static RendererAPI* InitRendererAPI()
+	{
+		switch (RendererAPI::GetAPI())
+		{
+		case RendererAPIType::OpenGL: return new OpenGLRenderer();
+		}
+		HZ_CORE_ASSERT(false, "Unknow Renderer API type");
+		return nullptr;
+	}
 
 	static RendererData* s_Data = nullptr;
 	static RenderCommandQueue* s_CommandQueue = nullptr;
@@ -60,6 +71,11 @@ namespace Hazel {
 		return s_RendererAPI->GetCapabilities();
 	}
 
+	Ref<ShaderLibrary> Renderer::GetShaderLibrary()
+	{
+		return s_Data->m_ShaderLibrary;
+	}
+
 	void Renderer::WaitAndRender()
 	{
 		s_CommandQueue->Execute();
@@ -89,6 +105,35 @@ namespace Hazel {
 		Ref<Material> material, const glm::mat4& transform)
 	{
 		s_RendererAPI->RenderQuad(renderCommandBuffer, pipline, uniformBufferSet, material, transform);
+	}
+
+	void Renderer::RenderGeometry(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipeline,
+		Ref<UniformBufferSet> uniformBufferSet, Ref<Material> material, Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer,
+		const glm::mat4& transform, uint32_t indexCount)
+	{
+		s_RendererAPI->RenderGeometry(renderCommandBuffer, pipeline, uniformBufferSet, material, vertexBuffer, indexBuffer, transform, indexCount);
+	}
+
+	void Renderer::SubmitQuad(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Material> material, const glm::mat4& transform)
+	{
+		//empty
+	}
+
+	Ref<Texture2D> Renderer::GetWhiteTexture()
+	{
+		return s_Data->WhiteTexture;
+	}
+
+	uint32_t Renderer::GetCurrentFrameIndex()
+	{
+		//TODO
+		return 0;
+	}
+
+	RendererConfig& Renderer::GetConfig()
+	{
+		static RendererConfig config;
+		return config;
 	}
 
 	RenderCommandQueue& Renderer::GetRenderCommandQueue()

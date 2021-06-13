@@ -42,5 +42,13 @@ namespace Hazel
 		virtual glm::mat4& GetMatrix4(const std::string& name) = 0;
 
 		virtual Ref<Texture2D> GetTexture2D(const std::string& name) = 0;
+
+		virtual uint32_t GetFlags() const = 0;
+		virtual bool GetFlag(MaterialFlag flag) const = 0;
+		virtual void SetFlag(MaterialFlag flag, bool value=true) = 0;
+
+		virtual Ref<Shader> GetShader() = 0;
+		virtual const std::string& GetName() const = 0;
+		
 	};
 }

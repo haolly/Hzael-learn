@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 -- premake5.lua
 workspace "Hazel-learn"
 	architecture "x64"
@@ -19,6 +20,10 @@ IncludeDir["stb_image"] = "Hazel-learn/vendor/stb_image"
 IncludeDir["entt"] = "Hazel-learn/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Hazel-learn/vendor/yaml-cpp/include"
 IncludeDir["ImGuizmo"] = "Hazel-learn/vendor/ImGuizmo"
+IncludeDir["mono"] = "Hazel-learn/vendor/mono/include"
+
+LibraryDir = {}
+LibraryDir["mono"] = "vendor/mono/lib/Release/mono-2.0-sgen.lib"
 
 -- include another premake5.lua into this like C language
 group "Dependencies"
@@ -28,6 +33,7 @@ group "Dependencies"
 	include "Hazel-learn/vendor/yaml-cpp"
 group ""
 
+group "Core"
 project "Hazel-learn"
 	kind "StaticLib"
 	location "Hazel-learn"
@@ -70,6 +76,7 @@ project "Hazel-learn"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.mono}",
 	}
 
 	-- link static lib
@@ -80,6 +87,7 @@ project "Hazel-learn"
 		"imgui",
 		"opengl32.lib",
 		"yaml-cpp",
+		"%{LibraryDir.mono}",
 	}
 
 	filter "files:Hazel-learn/vendor/ImGuizmo/**.cpp"
@@ -110,6 +118,93 @@ project "Hazel-learn"
 		runtime "Release"
 		optimize "on"
 
+project "Hazel-ScriptCore"
+		location "Hazel-ScriptCore"
+		kind "SharedLib"
+		language "C#"
+
+		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+		files
+		{
+			"%{prj.name}/src/**.cs",
+		}
+
+group ""
+
+group "Tools"
+project "Hazel-Editor"
+	kind "ConsoleApp"
+
+	location "Hazel-Editor"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Hazel-learn/vendor/spdlog/include",
+		"Hazel-learn/src",
+		"Hazel-learn/vendor",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}",
+	}
+
+	links {"Hazel-learn"}
+
+	postbuildcommands
+	{
+		'{COPY} "../Hazel-Editor/assets" "%{cfg.targetdir}/assets" '
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		defines 
+		{
+			"HZ_PLATFORM_WINDOWS",
+		}
+
+	filter "configurations:Debug"
+		defines { "HZ_DEBUG" }
+		runtime "Debug"
+		symbols "on"
+
+		postbuildcommands
+		{
+			'{COPY} "../Hazel/vendor/mono/bin/Release/mono-2.0-sgen.dll" "%{cfg.targetdir}" '
+		}
+
+	filter "configurations:Release"
+		defines { "HZ_RELEASE" }
+		runtime "Release"
+		optimize "on"
+
+		postbuildcommands
+		{
+			'{COPY} "../Hazel/vendor/mono/bin/Release/mono-2.0-sgen.dll" "%{cfg.targetdir}" '
+		}
+
+	filter "configurations:Dist"
+		defines { "HZ_DIST" }
+		runtime "Release"
+		optimize "on"
+
+group ""
+
+group "Example"
+--[[
 project "Sandbox"
 	kind "ConsoleApp"
 
@@ -161,56 +256,21 @@ project "Sandbox"
 		defines { "HZ_DIST" }
 		runtime "Release"
 		optimize "on"
+--]]
+project "ExampleApp"
+		location "ExampleApp"
+		kind "SharedLib"
+		language "C#"
 
-project "Hazel-Editor"
-	kind "ConsoleApp"
-
-	location "Hazel-Editor"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "on"
-
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
-
-	includedirs
-	{
-		"Hazel-learn/vendor/spdlog/include",
-		"Hazel-learn/src",
-		"Hazel-learn/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.entt}",
-		"%{IncludeDir.yaml_cpp}",
-	}
-
-	links {"Hazel-learn"}
-
-	filter "system:windows"
-		systemversion "latest"
-		defines 
+		targetdir ("Hazel-Editor/assets/scripts")
+		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+		
+		files 
 		{
-			"HZ_PLATFORM_WINDOWS",
+			"%{prj.name}/src/**.cs",
 		}
-
-	filter "configurations:Debug"
-		defines { "HZ_DEBUG" }
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		defines { "HZ_RELEASE" }
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Dist"
-		defines { "HZ_DIST" }
-		runtime "Release"
-		optimize "on"
-
+		links 
+		{
+			"Hazel-ScriptCore"
+		}
+group ""

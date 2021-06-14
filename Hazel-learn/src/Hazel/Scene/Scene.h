@@ -29,6 +29,9 @@ namespace Hazel
 		friend class Entity;
 		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;
+
+		friend void OnScriptComponentConstruct(entt::registry& registry, entt::entity entity);
+		friend void OnScriptComponentDestroy(entt::registry& registry, entt::entity entity);
 	};
 
 	

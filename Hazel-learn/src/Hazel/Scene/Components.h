@@ -10,6 +10,10 @@
 
 namespace Hazel
 {
+	struct IDComponent
+	{
+		long long ID = 0;
+	};
 
 	struct TagComponent
 	{
@@ -68,5 +72,14 @@ namespace Hazel
 			InstantiateScript = []() {return static_cast<ScriptableEntity*>(new T());};
 			DestroyScript = [](NativeScriptComponent* nsc) {delete nsc->Instance; nsc->Instance = nullptr;};
 		}
+	};
+
+	struct ScriptComponent
+	{
+		std::string ModuleName;
+
+		ScriptComponent() = default;
+		ScriptComponent(const ScriptComponent& other) = default;
+		ScriptComponent(const std::string& moduleName) : ModuleName(moduleName) {}
 	};
 }

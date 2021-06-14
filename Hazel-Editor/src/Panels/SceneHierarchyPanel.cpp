@@ -323,5 +323,10 @@ namespace Hazel
 		{
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 		});
+
+		DrawComponent<ScriptComponent>("Script", entity, [=](ScriptComponent& sc) mutable
+		{
+			//todo
+		});
 	}
 }

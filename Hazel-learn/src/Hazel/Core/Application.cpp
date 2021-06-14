@@ -3,6 +3,7 @@
 
 #include "GLFW/glfw3.h"
 #include "Hazel/Renderer/Renderer.h"
+#include "Hazel/Script/ScriptEngine.h"
 
 namespace Hazel
 {
@@ -19,6 +20,7 @@ namespace Hazel
 		m_window = std::unique_ptr<Window>(Window::Create(WindowProps(name)));
 		m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
+		ScriptEngine::Init("asset/script/ExampleApp.dll");
 		Renderer::Init();
 		
 		m_ImGuiLayer = new ImGuiLayer();

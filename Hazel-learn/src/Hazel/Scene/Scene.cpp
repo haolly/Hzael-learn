@@ -3,9 +3,21 @@
 #include "Hazel/Scene/Components.h"
 #include "Hazel/Renderer/Renderer2D.h"
 #include "Hazel/Scene/Entity.h"
+#include "Hazel/Script/ScriptEngine.h"
 
 namespace Hazel
 {
+
+	static void OnScriptComponentConstruct(entt::registry& registry, entt::entity entity)
+	{
+		//todo
+		ScriptEngine::InitScriptEntity()
+	}
+	
+	static void OnScriptComponentDestroy(entt::registry& registry, entt::entity entity)
+	{
+		//todo
+	}
 
 	/// <summary>
 	/// Note, 这些模板特例化必须在使用任何实例之前，不然就会报错 https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
@@ -47,6 +59,8 @@ namespace Hazel
 
 	Scene::Scene()
 	{
+		m_Registry.on_construct<ScriptComponent>().connect<&OnScriptComponentConstruct>();
+		m_Registry.on_destroy<ScriptComponent>().connect<&OnScriptComponentDestroy>();
 	}
 
 	Scene::~Scene()

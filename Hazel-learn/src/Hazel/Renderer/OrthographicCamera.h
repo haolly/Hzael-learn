@@ -5,8 +5,8 @@ namespace Hazel {
 	class OrthographicCamera
 	{
 	public:
-		// aspect ratio »áÓ°ÏìäÖÈ¾µÄÕı·½ĞÎÊÇ²»ÊÇÕı·½ĞÎ£»Ö»ÓĞ¸úwindowµÄaspect ratio Ò»Ñù²Å»áÊÇÕı·½ĞÎ
-		// left, right, bottom, top ¾ö¶¨ÄÜ¿´µ½µÄÊÀ½ç×ø±êµÄ·¶Î§£¬Èç¹ûÉãÏñ»úµÄÎ»ÖÃÊÇÔ­µã£¬ÄÇÃ´Õı½»ÉãÏñ»úÄÜ¿´µ½µÄ×î×ó±ßµÄµØ·½¾ÍÊÇleft£¬×îÓÒ±ßµÄµØ·½¾ÍÊÇright
+		//// aspect ratio ä¼šå½±å“æ¸²æŸ“çš„æ­£æ–¹å½¢æ˜¯ä¸æ˜¯æ­£æ–¹å½¢,åªæœ‰è·Ÿwindowçš„aspect ratio ä¸€æ ·æ‰ä¼šæ˜¯æ­£æ–¹å½¢
+		// left, right, bottom, top å†³å®šèƒ½çœ‹åˆ°çš„ä¸–ç•Œåæ ‡çš„èŒƒå›´,å¦‚æœæ‘„åƒæœºçš„ä½ç½®æ˜¯åŸç‚¹,é‚£ä¹ˆæ­£äº¤æ‘„åƒæœºèƒ½çœ‹åˆ°çš„æœ€å·¦è¾¹çš„åœ°æ–¹å°±æ˜¯left,æœ€å³è¾¹çš„åœ°æ–¹å°±æ˜¯rightÂµÃ„ÂµÃ˜Â·Â½Â¾ÃÃŠÃ‡right
 		OrthographicCamera(float left, float right, float bottom, float top);
 		void SetProjection(float left, float right, float bottom, float top);
 		

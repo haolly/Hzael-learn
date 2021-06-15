@@ -41,7 +41,7 @@ namespace Hazel
 		uint32_t Width, Height;
 		uint32_t Samples = 1;
 		FramebufferAttachmentSpecification Attachments;
-		// Render pass 会用到这个概念，一个render pass 其实就是一个 framebuffer
+		// Render pass 会用到这个概念,一个render pass 其实就是一个 framebuffer
 		bool SwapChainTarget = false;
 	};
 

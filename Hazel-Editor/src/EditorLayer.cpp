@@ -117,7 +117,7 @@ namespace Hazel
 	{
 		HZ_PROFILE_FUNC();
 
-		// Note, 这里渲染相关的要放在update中，不然拖动viewPort的大小改变时候，在 OnImGUIRender 函数中处理就会出现黑框
+		// Note put render related into update instead of OnImGUIRender
 		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
 			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && (spec.Width != m_ViewportSize.x || spec.Height !=
 				m_ViewportSize.y))
@@ -357,7 +357,7 @@ namespace Hazel
 				Math::DecomposeTransform(transform, translation, rotation, scale);
 				tc.Translation = translation;
 				// NOTE, to avoid gimbal lock, cause we always ADD values to it
-				// 但是，这里也会导致另一个问题， rotation 一直在[-180,180] 之间
+				// 但是,这里也会导致另一个问题， rotation 一直在[-180,180] 之间
 				auto deltaRotation = rotation - tc.Rotation;
 				tc.Rotation += deltaRotation;
 				tc.Scale = scale;

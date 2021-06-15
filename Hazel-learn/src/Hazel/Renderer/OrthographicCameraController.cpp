@@ -67,7 +67,7 @@ namespace Hazel
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
-		//TODO, ’‚¿Ô”–Œ Ã‚£¨√ª”–±£≥÷œ‘ æƒ⁄»›¥Û–°≤ª±‰°£ ref http://edeleastar.github.io/opengl-programming/topic02/pdf/1.First_Projection.pdf
+		//TODO, ’‚¿Ô”–Œ Ã‚£¨,,”–±£≥÷œ‘ ,ƒ⁄»›,Û–°≤ª±,°£ ref http://edeleastar.github.io/opengl-programming/topic02/pdf/1.First_Projection.pdf
 		// https://paroj.github.io/gltut/Positioning/Tut04%20Aspect%20of%20the%20World.html#idp3329
 		Resize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;

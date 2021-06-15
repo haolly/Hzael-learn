@@ -195,7 +195,7 @@ namespace Hazel {
 		const float textureIndex = 0.0f;	// White Texture
 		const float tilingFactor = 1.0f;
 
-		// 这里的 Position 都是在world space中
+		// pos in world space
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[quadVertexCount] = {
 			{0.0f, 0.0f},
@@ -391,7 +391,6 @@ namespace Hazel {
 							 * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
 							 * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		// 这里的 Position 都是在world space中
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[quadVertexCount] = {
 			{0.0f, 0.0f},

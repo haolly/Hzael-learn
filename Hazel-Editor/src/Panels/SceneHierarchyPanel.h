@@ -12,7 +12,7 @@ namespace Hazel
 
 		void SetContext(const Ref<Scene>& context);
 		void OnImGuiRender();
-		//TODO, 这里不应该是源头，如果是用鼠标选择了entity，那么这里需要得到对应的callback
+		//TODO, 这里不应该是源头,如果是用鼠标选择了entity,那么这里需要得到对应的callback
 		Entity GetSelectedEntity() const;
 		void SetSelectedEntity(Entity entity);
 	private:

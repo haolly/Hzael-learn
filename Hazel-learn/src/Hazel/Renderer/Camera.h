@@ -18,7 +18,7 @@ namespace Hazel
 			return m_Projection;
 		}
 	protected:
-		//NOTE: camera ×ÔÉíµÄfov¡¢far/near µÈÊôÐÔ¾ö¶¨ÁËMVP ÖÐµÄP£¬V ÊÇÓÉcameraµÄtransform¾ö¶¨µÄ
+		////NOTE: camera è‡ªèº«çš„fov,far/near ç­‰å±žæ€§å†³å®šäº†MVP ä¸­çš„P,V æ˜¯ç”±cameraçš„transformå†³å®šçš„
 		glm::mat4 m_Projection = glm::mat4(1.0f);
 	};
 }

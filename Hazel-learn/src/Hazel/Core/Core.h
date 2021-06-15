@@ -30,8 +30,8 @@
 #define HZ_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 namespace Hazel {
 	/// <summary>
-	/// Ϊɶ��Ҫ��Щ�أ�1. ��ͬģ����Ҫǿ���ã����ܳ���Aģ���ͷ���֮����Bģ���ȡ������Դ�� 2. asset ���͵���Դ���ʺϿ���
-	/// �����൱��һ���������Դ����
+	/// 为啥需要这些呢,1. 不同模块需要强引用,不能出现A模块释放了之后导致B模块获取不到资源。 2. asset 类型的资源不适合拷贝
+	/// 这里相当于一个引擎的资源管理
 	/// ref https://www.youtube.com/watch?v=HkGZ378nArE&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=41&t=131s
 	/// </summary>
 	/// <typeparam name="T"></typeparam>

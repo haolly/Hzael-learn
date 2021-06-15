@@ -8,7 +8,7 @@ namespace Hazel
 {
 
 	/// <summary>
-	/// Note, 这些模板特例化必须在使用任何实例之前，不然就会报错 https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
+	/// Note, 这些模板特例化必须在使用任何实例之前,不然就会报错 https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="entity"></param>

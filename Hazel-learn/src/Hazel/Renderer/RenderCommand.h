@@ -1,10 +1,8 @@
 #pragma once
-
 #include "RendererAPI.h"
 
 namespace Hazel {
 
-	//Note, 为啥需要额外包裹一层？ 因为后面可能会有多线程相关的东西，所有的东西都push 到这里
 	class RenderCommand 
 	{
 	public:

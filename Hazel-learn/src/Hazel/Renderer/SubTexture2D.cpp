@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "SubTexture2D.h"
 
 namespace Hazel

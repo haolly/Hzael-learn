@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <glm/glm.hpp>
 
@@ -18,7 +18,6 @@ namespace Hazel
 			return m_Projection;
 		}
 	protected:
-		//NOTE: camera ×ÔÉíµÄfov¡¢far/near µÈÊôĞÔ¾ö¶¨ÁËMVP ÖĞµÄP£¬V ÊÇÓÉcameraµÄtransform¾ö¶¨µÄ
 		glm::mat4 m_Projection = glm::mat4(1.0f);
 	};
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Hazel/Renderer/Shader.h"
 #include <glm/glm.hpp>
 
@@ -83,7 +83,7 @@ namespace Hazel {
 		//ref: https://www.lighthouse3d.com/tutorials/glsl-tutorial/uniform-blocks/
 		inline static std::unordered_map<uint32_t, ShaderUniformBuffer> s_UniformBuffers;
 
-		// todo, push constant in vulkan, 一个shader 可以有多个const buffer
+		// todo, push constant in vulkan, 
 		std::unordered_map<std::string, ShaderBuffer> m_Buffers;
 		// spriv push constant will compiler to opengl glsl's uniform?
 		std::unordered_map<std::string, GLint> m_UniformLocations;

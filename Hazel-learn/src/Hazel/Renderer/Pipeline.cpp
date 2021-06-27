@@ -19,5 +19,6 @@ namespace Hazel
 		}
 
 		HZ_CORE_ASSERT(false, "Unknow renderer api");
+		return nullptr;
 	}
 }

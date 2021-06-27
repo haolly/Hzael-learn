@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Hazel/Scene/Entity.h"
 namespace Hazel
 {

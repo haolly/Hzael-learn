@@ -96,6 +96,9 @@
     <ClInclude Include="src\Hazel\Core\Application.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Core\Assert.h">
+      <Filter>src\Hazel\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazel\Core\Base.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
@@ -229,9 +232,6 @@
       <Filter>src\Hazel\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Scene\Entity.h">
-      <Filter>src\Hazel\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazel\Scene\Scene.h">
       <Filter>src\Hazel\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Scene\SceneCamera.h">
@@ -1539,6 +1539,8 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\SceneRenderer.h" />
+    <ClInclude Include="src\Hazel\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazel\Asset\AssetImporter.cpp">
@@ -1551,6 +1553,9 @@
       <Filter>src\Hazel\Asset</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Core\Application.cpp">
+      <Filter>src\Hazel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\Core\Base.cpp">
       <Filter>src\Hazel\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Core\Layer.cpp">
@@ -1614,6 +1619,9 @@
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Renderer\Renderer2D.cpp">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\Renderer\SceneRenderer.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Renderer\Shader.cpp">

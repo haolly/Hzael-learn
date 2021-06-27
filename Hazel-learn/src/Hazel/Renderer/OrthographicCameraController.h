@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/MouseEvent.h"
 #include "Hazel/Renderer/OrthographicCamera.h"

@@ -2,6 +2,9 @@
 
 namespace Hazel
 {
+	/**
+	 * \brief TODO,  difference with RenderCommandBuffer
+	 */
 	class RenderCommandQueue
 	{
 	public:

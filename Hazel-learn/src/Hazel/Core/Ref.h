@@ -25,7 +25,7 @@ namespace Hazel
 	};
 
 	/**
-	 * \brief  管理 RefCounted 类的计数器加减逻辑
+	 * \brief  
 	 * \tparam T 
 	 */
 	template<typename T>

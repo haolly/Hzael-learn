@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "Application.h"
 
 #include "GLFW/glfw3.h"

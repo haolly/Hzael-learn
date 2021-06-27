@@ -13,7 +13,7 @@ namespace Hazel
 		void Shutdown() override;
 		void BeginFrame() override;
 		void EndFrame() override;
-		//TODO, 哪里调用的？
+		//TODO
 		void BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer, const Ref<RenderPass>& renderPass, bool explicitClear) override;
 		void EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer) override;
 		

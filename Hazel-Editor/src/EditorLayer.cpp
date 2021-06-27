@@ -1,4 +1,4 @@
-#include "EditorLayer.h"
+﻿#include "EditorLayer.h"
 
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -19,9 +19,14 @@ namespace Hazel
 	void EditorLayer::OnAttach()
 	{
 		HZ_PROFILE_FUNC();
-		m_CheckboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
-		m_LogoTexture = Texture2D::Create("assets/textures/ChernoLogo.png");
-		m_SpriteSheet = Texture2D::Create("assets/game/textures/spritesheet.png");
+		m_CheckboardTexture = Texture2D::Create("Resources/Editor/Checkerboard.png");
+		m_LogoTexture = Texture2D::Create("Resources/Editor/ChernoLogo.png");
+
+		m_PlayButtonTex = Texture2D::Create("Resources/Editor/PlayButton.png");
+		m_PauseButtonTex = Texture2D::Create("Resources/Editor/PauseButton.png");
+		m_StopButtonTex = Texture2D::Create("Resources/Editor/StopButton.png");
+
+		m_SpriteSheet = Texture2D::Create("Resources/Editor/spritesheet.png");
 		m_WoodTextureInSheet = SubTexture2D::CreateFromCoords(m_SpriteSheet, {463, 1}, {64, 64});
 
 		FramebufferSpecification fbSpec;
@@ -106,8 +111,8 @@ namespace Hazel
 		m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
 
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 		m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
+		m_SceneHierarchyPanel = CreateScope<SceneHierarchyPanel>(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -116,9 +121,18 @@ namespace Hazel
 
 	void EditorLayer::OnUpdate(float deltaTime)
 	{
-		HZ_PROFILE_FUNC();
+		switch (m_SceneState)
+		{
+			case SceneState::Edit:
+			{
+				m_EditorCamera.SetActive(m_ViewportFocused);
+				m_EditorCamera.OnUpdate(deltaTime);
 
-		// Note, 这里渲染相关的要放在update中，不然拖动viewPort的大小改变时候，在 OnImGUIRender 函数中处理就会出现黑框
+				m_EditorScene->OnRenderEditor(m_ViewportRenderer, deltaTime, m_EditorCamera);
+			}
+			default: ;
+		}
+
 		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
 			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && (spec.Width != m_ViewportSize.x || spec.Height !=
 				m_ViewportSize.y))
@@ -142,11 +156,11 @@ namespace Hazel
 
 		m_Framebuffer->Bind();
 		// Render
-		RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-		RenderCommand::Clear();
-
-		// Clear the entity ID attachment to -1
-		m_Framebuffer->ClearAttachment(1, -1);
+		// RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+		// RenderCommand::Clear();
+		//
+		// // Clear the entity ID attachment to -1
+		// m_Framebuffer->ClearAttachment(1, -1);
 		
 
 		// Update Scene in Editor
@@ -359,7 +373,6 @@ namespace Hazel
 				Math::DecomposeTransform(transform, translation, rotation, scale);
 				tc.Translation = translation;
 				// NOTE, to avoid gimbal lock, cause we always ADD values to it
-				// 但是，这里也会导致另一个问题， rotation 一直在[-180,180] 之间
 				auto deltaRotation = rotation - tc.Rotation;
 				tc.Rotation += deltaRotation;
 				tc.Scale = scale;
@@ -450,9 +463,12 @@ namespace Hazel
 
 	void EditorLayer::NewScene()
 	{
-		m_ActiveScene = Ref<Scene>::Create();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_EditorScene = Ref<Scene>::Create("Empty Scene", true);
+		m_SceneHierarchyPanel->SetContext(m_EditorScene);
+
+		m_EditorCamera = EditorCamera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 1000.0f));
+		m_CurrentScene = m_EditorScene;
+		// m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 	}
 
 	void EditorLayer::OpenScene()

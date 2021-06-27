@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "hazelPCH.h"
 #include "Hazel/Renderer/Buffer.h"
 

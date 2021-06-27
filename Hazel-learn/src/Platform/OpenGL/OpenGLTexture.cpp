@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "OpenGLTexture.h"
 
 #include <glad/glad.h>

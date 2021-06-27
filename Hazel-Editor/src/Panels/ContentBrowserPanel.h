@@ -75,9 +75,6 @@ namespace Hazel
 		std::vector<AssetHandle> SubDirectories;
 	};
 
-	/**
-	 * \brief 这里类似于一个虚拟文件系统
-	 */
 	class ContentBrowserPanel
 	{
 	public:

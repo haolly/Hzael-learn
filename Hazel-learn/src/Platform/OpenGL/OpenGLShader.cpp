@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "OpenGLShader.h"
 
 
@@ -22,7 +22,7 @@ namespace Hazel
 				return GL_VERTEX_SHADER;
 			if (type == "fragment" || type == "pixel")
 				return GL_FRAGMENT_SHADER;
-			HZ_CORE_ASSERT(false, "Unknow shader type:{0}", type);
+			HZ_CORE_ASSERT(false, "Unknow shader type");
 			return 0;
 		}
 
@@ -160,7 +160,7 @@ namespace Hazel
 	{
 		m_ShaderSource = PreProcess(source);
 		Utils::CreateCacheDirectoryIfNeeded();
-		//BUG!, 不要在构造函数的调用链条里面使用 Ref this，这会导致this 被delete掉
+		//BUG!,
 		//Ref<OpenGLShader> instance = this;
 		std::array<std::vector<uint32_t>, 2> vulkanBinaries;
 		std::unordered_map<uint32_t, std::vector<uint32_t>> shaderData;

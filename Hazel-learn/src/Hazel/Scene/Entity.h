@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <entt.hpp>
 
@@ -19,9 +19,6 @@ namespace Hazel
 		{
 			HZ_CORE_ASSERT(!HasComponent<Component>(), "Entity already has the same component");
 			Component& component = m_Scene->m_Registry.emplace<Component>(m_EntityHandle, std::forward<Args>(args)...);
-			//NOTE, ²»ÖªµÀÄ£°åÌØÀý»¯ÎªÉ¶±¨´í....
-			//Ô­Òò£ºinclude Ñ­»·ÁË
-			// µ±add Ò»¸öcameraCompµÄÊ±ºò£¬ÒªÈ¥ÉèÖÃcameraµÄviewSize
 			m_Scene->OnComponentAdded<Component>(*this, component);
 			return component;
 		}

@@ -3,7 +3,7 @@
 
 namespace Hazel
 {
-	//TODO, 啥都不干？
+	//TODO
 	class OpenGLRenderPass : public RenderPass
 	{
 	public:

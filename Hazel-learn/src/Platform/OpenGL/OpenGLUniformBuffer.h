@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Hazel/Renderer/UniformBuffer.h"
 
 namespace Hazel

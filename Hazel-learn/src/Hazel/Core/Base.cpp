@@ -1,5 +1,8 @@
 ﻿#include "hazelPCH.h"
-#include "ScriptableEntity.h"
+
+#include "Base.h"
+
+#include "Log.h"
 
 namespace Hazel
 {

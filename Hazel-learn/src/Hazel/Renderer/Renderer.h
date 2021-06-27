@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Material.h"
 #include "RendererCapabilities.h"
 #include "RenderCommandQueue.h"
@@ -11,6 +11,7 @@ namespace Hazel
 
 	struct RendererConfig
 	{
+		//TODO, what is this?
 		uint32_t FramesInFlight = 3;
 	};
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Hazel.h>
 
 #include "Hazel/Events/KeyEvent.h"
@@ -22,6 +22,8 @@ namespace Hazel
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 		void NewScene();
 		void OpenScene();
+		void OpenScene(const std::string& filepath);
+		void SaveScene();
 		void SaveSceneAs();
 	private:
 		OrthographicCameraController m_CameraController;
@@ -31,11 +33,17 @@ namespace Hazel
 		Ref<VertexArray> m_SquareVA;
 
 		Ref<Scene> m_ActiveScene;
+		Ref<Scene> m_RuntimeScene, m_EditorScene, m_CurrentScene;
+		Ref<SceneRenderer> m_ViewportRenderer;
+		Ref<SceneRenderer> m_SecondViewportRenderer;
+		Ref<SceneRenderer> m_FocusedRenderer;
+
 		Entity m_SquareEntity;
 		Entity m_CameraEntity, m_SecondCamera;
 		bool m_PrimaryCamera = true;
 
 		Ref<Texture2D> m_CheckboardTexture, m_LogoTexture;
+		Ref<Texture2D> m_PlayButtonTex, m_StopButtonTex, m_PauseButtonTex;
 
 		Ref<Texture2D> m_SpriteSheet;
 		Ref<SubTexture2D> m_WoodTextureInSheet;
@@ -51,11 +59,18 @@ namespace Hazel
 		int m_GizmoType = -1;
 
 		// Panels
-		SceneHierarchyPanel m_SceneHierarchyPanel;
+		Scope<SceneHierarchyPanel> m_SceneHierarchyPanel;
 		Scope<ContentBrowserPanel> m_ContentBrowserPanel;
 
 		EditorCamera m_EditorCamera;
 
 		Entity m_HoveredEntity;
+
+		enum class SceneState
+		{
+			Edit = 0, Play = 1, Pause = 2
+		};
+
+		SceneState m_SceneState = SceneState::Edit;
 	};
 }

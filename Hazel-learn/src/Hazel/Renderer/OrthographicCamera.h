@@ -1,12 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include <glm/glm.hpp>
 
 namespace Hazel {
 	class OrthographicCamera
 	{
 	public:
-		// aspect ratio »áÓ°ÏìäÖÈ¾µÄÕı·½ĞÎÊÇ²»ÊÇÕı·½ĞÎ£»Ö»ÓĞ¸úwindowµÄaspect ratio Ò»Ñù²Å»áÊÇÕı·½ĞÎ
-		// left, right, bottom, top ¾ö¶¨ÄÜ¿´µ½µÄÊÀ½ç×ø±êµÄ·¶Î§£¬Èç¹ûÉãÏñ»úµÄÎ»ÖÃÊÇÔ­µã£¬ÄÇÃ´Õı½»ÉãÏñ»úÄÜ¿´µ½µÄ×î×ó±ßµÄµØ·½¾ÍÊÇleft£¬×îÓÒ±ßµÄµØ·½¾ÍÊÇright
 		OrthographicCamera(float left, float right, float bottom, float top);
 		void SetProjection(float left, float right, float bottom, float top);
 		

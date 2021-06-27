@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "OrthographicCameraController.h"
 
 #include "Hazel/Core/Input.h"
@@ -67,7 +67,7 @@ namespace Hazel
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
-		//TODO, ���������⣬û�б�����ʾ���ݴ�С���䡣 ref http://edeleastar.github.io/opengl-programming/topic02/pdf/1.First_Projection.pdf
+		//TODO, ref http://edeleastar.github.io/opengl-programming/topic02/pdf/1.First_Projection.pdf
 		// https://paroj.github.io/gltut/Positioning/Tut04%20Aspect%20of%20the%20World.html#idp3329
 		Resize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;

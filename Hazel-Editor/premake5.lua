@@ -4,6 +4,7 @@ project "Hazel-Editor"
 	cppdialect "C++17"
 	staticruntime "off"
 
+
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -28,6 +29,7 @@ project "Hazel-Editor"
 
 	filter "system:windows"
 		systemversion "latest"
+		buildoptions {"/utf-8"}
 		defines 
 		{
 			"HZ_PLATFORM_WINDOWS",

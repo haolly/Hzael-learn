@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "SceneSerializer.h"
 
 #include <yaml-cpp/yaml.h>

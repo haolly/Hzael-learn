@@ -2,6 +2,7 @@
 
 namespace Hazel
 {
+	//TODO, OPENGL's implementation
 	class RenderCommandBuffer : public RefCounted
 	{
 	public:

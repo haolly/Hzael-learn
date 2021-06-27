@@ -1,20 +1,53 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "EditorCamera.h"
 
 #include "Hazel/Core/Input.h"
 #include "Hazel/Core/KeyCodes.h"
 
-#include <glfw/glfw3.h>
-
 //#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
+
+#define M_PI 3.141592f
 
 namespace Hazel {
 
 	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearClip, float farClip)
 		: m_FOV(fov), m_AspectRatio(aspectRatio), m_NearClip(nearClip), m_FarClip(farClip), Camera(glm::perspective(glm::radians(fov), aspectRatio, nearClip, farClip))
 	{
+		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+		m_FocalPoint = glm::vec3(0.0f);
+
+		// default value
+		m_Yaw = 3.0f * M_PI / 4.0f;
+		m_Pitch = M_PI / 4.0f;
+
 		UpdateView();
+	}
+
+	EditorCamera::EditorCamera(const glm::mat4& projectionMatrix)
+		: Camera(projectionMatrix)
+	{
+		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+		m_FocalPoint = glm::vec3(0.0f);
+
+		glm::vec3 position = {-5, 5, 5};
+		m_Distance = glm::distance(position, m_FocalPoint);
+		
+		m_Yaw = 3.0f * M_PI / 4.0f;
+		m_Pitch = M_PI / 4.0f;
+
+		UpdateView();
+	}
+
+	void EditorCamera::Focus(const glm::vec3& focusPoint)
+	{
+		m_FocalPoint = focusPoint;
+		if(m_Distance > m_MinFocusDistance)
+		{
+			float  distance = m_Distance - m_MinFocusDistance;
+			MouseZoom(distance / ZoomSpeed());
+			UpdateView();
+		}
 	}
 
 	void EditorCamera::UpdateProjection()
@@ -28,7 +61,10 @@ namespace Hazel {
 		// m_Yaw = m_Pitch = 0.0f; // Lock the camera's rotation
 		m_Position = CalculatePosition();
 
-		glm::quat orientation = GetOrientation();
+		const glm::quat orientation = GetOrientation();
+
+		m_Rotation = glm::eulerAngles(orientation) * (180.0f / M_PI);
+
 		m_ViewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
 		m_ViewMatrix = glm::inverse(m_ViewMatrix);
 	}
@@ -60,10 +96,10 @@ namespace Hazel {
 
 	void EditorCamera::OnUpdate(float ts)
 	{
-		if (Input::IsKeyPressed(KeyCode::HZ_KEY_LEFT_ALT))
+		if (m_IsActive && Input::IsKeyPressed(KeyCode::HZ_KEY_LEFT_ALT))
 		{
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
-			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
+			const glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
 			m_InitialMousePosition = mouse;
 
 			if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))

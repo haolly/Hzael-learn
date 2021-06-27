@@ -11,6 +11,7 @@ project "Hazel-learn"
 	pchheader "hazelPCH.h"
 	pchsource "src/hazelPCH.cpp"
 
+
 	files
 	{
 		"src/**.h",
@@ -59,11 +60,11 @@ project "Hazel-learn"
 
 	filter "system:windows"
 		systemversion "latest"
+		buildoptions {"/utf-8"}
 		defines 
 		{
 			"HZ_PLATFORM_WINDOWS",
 			"HZ_BUILD_DLL",
-			"HZ_ENABLE_ASSERT",
 			"GLFW_INCLUDE_NONE",
 		}
 

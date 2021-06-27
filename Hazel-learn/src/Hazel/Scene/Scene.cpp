@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "Scene.h"
 #include "Hazel/Scene/Components.h"
 #include "Hazel/Renderer/Renderer2D.h"
@@ -8,7 +8,7 @@ namespace Hazel
 {
 
 	/// <summary>
-	/// Note, 这些模板特例化必须在使用任何实例之前，不然就会报错 https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
+	/// Note,  https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="entity"></param>
@@ -48,12 +48,36 @@ namespace Hazel
 	{
 	}
 
-	Scene::Scene()
+	Scene::Scene(const std::string& debugName, bool isEditorScene)
+		: m_DebugName(debugName), m_IsEditorScene(isEditorScene)
+	{
+		// TODO, connect scriptcomponent
+		Init();
+	}
+
+	void Scene::Init()
+	{
+	}
+
+	void Scene::OnUpdate(float ts)
+	{
+	}
+
+	void Scene::OnRenderRuntime(Ref<SceneRenderer> renderer, float ts)
+	{
+	}
+
+	void Scene::OnRenderEditor(Ref<SceneRenderer> renderer, float ts, const EditorCamera& editorCamera)
+	{
+	}
+
+	void Scene::OnEvent(Event& e)
 	{
 	}
 
 	Scene::~Scene()
 	{
+		m_Registry.clear();
 	}
 
 	Entity Scene::CreateEntity(const std::string& name)
@@ -72,7 +96,6 @@ namespace Hazel
 
 	void Scene::OnUpdateEditor(float ts, EditorCamera& camera)
 	{
-		// 本质上就是 shader 中的viewProjection 不同
 		Renderer2D::BeginScene(camera);
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group)

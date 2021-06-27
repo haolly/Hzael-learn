@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Camera.h"
 #include "Hazel/Events/Event.h"
@@ -13,9 +13,15 @@ namespace Hazel {
 	public:
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
+		EditorCamera(const glm::mat4& projectionMatrix);
 
+		
+		void Focus(const glm::vec3& focusPoint);
 		void OnUpdate(float ts);
 		void OnEvent(Event& e);
+
+		bool IsActive() const { return m_IsActive; }
+		void SetActive(bool active) { m_IsActive = active;}
 
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
@@ -51,14 +57,20 @@ namespace Hazel {
 	private:
 		float m_FOV = 45.0f, m_AspectRatio = 1.778f, m_NearClip = 0.1f, m_FarClip = 1000.0f;
 
+		bool m_IsActive = true;
+		bool m_Panning, m_Rotating;
+
 		glm::mat4 m_ViewMatrix;
 		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 m_FocalPoint = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
 
 		glm::vec2 m_InitialMousePosition = { 0.0f, 0.0f };
 
+		glm::vec3 m_FocalPoint = { 0.0f, 0.0f, 0.0f };
 		float m_Distance = 10.0f;
 		float m_Pitch = 0.0f, m_Yaw = 0.0f;
+
+		float m_MinFocusDistance = 100.0f;
 
 		float m_ViewportWidth = 1280, m_ViewportHeight = 720;
 	};

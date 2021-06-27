@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Hazel/Renderer/Camera.h"
 
 namespace Hazel

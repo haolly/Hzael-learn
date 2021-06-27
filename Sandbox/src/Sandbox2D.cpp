@@ -39,8 +39,8 @@ void Sandbox2D::OnUpdate(float deltaTime)
 
 
 	// Render
-	Hazel::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-	Hazel::RenderCommand::Clear();
+	// Hazel::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+	// Hazel::RenderCommand::Clear();
 
 
 	{

@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HZ_PLATFORM_WINDOWS;HZ_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Hazel-learn\vendor\spdlog\include;..\Hazel-learn\src;..\Hazel-learn\vendor;..\Hazel-learn\vendor\glm;..\Hazel-learn\vendor\Glad\include;..\Hazel-learn\vendor\entt\include;..\Hazel-learn\vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Hazel-learn\vendor\spdlog\include;..\Hazel-learn\src;..\Hazel-learn\vendor;..\Hazel-learn\vendor\glm;..\Hazel-learn\vendor\Glad\include;..\Hazel-learn\vendor\entt\include;..\Hazel-learn\vendor\imgui;..\Hazel-learn\vendor\yaml-cpp\include;C:\VulkanSDK\1.2.170.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -97,7 +97,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HZ_PLATFORM_WINDOWS;HZ_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Hazel-learn\vendor\spdlog\include;..\Hazel-learn\src;..\Hazel-learn\vendor;..\Hazel-learn\vendor\glm;..\Hazel-learn\vendor\Glad\include;..\Hazel-learn\vendor\entt\include;..\Hazel-learn\vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Hazel-learn\vendor\spdlog\include;..\Hazel-learn\src;..\Hazel-learn\vendor;..\Hazel-learn\vendor\glm;..\Hazel-learn\vendor\Glad\include;..\Hazel-learn\vendor\entt\include;..\Hazel-learn\vendor\imgui;..\Hazel-learn\vendor\yaml-cpp\include;C:\VulkanSDK\1.2.170.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -118,7 +118,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HZ_PLATFORM_WINDOWS;HZ_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Hazel-learn\vendor\spdlog\include;..\Hazel-learn\src;..\Hazel-learn\vendor;..\Hazel-learn\vendor\glm;..\Hazel-learn\vendor\Glad\include;..\Hazel-learn\vendor\entt\include;..\Hazel-learn\vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Hazel-learn\vendor\spdlog\include;..\Hazel-learn\src;..\Hazel-learn\vendor;..\Hazel-learn\vendor\glm;..\Hazel-learn\vendor\Glad\include;..\Hazel-learn\vendor\entt\include;..\Hazel-learn\vendor\imgui;..\Hazel-learn\vendor\yaml-cpp\include;C:\VulkanSDK\1.2.170.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -136,13 +136,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorLayer.h" />
-    <ClInclude Include="src\ImGui\ImGui.h" />
+    <ClInclude Include="src\Panels\ContentBrowserItem.h" />
     <ClInclude Include="src\Panels\ContentBrowserPanel.h" />
     <ClInclude Include="src\Panels\SceneHierarchyPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
     <ClCompile Include="src\HazelEditorApp.cpp" />
+    <ClCompile Include="src\Panels\ContentBrowserItem.cpp" />
     <ClCompile Include="src\Panels\ContentBrowserPanel.cpp" />
     <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp" />
   </ItemGroup>

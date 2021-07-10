@@ -38,11 +38,6 @@ void Sandbox2D::OnUpdate(float deltaTime)
 	Hazel::Renderer2D::ResetStats();
 
 
-	// Render
-	Hazel::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-	Hazel::RenderCommand::Clear();
-
-
 	{
 		static float rotation = 0.0f;
 		rotation += deltaTime * 50.0f;

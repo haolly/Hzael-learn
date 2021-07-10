@@ -4,6 +4,8 @@
 
 #include <filesystem>
 
+
+#include "AssetExtensions.h"
 #include "AssetImporter.h"
 #include "yaml-cpp/emitter.h"
 
@@ -77,10 +79,18 @@ namespace Hazel
 		WriteRegistryToFile();
 	}
 
-	AssetType AssetManager::GetAssetTypeFromFileType(const std::string& extension)
+	AssetType AssetManager::GetAssetTypeFromExtension(const std::string& extension)
 	{
-		//todo
-		return AssetType::None;
+		std::string ext = Utils::StringUtils::ToLower(extension);
+		if(s_AssetExtensionMap.find(extension) == s_AssetExtensionMap.end())
+			return AssetType::None;
+
+		return s_AssetExtensionMap.at(extension.c_str());
+	}
+
+	AssetType AssetManager::GetAssetTypeFromPath(const std::filesystem::path& path)
+	{
+		return GetAssetTypeFromExtension(path.extension().string());
 	}
 
 	AssetHandle AssetManager::ImportAsset(const std::string& filepath)
@@ -91,7 +101,7 @@ namespace Hazel
 		if(s_AssetRegistry.find(fixedFilePath) != s_AssetRegistry.end())
 			return 0;
 
-		AssetType type = GetAssetTypeFromFileType(Utils::StringUtils::GetExtension(fixedFilePath));
+		AssetType type = GetAssetTypeFromExtension(Utils::StringUtils::GetExtension(fixedFilePath));
 		//TODO: Improve this 
 		if(type == AssetType::None)
 			return 0;
@@ -105,6 +115,23 @@ namespace Hazel
 		s_AssetRegistry[fixedFilePath] = metadata;
 
 		return metadata.Handle;
+	}
+
+	bool AssetManager::ReloadData(AssetHandle assetHandle)
+	{
+		auto& metadata = GetMetadata(assetHandle);
+		if(!metadata.IsDataLoaded)
+		{
+			HZ_CORE_WARN("Trying to reload asset that was never loaded");
+
+			Ref<Asset> asset;
+			metadata.IsDataLoaded = AssetImporter::TryLoadData(metadata, asset);
+			return metadata.IsDataLoaded;
+		}
+		HZ_CORE_ASSERT(s_LoadedAssets.find(assetHandle) != s_LoadedAssets.end());
+		Ref<Asset>& asset = s_LoadedAssets.at(assetHandle);
+		metadata.IsDataLoaded = AssetImporter::TryLoadData(metadata, asset);
+		return metadata.IsDataLoaded;
 	}
 
 	void AssetManager::LoadAssetRegistry()

@@ -10,7 +10,9 @@ project "Hazel-Editor"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+		"src/**.hpp",
+		"src/**.c"
 	}
 
 	includedirs
@@ -21,7 +23,9 @@ project "Hazel-Editor"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.entt}",
+		"%{IncludeDir.imgui}",
 		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.VulkanSDK}",
 	}
 
 	links {"Hazel-learn"}

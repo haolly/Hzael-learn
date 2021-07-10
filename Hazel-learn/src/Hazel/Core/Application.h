@@ -11,7 +11,6 @@ namespace Hazel
 	class Shader;
 	class VertexBuffer;
 	class IndexBuffer;
-	class VertexArray;
 
 	class HAZEL_API Application
 	{

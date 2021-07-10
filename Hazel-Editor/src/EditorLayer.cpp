@@ -7,6 +7,7 @@
 #include "Hazel/Scene/SceneSerializer.h"
 #include "Hazel/Utils/PlatformUtils.h"
 #include "Hazel/Math/Math.h"
+#include "imgui/imgui_internal.h"
 
 
 namespace Hazel
@@ -19,20 +20,15 @@ namespace Hazel
 	void EditorLayer::OnAttach()
 	{
 		HZ_PROFILE_FUNC();
-		m_CheckboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
-		m_LogoTexture = Texture2D::Create("assets/textures/ChernoLogo.png");
-		m_SpriteSheet = Texture2D::Create("assets/game/textures/spritesheet.png");
-		m_WoodTextureInSheet = SubTexture2D::CreateFromCoords(m_SpriteSheet, {463, 1}, {64, 64});
+		m_CheckboardTexture = Texture2D::Create("Resources/Editor/Checkerboard.png");
+		m_LogoTexture = Texture2D::Create("Resources/Editor/ChernoLogo.png");
 
-		FramebufferSpecification fbSpec;
-		fbSpec.Attachments = {
-			{FramebufferTextureSpecification(ImageFormat::RGBA8)},
-			{FramebufferTextureSpecification(ImageFormat::RED_INTEGER)},
-			{FramebufferTextureSpecification(ImageFormat::Depth)}
-		};
-		fbSpec.Width = 1280;
-		fbSpec.Height = 720;
-		m_Framebuffer = Framebuffer::Create(fbSpec);
+		m_PlayButtonTex = Texture2D::Create("Resources/Editor/PlayButton.png");
+		m_PauseButtonTex = Texture2D::Create("Resources/Editor/PauseButton.png");
+		m_StopButtonTex = Texture2D::Create("Resources/Editor/StopButton.png");
+
+		m_SpriteSheet = Texture2D::Create("Resources/Editor/spritesheet.png");
+		m_WoodTextureInSheet = SubTexture2D::CreateFromCoords(m_SpriteSheet, {463, 1}, {64, 64});
 
 		m_ActiveScene = Ref<Scene>::Create();
 
@@ -106,8 +102,10 @@ namespace Hazel
 		m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
 
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 		m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
+		m_SceneHierarchyPanel = CreateScope<SceneHierarchyPanel>(m_ActiveScene);
+
+		m_ViewportRenderer = Ref<SceneRenderer>::Create(m_CurrentScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -116,60 +114,98 @@ namespace Hazel
 
 	void EditorLayer::OnUpdate(float deltaTime)
 	{
-		HZ_PROFILE_FUNC();
-
-		// Note, 这里渲染相关的要放在update中，不然拖动viewPort的大小改变时候，在 OnImGUIRender 函数中处理就会出现黑框
-		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
-			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && (spec.Width != m_ViewportSize.x || spec.Height !=
-				m_ViewportSize.y))
+		switch (m_SceneState)
 		{
-			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_CameraController.Resize(m_ViewportSize.x, m_ViewportSize.y);
-			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
+			case SceneState::Edit:
+			{
+				m_EditorCamera.SetActive(m_ViewportFocused);
+				m_EditorCamera.OnUpdate(deltaTime);
 
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+				m_EditorScene->OnRenderEditor(m_ViewportRenderer, deltaTime, m_EditorCamera);
+
+				Renderer2D::SetTargetRenderPass(m_ViewportRenderer->GetExternalCompositeRenderPass());
+
+				if(m_ShowBoundingBoxes)
+				{
+					Renderer2D::BeginScene(m_EditorCamera.GetViewProjection());
+				}
+				
+				break;
+			}
+
+			case SceneState::Play:
+			{
+				if(m_ViewportFocused)
+					m_EditorCamera.OnUpdate(deltaTime);
+
+				m_RuntimeScene->OnUpdate(deltaTime);
+				m_RuntimeScene->OnRenderRuntime(m_ViewportRenderer, deltaTime);
+				break;
+			}
+
+			case SceneState::Pause:
+			{
+				if(m_ViewportFocused)
+					m_EditorCamera.OnUpdate(deltaTime);
+
+				m_RuntimeScene->OnRenderRuntime(m_ViewportRenderer, deltaTime);
+				break;
+			}
 		}
 
-		// Update
-		if (m_ViewportFocused)
-		{
-			m_CameraController.OnUpdate(deltaTime);
-			m_EditorCamera.OnUpdate(deltaTime);
-		}
+		SceneRenderer::WaitForThreads();
 
+		// if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+		// 	m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && (spec.Width != m_ViewportSize.x || spec.Height !=
+		// 		m_ViewportSize.y))
+		// {
+		// 	m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		// 	m_CameraController.Resize(m_ViewportSize.x, m_ViewportSize.y);
+		// 	m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
+		//
+		// 	m_ActiveScene->SetViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		// }
+		//
+		// // Update
+		// if (m_ViewportFocused)
+		// {
+		// 	m_CameraController.OnUpdate(deltaTime);
+		// 	m_EditorCamera.OnUpdate(deltaTime);
+		// }
+		//
 		Renderer2D::ResetStats();
 
 
-		m_Framebuffer->Bind();
-		// Render
-		RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-		RenderCommand::Clear();
-
-		// Clear the entity ID attachment to -1
-		m_Framebuffer->ClearAttachment(1, -1);
-		
-
-		// Update Scene in Editor
-		//Renderer2D::BeginScene(m_CameraController.GetCamera());
-		m_ActiveScene->OnUpdateEditor(deltaTime, m_EditorCamera);
-		//Renderer2D::EndScene();
-
-		auto[mx, my] = ImGui::GetMousePos();
-		mx -= m_ViewportBounds[0].x;
-		my -= m_ViewportBounds[0].y;
-		glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
-		my = viewportSize.y - my;
-		int mouseX = (int)mx;
-		int mouseY = (int)my;
-
-		if(mouseX >=0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
-		{
-			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-			HZ_CORE_WARN("PixelData {0}", pixelData);
-			m_HoveredEntity = pixelData == -1 ? Entity() : Entity(static_cast<entt::entity>(pixelData), m_ActiveScene.Raw());
-		}
-
-		m_Framebuffer->UnBind();
+		// m_Framebuffer->Bind();
+		// // Render
+		// // RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+		// // RenderCommand::Clear();
+		// //
+		// // // Clear the entity ID attachment to -1
+		// // m_Framebuffer->ClearAttachment(1, -1);
+		//
+		//
+		// // Update Scene in Editor
+		// //Renderer2D::BeginScene(m_CameraController.GetCamera());
+		// m_ActiveScene->OnUpdateEditor(deltaTime, m_EditorCamera);
+		// //Renderer2D::EndScene();
+		//
+		// auto[mx, my] = ImGui::GetMousePos();
+		// mx -= m_ViewportBounds[0].x;
+		// my -= m_ViewportBounds[0].y;
+		// glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+		// my = viewportSize.y - my;
+		// int mouseX = (int)mx;
+		// int mouseY = (int)my;
+		//
+		// if(mouseX >=0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		// {
+		// 	int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+		// 	HZ_CORE_WARN("PixelData {0}", pixelData);
+		// 	m_HoveredEntity = pixelData == -1 ? Entity() : Entity(static_cast<entt::entity>(pixelData), m_ActiveScene.Raw());
+		// }
+		//
+		// m_Framebuffer->UnBind();
 
 		//HZ_INFO("fps:{0}", 1/deltaTime);
 	}
@@ -275,7 +311,7 @@ namespace Hazel
 
 		ImGui::End();
 
-		m_SceneHierarchyPanel.OnImGuiRender();
+		m_SceneHierarchyPanel->OnImGuiRender();
 		m_ContentBrowserPanel->OnImGuiRender();
 
 
@@ -297,23 +333,30 @@ namespace Hazel
 		//Viewport
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
 		ImGui::Begin("Viewport");
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+
 		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
 		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
 		auto viewportOffset = ImGui::GetWindowPos();
 		m_ViewportBounds[0] = {viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y};
 		m_ViewportBounds[1] = {viewportMaxRegion.x +viewportOffset.x, viewportMaxRegion.y + viewportOffset.y};
+
+		auto viewportSize = ImGui::GetContentRegionAvail();
+		m_ViewportRenderer->SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		m_EditorScene->SetViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		if(m_RuntimeScene)
+			m_RuntimeScene->SetViewportResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+
+		m_EditorCamera.SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), viewportSize.x, viewportSize.y, 0.1f, 1000.0f));
+		m_EditorCamera.SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 		
-		
-		
-		m_ViewportFocused = ImGui::IsWindowFocused();
-		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!(m_ViewportFocused || m_ViewportHovered));
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		//Note, this panel's size change will not handle by Window:OnEvent
 		m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 
+#ifdef HAS_MESH
 		//Gizmo
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && m_GizmoType != -1)
@@ -359,12 +402,12 @@ namespace Hazel
 				Math::DecomposeTransform(transform, translation, rotation, scale);
 				tc.Translation = translation;
 				// NOTE, to avoid gimbal lock, cause we always ADD values to it
-				// 但是，这里也会导致另一个问题， rotation 一直在[-180,180] 之间
 				auto deltaRotation = rotation - tc.Rotation;
 				tc.Rotation += deltaRotation;
 				tc.Scale = scale;
 			}
 		}
+#endif
 
 		ImGui::End();
 		ImGui::PopStyleVar();
@@ -386,13 +429,21 @@ namespace Hazel
 		{
 			bool canMousePick = m_ViewportHovered && ! ImGuizmo::IsOver() && !Input::IsKeyPressed(KeyCode::HZ_KEY_LEFT_ALT);
 			if(canMousePick)
-				m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+				m_SceneHierarchyPanel->SetSelectedEntity(m_HoveredEntity);
 		}
 		return false;
 	}
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
+		//TODO, WHAT IS THIS?
+		if(GImGui->ActiveId == 0)
+		{
+			if(m_ViewportHovered)
+			{
+				
+			}
+		}
 		//Shotcuts
 		if (e.GetRepeatCount() > 0)
 			return false;
@@ -450,9 +501,12 @@ namespace Hazel
 
 	void EditorLayer::NewScene()
 	{
-		m_ActiveScene = Ref<Scene>::Create();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_EditorScene = Ref<Scene>::Create("Empty Scene", true);
+		m_SceneHierarchyPanel->SetContext(m_EditorScene);
+
+		m_EditorCamera = EditorCamera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 1000.0f));
+		m_CurrentScene = m_EditorScene;
+		// m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 	}
 
 	void EditorLayer::OpenScene()
@@ -460,12 +514,14 @@ namespace Hazel
 		std::string filepath = FileDialogs::OpenFile("Hazel Scene(*.hazel)\0*.hazel\0");
 		if (!filepath.empty())
 		{
-			m_ActiveScene = Ref<Scene>::Create();
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-
-			SceneSerializer serializer(m_ActiveScene);
+			auto newScene = Ref<Scene>::Create("New Scene", true);
+			SceneSerializer serializer(newScene);
 			serializer.Deserialize(filepath);
+			m_EditorScene = newScene;
+			m_SceneFilePath = filepath;
+			m_SceneHierarchyPanel->SetContext(m_EditorScene);
+
+			m_CurrentScene = m_EditorScene;
 		}
 	}
 

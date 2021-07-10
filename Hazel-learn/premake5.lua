@@ -41,7 +41,7 @@ project "Hazel-learn"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.VulkanSDK}",
+		"%{IncludeDir.VulkanSDK}"
 	}
 
 	-- link static lib
@@ -51,7 +51,9 @@ project "Hazel-learn"
 		"Glad",
 		"imgui",
 		"yaml-cpp",
-		"opengl32.lib"
+		"opengl32.lib",
+		"%{Library.Vulkan}",
+		"%{Library.VulkanUtils}"
 	}
 
 	filter "files:vendor/ImGuizmo/**.cpp"
@@ -75,8 +77,10 @@ project "Hazel-learn"
 		links
 		{
 			"%{Library.ShaderC_Debug}",
+			"%{Library.ShaderC_Utils_Debug}",
 			"%{Library.SPIRV_Cross_Debug}",
 			"%{Library.SPIRV_Cross_GLSL_Debug}",
+			"%{Library.SPIRV_Tools_Debug}",
 		}
 
 	filter "configurations:Release"
@@ -87,6 +91,7 @@ project "Hazel-learn"
 		links
 		{
 			"%{Library.ShaderC_Release",
+			"%{Library.ShaderC_Utils_Release",
 			"%{Library.SPIRV_Cross_Release}",
 			"%{Library.SPIRV_Cross_GLSL_Release}",
 		}

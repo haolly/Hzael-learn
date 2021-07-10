@@ -1,3 +1,5 @@
 {
-    "svn.ignoreMissingSvnWarning": true
+    "svn.ignoreMissingSvnWarning": true,
+    "gotoSymbolStack.currentStackPosition": 0,
+    "gotoSymbolStack.filePositionInfo": []
 }

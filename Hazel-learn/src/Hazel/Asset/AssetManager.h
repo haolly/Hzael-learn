@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <filesystem>
 #include "AssetImporter.h"
 #include "AssetMetadata.h"
 
@@ -17,6 +18,10 @@ namespace Hazel
 		static AssetMetadata& GetMetadata(const std::string& filepath);
 
 		static AssetHandle GetAssetHandleFromFilePath(const std::string& filepath);
+		static std::filesystem::path GetFileSystemPath(const AssetMetadata& metadata)
+		{
+			return std::filesystem::path(metadata.FilePath);
+		}
 		static bool IsAssetHandleValid(AssetHandle assetHandle)
 		{
 			return GetMetadata(assetHandle).IsValid();
@@ -25,9 +30,11 @@ namespace Hazel
 		static void Rename(AssetHandle assetHandle, const std::string& newName);
 		static void RemoveAsset(AssetHandle assetHandle);
 
-		static AssetType GetAssetTypeFromFileType(const std::string& extension);
+		static AssetType GetAssetTypeFromExtension(const std::string& extension);
+		static AssetType GetAssetTypeFromPath(const std::filesystem::path& path);
 
 		static AssetHandle ImportAsset(const std::string& filepath);
+		static bool ReloadData(AssetHandle assetHandle);
 
 		template<typename T>
 		static Ref<T> GetAsset(AssetHandle assetHandle)

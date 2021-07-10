@@ -78,6 +78,9 @@
     <ClInclude Include="src\Hazel\Asset\Asset.h">
       <Filter>src\Hazel\Asset</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Asset\AssetExtensions.h">
+      <Filter>src\Hazel\Asset</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazel\Asset\AssetImporter.h">
       <Filter>src\Hazel\Asset</Filter>
     </ClInclude>
@@ -94,6 +97,9 @@
       <Filter>src\Hazel\Asset</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Core\Application.h">
+      <Filter>src\Hazel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Core\Assert.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Core\Base.h">
@@ -149,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazel\Events\MouseEvent.h">
       <Filter>src\Hazel\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\ImGui\ImGui.h">
+      <Filter>src\Hazel\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\ImGui\ImGuiLayer.h">
       <Filter>src\Hazel\ImGui</Filter>
@@ -207,6 +216,9 @@
     <ClInclude Include="src\Hazel\Renderer\RendererCapabilities.h">
       <Filter>src\Hazel\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\SceneRenderer.h">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazel\Renderer\Shader.h">
       <Filter>src\Hazel\Renderer</Filter>
     </ClInclude>
@@ -238,9 +250,6 @@
       <Filter>src\Hazel\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Scene\SceneSerializer.h">
-      <Filter>src\Hazel\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazel\Scene\ScriptableEntity.h">
       <Filter>src\Hazel\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Utils\FileSystem.h">
@@ -1571,6 +1580,9 @@
     <ClCompile Include="src\Hazel\ImGui\ImGuiLayer.cpp">
       <Filter>src\Hazel\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazel\ImGui\VulkanImGui.cpp">
+      <Filter>src\Hazel\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazel\Math\Math.cpp">
       <Filter>src\Hazel\Math</Filter>
     </ClCompile>
@@ -1616,6 +1628,9 @@
     <ClCompile Include="src\Hazel\Renderer\Renderer2D.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazel\Renderer\SceneRenderer.cpp">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazel\Renderer\Shader.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
@@ -1641,9 +1656,6 @@
       <Filter>src\Hazel\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Scene\SceneSerializer.cpp">
-      <Filter>src\Hazel\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazel\Scene\ScriptableEntity.cpp">
       <Filter>src\Hazel\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazel\Utils\StringUtils.cpp">

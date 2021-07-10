@@ -1,4 +1,6 @@
-#pragma once
+﻿#pragma once
+#include <map>
+
 #include "Image.h"
 #include "glm/vec4.hpp"
 
@@ -28,12 +30,17 @@ namespace Hazel
 		float Scale = 1.0f;
 		uint32_t Width, Height;
 		glm::vec4 ClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+		//todo
+		bool ClearOnLoad = true;
+
 		
 		FramebufferAttachmentSpecification Attachments;
 		uint32_t Samples = 1;
 		
 		// Render pass 会用到这个概念，一个render pass 其实就是一个 framebuffer
 		bool SwapChainTarget = false;
+
+		std::map<uint32_t, Ref<Image2D>> ExistingImages;
 
 		std::string DebugName;
 	};

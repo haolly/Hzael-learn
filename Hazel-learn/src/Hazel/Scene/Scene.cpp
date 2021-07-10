@@ -1,151 +1,187 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "Scene.h"
 #include "Hazel/Scene/Components.h"
 #include "Hazel/Renderer/Renderer2D.h"
 #include "Hazel/Scene/Entity.h"
+#include "Hazel/Math/Math.h"
+#include "Hazel/Renderer/SceneRenderer.h"
+#include "Hazel/Scene/Entity.h"
 
 namespace Hazel
 {
+	static const std::string DefaultEntityName = "Entity";
+	std::unordered_map<UUID, Scene*> s_ActiveScenes;
 
-	/// <summary>
-	/// Note, 这些模板特例化必须在使用任何实例之前，不然就会报错 https://docs.microsoft.com/en-us/cpp/error-messages/compiler-errors-2/compiler-error-c2908?view=msvc-160
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="entity"></param>
-	/// <param name="component"></param>
-	template<typename T>
-	void Scene::OnComponentAdded(Entity entity, T& component)
+	struct SceneComponent
 	{
-		static_assert(false);
-	}
+		UUID SceneID;
+	};
 
-	template<>
-	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	Scene::Scene(const std::string& debugName, bool isEditorScene)
 	{
-	}
+		m_SceneEntity = m_Registry.create();
+		m_Registry.emplace<SceneComponent>(m_SceneEntity, m_SceneID);
 
-	template<>
-	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
-	{
-		if(m_ViewportWidth >0 && m_ViewportHeight > 0)
-		{
-			component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
-		}
-	}
-
-	template<>
-	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
-	{
-	}
-
-	template<>
-	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
-	{
-	}
-
-	template<>
-	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
-	{
-	}
-
-	Scene::Scene()
-	{
+		s_ActiveScenes[m_SceneID] = this;
+		Init();
 	}
 
 	Scene::~Scene()
 	{
+		m_Registry.clear();
+		s_ActiveScenes.erase(m_SceneID);
+	}
+
+
+	void Scene::Init()
+	{
+	}
+
+	void Scene::OnUpdate(float ts)
+	{
+		{
+			auto view = m_Registry.view<TransformComponent>();
+			for(auto entity : view)
+			{
+				auto& transformComponent = view.get<TransformComponent>(entity);
+				Entity e = Entity(entity, this);
+				glm::mat4 transform = GetTransformRelativeToParent(e);
+				glm::vec3 translation;
+				glm::vec3 rotation;
+				glm::vec3 scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::quat rotationQuat = glm::quat(rotation);
+				transformComponent.Up = glm::normalize(glm::rotate(rotationQuat, glm::vec3(0.0f, 1.0f, 0.0f)));
+				transformComponent.Right = glm::normalize(glm::rotate(rotationQuat, glm::vec3(1.0f, 0.0f, 0.0f)));
+				transformComponent.Forward = glm::normalize(glm::rotate(rotationQuat, glm::vec3(0.0f, 0.0f, -1.0f)));
+			}
+		}
+	}
+
+	void Scene::OnRenderRuntime(Ref<SceneRenderer> renderer, float ts)
+	{
+	}
+
+	void Scene::OnRenderEditor(Ref<SceneRenderer> renderer, float ts, const EditorCamera& editorCamera)
+	{
+		renderer->EndScene();
+	}
+
+	void Scene::OnEvent(Event& e)
+	{
+	}
+
+	void Scene::OnRuntimeStart()
+	{
+		m_IsPlaying = true;
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		m_IsPlaying = false;
+	}
+
+	void Scene::SetViewportResize(uint32_t width, uint32_t height)
+	{
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+	}
+
+	Entity Scene::GetMainCameraEntity()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for(auto entity : view)
+		{
+			auto& comp = view.get<CameraComponent>(entity);
+			if(comp.Primary)
+				return {entity, this};
+		}
+		return {};
 	}
 
 	Entity Scene::CreateEntity(const std::string& name)
 	{
 		Entity entity = {m_Registry.create(), this};
+		auto& idComponent = entity.AddComponent<IDComponent>();
+		idComponent.ID = {};
 		entity.AddComponent<TransformComponent>();
-		auto& tag = entity.AddComponent<TagComponent>();
-		tag.Tag = name.empty() ? "UnNamedEntity" : name;
+		if(!name.empty())
+			entity.AddComponent<TagComponent>(name);
+
+		entity.AddComponent<RelationshipComponent>();
+		m_EntityIDMap[idComponent.ID] = entity;
+		return entity;
+	}
+
+
+
+
+	Entity Scene::CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap)
+	{
+		auto entity = Entity{m_Registry.create(), this};
+		auto& idComponent = entity.AddComponent<IDComponent>();
+		idComponent.ID = uuid;
+
+		entity.AddComponent<TransformComponent>();
+		if(!name.empty())
+			entity.AddComponent<TagComponent>(name);
+
+		entity.AddComponent<RelationshipComponent>();
+
+		HZ_CORE_ASSERT(m_EntityIDMap.find(uuid) == m_EntityIDMap.end());
+		m_EntityIDMap[idComponent.ID] = entity;
 		return entity;
 	}
 
 	void Scene::DestroyEntity(Entity entity)
 	{
-		m_Registry.destroy(entity);
+		m_Registry.destroy(entity.m_EntityHandle);
 	}
 
-	void Scene::OnUpdateEditor(float ts, EditorCamera& camera)
+	Entity Scene::FindEntityByTag(const std::string& tag)
 	{
-		// 本质上就是 shader 中的viewProjection 不同
-		Renderer2D::BeginScene(camera);
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
+		auto view = m_Registry.view<TagComponent>();
+		for(auto entity : view)
 		{
-			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+			const auto& canditate = view.get<TagComponent>(entity).Tag;
+			if(canditate == tag)
+				return Entity(entity, this);
 		}
-		Renderer2D::EndScene();
+
+		return Entity{};
+	}
+
+	Entity Scene::FindEntityByUUID(UUID id)
+	{
+		auto view = m_Registry.view<IDComponent>();
+		for(auto entity : view)
+		{
+			const auto& canditate = view.get<IDComponent>(entity);
+			if(canditate.ID == id)
+				return Entity(entity, this);
+		}
+
+		return Entity{};
 
 	}
 
-	void Scene::OnUpdateRuntime(float ts)
+	void Scene::ConvertToLocalSpace(Entity entity)
 	{
-		{
-			// TODO move to Scene::OnScenePlay, and call scriptComponent.Instance->OnDestroy on Scene::OnStopPlay
-			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& scriptComponent)
-			{
-				if(!scriptComponent.Instance)
-				{
-					scriptComponent.Instance = scriptComponent.InstantiateScript();
-					scriptComponent.Instance->m_Entity = Entity{entity, this};
-					scriptComponent.Instance->OnCreate();
-				}
-				scriptComponent.Instance->OnUpdate(ts);
-			});
-		}
-
-		Camera* mainCamera = nullptr;
-		TransformComponent* mainCameraTrans = nullptr;
-		auto view = m_Registry.view<CameraComponent, TransformComponent>();
-		for (auto entity : view)
-		{
-			auto [camera, transform] = view.get<CameraComponent, TransformComponent>(entity);
-			if(camera.Primary)
-			{
-				mainCamera = &camera.Camera;
-				mainCameraTrans = &transform;
-				break;
-			}
-		}
-
-		if(mainCamera)
-		{
-
-			Renderer2D::BeginScene(*mainCamera, mainCameraTrans->GetTransform());
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
-			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
-			}
-			Renderer2D::EndScene();
-		}
-
-		
 	}
 
-	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	void Scene::ConvertToWorldSpace(Entity entity)
 	{
-		m_ViewportWidth = width;
-		m_ViewportHeight = height;
+	}
 
-		// Resize non-fixedAspectRatio cameras
-		auto view = m_Registry.view<CameraComponent>();
-		for (auto entity : view)
-		{
-			auto& cameraComp = view.get<CameraComponent>(entity);
-			if(!cameraComp.FixedAspectRatio)
-			{
-				cameraComp.Camera.SetViewportSize(width, height);
-			}
-		}
+	glm::mat4 Scene::GetTransformRelativeToParent(Entity entity)
+	{
+		glm::mat4 transform(1.0f);
+		Entity parent = FindEntityByUUID(entity.GetParentUUID());
+		if(parent)
+			transform = GetTransformRelativeToParent(parent);
 
+		return transform * entity.Transform().GetTransform();
 	}
 
 	Entity Scene::GetPrimaryCameraEntity()

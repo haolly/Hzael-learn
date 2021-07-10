@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "OpenGLShader.h"
 
 
@@ -22,7 +22,7 @@ namespace Hazel
 				return GL_VERTEX_SHADER;
 			if (type == "fragment" || type == "pixel")
 				return GL_FRAGMENT_SHADER;
-			HZ_CORE_ASSERT(false, "Unknow shader type:{0}", type);
+			HZ_CORE_ASSERT(false, "Unknow shader type");
 			return 0;
 		}
 

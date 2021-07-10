@@ -3,6 +3,7 @@
 
 #include "GLFW/glfw3.h"
 #include "Hazel/Asset/AssetManager.h"
+#include "Hazel/Debug/Instrumentor.h"
 #include "Hazel/Renderer/Framebuffer.h"
 #include "Hazel/Renderer/Renderer.h"
 

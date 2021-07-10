@@ -2,6 +2,8 @@
 
 #include <entt.hpp>
 
+
+#include "Components.h"
 #include "Hazel/Scene/Scene.h"
 
 namespace Hazel
@@ -22,7 +24,7 @@ namespace Hazel
 			//NOTE, 不知道模板特例化为啥报错....
 			//原因：include 循环了
 			// 当add 一个cameraComp的时候，要去设置camera的viewSize
-			m_Scene->OnComponentAdded<Component>(*this, component);
+			//m_Scene->OnComponentAdded<Component>(*this, component);
 			return component;
 		}
 
@@ -42,7 +44,7 @@ namespace Hazel
 		template <typename T>
 		void RemoveComponent()
 		{
-			HZ_CORE_ASSERT(HasComponent<Component>(), "Entity does not has the component");
+			HZ_CORE_ASSERT(HasComponent<T>(), "Entity does not has the component");
 			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
 
@@ -57,6 +59,30 @@ namespace Hazel
 
 		bool operator !=(const Entity& other) const { return !(*this == other); }
 
+		TransformComponent& Transform()
+		{
+			return m_Scene->m_Registry.get<TransformComponent>(m_EntityHandle);
+		}
+		const glm::mat4& Transform() const
+		{
+			return m_Scene->m_Registry.get<TransformComponent>(m_EntityHandle).GetTransform();
+		}
+
+		void SetParentUUID(UUID parent)
+		{
+			GetComponent<RelationshipComponent>().ParentHandle = parent;
+		}
+
+		UUID GetParentUUID()
+		{
+			return GetComponent<RelationshipComponent>().ParentHandle;
+		}
+
+		std::vector<UUID>& Children()
+		{
+			return GetComponent<RelationshipComponent>().Children;
+		}
+
 	public:
 		Scene* GetScene() { return m_Scene;}
 
@@ -64,5 +90,8 @@ namespace Hazel
 		entt::entity m_EntityHandle = entt::null;
 		//TODO, SHOULD BE std::weak_ref<Scene>
 		Scene* m_Scene = nullptr;
+
+		// Make Scene class access Entity's private member
+		friend class Scene;
 	};
 }

@@ -5,11 +5,16 @@
 
 
 #include "SceneCamera.h"
-#include "ScriptableEntity.h"
 #include "glm/gtx/quaternion.hpp"
+#include "Hazel/Core/UUID.h"
 
 namespace Hazel
 {
+
+	struct IDComponent
+	{
+		UUID ID = 0;
+	};
 
 	struct TagComponent
 	{
@@ -24,6 +29,10 @@ namespace Hazel
 		glm::vec3 Rotation = {0.0f, 0.0f, 0.0f};
 		glm::vec3 Scale = {1.0f, 1.0f, 1.0f};
 
+		glm::vec3 Up = {0.0f, 1.0f, 0.0f};
+		glm::vec3 Right = {1.0f, 0.0f, 0.0f};
+		glm::vec3 Forward = {0.0f, 0.0f, -1.0f};	//todo
+
 		TransformComponent() = default;
 		TransformComponent(const glm::vec3& translation) : Translation(translation) {}
 
@@ -34,6 +43,20 @@ namespace Hazel
 			return glm::translate(glm::mat4(1.0f), Translation) * rotation * glm::scale(glm::mat4(1.0f), Scale);
 		}
 
+	};
+
+	struct RelationshipComponent
+	{
+		UUID ParentHandle = 0;
+		std::vector<UUID> Children;
+
+		RelationshipComponent() = default;
+		RelationshipComponent(const RelationshipComponent& other) = default;
+		RelationshipComponent(UUID parent)
+			: ParentHandle(parent)
+		{
+			
+		}
 	};
 
 	struct SpriteRendererComponent
@@ -55,18 +78,4 @@ namespace Hazel
 		// CameraComponent(const glm::mat4& projection) : Camera(projection) {}
 	};
 	
-	struct NativeScriptComponent
-	{
-		ScriptableEntity* Instance = nullptr;
-
-		ScriptableEntity* (*InstantiateScript)();
-		void (*DestroyScript)(NativeScriptComponent*);
-
-		template<typename T>
-		void Bind()
-		{
-			InstantiateScript = []() {return static_cast<ScriptableEntity*>(new T());};
-			DestroyScript = [](NativeScriptComponent* nsc) {delete nsc->Instance; nsc->Instance = nullptr;};
-		}
-	};
 }

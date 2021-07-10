@@ -50,3 +50,5 @@
 ## Resource Manager
 
 1. Shader 是由 shaderLibrary 来管理的，目前还没有lifeTime 的概念
+2. AssetManager 管理 AssetMetadata 已经 loadedAsset
+3. AssetSerializer interface 定义了一个不同类型的文件是如何被load的

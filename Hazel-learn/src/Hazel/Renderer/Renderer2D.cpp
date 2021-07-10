@@ -1,4 +1,4 @@
-#include "hazelPCH.h"
+﻿#include "hazelPCH.h"
 #include "Renderer2D.h"
 
 #include "Buffer.h"
@@ -164,7 +164,7 @@ namespace Hazel
 		s_Data.CommandBuffer = RenderCommandBuffer::Create(0, "Renderer2D");
 		//TODO, 这个是怎么用的？
 		s_Data.UniformBufferSet = UniformBufferSet::Create(3);
-		s_Data.UniformBufferSet.Create(sizeof(Renderer2DData::UBCamera), 0);
+		s_Data.UniformBufferSet->Create(sizeof(Renderer2DData::UBCamera), 0);
 		s_Data.QuadMaterial = Material::Create(s_Data.QuadPipeline->GetSpecification().Shader, "QuadMaterial");
 	}
 
@@ -205,6 +205,8 @@ namespace Hazel
 
 	Ref<RenderPass> Renderer2D::GetTargetRenderPass()
 	{
+		//todo
+		return nullptr;
 	}
 
 	void Renderer2D::SetTargetRenderPass(Ref<RenderPass> renderPass)

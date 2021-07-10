@@ -1,6 +1,8 @@
 #include "hazelPCH.h"
 #include "WindowsWindow.h"
 
+
+#include "Hazel/Debug/Instrumentor.h"
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Events/MouseEvent.h"
@@ -106,19 +108,19 @@ namespace Hazel
 			{
 			case GLFW_PRESS:
 				{
-					KeyPressedEvent e(key, 0);
+					KeyPressedEvent e((KeyCode)key, 0);
 					data.EventCallbackFn(e);
 					break;
 				}
 			case GLFW_RELEASE:
 				{
-					KeyReleasedEvent e(key);
+					KeyReleasedEvent e((KeyCode)key);
 					data.EventCallbackFn(e);
 					break;
 				}
 			case GLFW_REPEAT:
 				{
-					KeyPressedEvent e(key, 1);
+					KeyPressedEvent e((KeyCode)key, 1);
 					data.EventCallbackFn(e);
 					break;
 				}
@@ -128,7 +130,7 @@ namespace Hazel
 		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int c)
 		{
 			auto data = *(WindowData*)glfwGetWindowUserPointer(window);
-			KeyTypedEvent e(c);
+			KeyTypedEvent e((KeyCode)c);
 			data.EventCallbackFn(e);
 		});
 
